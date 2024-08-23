@@ -285,7 +285,7 @@
                         <div class="form-group">
                                     <label for="tanggal_audit" class="form-label">Tanggal Audit</label>
                                     <input type="date" value="${response.auditInsidental[0].tanggal_audit}" name="tanggal_audit"
-                                        id="tanggal_audit" class="form-control" placeholder="Tanggal Audit">
+                                        id="tanggal_audit" required class="form-control" placeholder="Tanggal Audit">
                                 </div>
                                     <div class="form-group">
                                     <label for="" class="form-label">Unitkerja</label>
@@ -421,7 +421,7 @@
                         <div class="form-group">
                                     <label for="tanggal_audit" class="form-label">Tanggal Audit</label>
                                     <input type="date"  name="tanggal_audit" value="${response.auditProses.tanggal_audit}"
-                                        id="tanggal_audit" class="form-control" placeholder="Tanggal Audit">
+                                        id="tanggal_audit" required class="form-control" placeholder="Tanggal Audit">
                                 </div>
                                     <div class="form-group">
                                     <label for="" class="form-label">Unitkerja</label>
@@ -558,7 +558,7 @@
                         <div class="form-group">
                                     <label for="tanggal_audit" class="form-label">Tanggal Audit</label>
                                     <input type="date"  name="tanggal_audit"
-                                        id="tanggal_audit" class="form-control" placeholder="Tanggal Audit">
+                                        id="tanggal_audit" required class="form-control" placeholder="Tanggal Audit">
                                 </div>
                                     <div class="form-group">
                                     <label for="" class="form-label">Unitkerja</label>

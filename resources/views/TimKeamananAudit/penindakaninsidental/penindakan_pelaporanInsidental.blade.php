@@ -1,3 +1,7 @@
+@php
+    use Carbon\Carbon;
+  
+@endphp
 @extends('TimKeamananAudit.keamananaudit_layout')
 @section('content')
     <div class="page-heading">
@@ -56,9 +60,11 @@
                         <table class="table row-table" id="table1">
                             <thead>
                                 <tr>
+                                    <th>Tanggal Audit</th>
                                     <th>Judul</th>
 
                                     <th>Nama Sistem</th>
+                                    <th>Unit Kerja</th>
                                     <th>Versi</th>
                                     <th>Status</th>
                                     <th>Aksi</th>
@@ -68,9 +74,11 @@
 
                                 @foreach ($laporan as $item)
                                     <tr>
+                                        <td>{{ $item->tanggal_audit }}</td>
                                         <td>{{ $item->judul }}</td>
 
                                         <td>{{ $item->nama_sistem }}</td>
+                                        <td>{{ $item->unitkerja }}</td>
                                         <td>{{ $item->versi }}</td>
                                         <td>{{ $item->status }}</td>
 
@@ -140,7 +148,7 @@
                                     <td><span id="detailRekomendasi"></span></td>
                                 </tr>
                                 <tr>
-                                    <td>Kesimpulan</td>
+                                    <td>Kesimpulan Audit</td>
                                     <td><span id="detailKesimpulan"></span></td>
                                 </tr>
                             </table>

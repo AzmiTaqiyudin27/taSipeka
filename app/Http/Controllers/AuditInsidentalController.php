@@ -67,7 +67,8 @@ $user = Auth::user();
 
         $data = DB::table('audit_insidentals')
     ->join('kode_audits', 'audit_insidentals.kode_audit', '=', 'kode_audits.kode_audit_rutin')
-    ->select('audit_insidentals.*','audit_insidentals.judul' ,'kode_audits.kode_audit_rutin', 'kode_audits.nama_sistem' )->get();
+    ->join('users', 'audit_insidentals.unitkerja_id', '=', 'users.id')
+    ->select('audit_insidentals.*','audit_insidentals.judul' ,'kode_audits.kode_audit_rutin', 'kode_audits.nama_sistem', 'users.username as unitkerja' )->get();
 
     return view($view,[
             'laporan' => $data,
