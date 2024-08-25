@@ -15,7 +15,7 @@
                     <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="/auth/auth/dashboard-audit">Dashboard</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">Pelaporan Audit Sistem Informasi
+                            <li class="breadcrumb-item active" aria-current="page">Penerimaan Pengajuan Audit Sistem Informasi
                                 Insidental</li>
                         </ol>
                     </nav>
@@ -65,14 +65,20 @@
                                         <td>{{ $item->nama_sistem }}</td>
                                         <td>{{ $item->kendala }}</td>
                                         <td>{{ $item->keterangan }}</td>
-                                        <td>
-                                            @php
-                                                $fotos = explode(',', $item->foto);
-                                            @endphp
-                                            @foreach ($fotos as $foto)
-                                                <a href="/foto/{{ $foto }}">{{ $foto }}</a><br>
-                                            @endforeach
+                                        <td   @php
+        // Jika foto disimpan sebagai JSON atau string yang dipisahkan koma
+        $fotos = json_decode($item->foto, true) ?? explode(',', $item->foto);
+    @endphp
+                                            <ul>
+                                                @foreach ($fotos as $foto)
+                                                <li>
+                                                    <a href="/foto/{{ $foto }}">{{ $foto }}</a><br>
+                                                </li>
+                                                @endforeach
+                                            </ul>
                                         </td>
+
+
                                         <td>
                                             <select name="status_approved" data-id="{{ $item->id }}"
                                                 id="status_approved" class="form-select status">
@@ -114,15 +120,15 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="deleteModalLabel">Alasan Penolakan</h5>
-                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
+
+
                             </button>
                         </div>
                         <div class="modal-body">
                             <textarea class="form-control" id="alasanTolak" rows="3"></textarea>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="batalBtn" >Batal</button>
                             <form id="deleteForm" action="" method="POST" style="display:inline;">
 
                                 <button type="button" id="tombolTolak" class="btn btn-danger">Konfirmasi</button>
@@ -144,11 +150,18 @@
 
     <script>
         console.log("lah");
-
+          document.getElementById('batalBtn').addEventListener('click', function () {
+        // Refresh halaman setelah modal ditutup
+        window.location.reload();
+    });
         $(".status").change(function() {
             var id = $(this).data("id");
             console.log(id);
-            var modalTolak = new bootstrap.Modal(document.getElementById('penolakanModal'));
+            var modalTolak = new bootstrap.Modal(document.getElementById('penolakanModal'), {
+                backdrop : 'static',
+                keyboard : false
+
+        });
             var status = $(this).val();
             var url = "{{ route('pengajuanInsidental.updateStatus') }}";
             if (status == '3') {
@@ -176,10 +189,11 @@
         'Sukses',
         'Pengajuan Telah Ditolak!',
         'success'
-    );
-     setTimeout(() => {
-        window.location.reload();
-    }, 500);
+    ).then((result) => {
+        if(result.isConfirmed || result.isDismissed){
+            window.location.reload();
+        }
+    });;;
 
 
                             },
@@ -205,10 +219,12 @@
         'Sukses',
         'Status telah diperbarui!',
         'success'
-    );
-    setTimeout(() => {
-        window.location.reload();
-    }, 500);
+    ).then((result) => {
+        if(result.isConfirmed || result.isDismissed){
+            window.location.reload();
+        }
+    });;;
+
 
                     },
                     error: function(error) {

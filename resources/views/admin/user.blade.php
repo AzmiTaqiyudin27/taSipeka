@@ -38,6 +38,11 @@
                 {{ session('suksesubah') }}
             </div>
         @endif
+        @if(session()->has('hapusAkun'))
+             <div class="alert alert-success" role="alert">
+                {{ session('hapusAkun') }}
+            </div>
+        @endif
         @if (session('success'))
             <div class="alert alert-success">
                 {{ session('success') }}
@@ -315,15 +320,13 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="deleteModalLabel">Alasan Penolakan</h5>
-                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+
                     </div>
                     <div class="modal-body">
                         <textarea class="form-control" id="alasanTolak" rows="3"></textarea>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="batalBtn" >Batal</button>
                         <form id="" action="" method="POST" style="display:inline;">
 
                             <button type="button" id="tombolTolak" class="btn btn-danger">Konfirmasi</button>
@@ -339,15 +342,13 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="deleteModalLabel">Konfirmasi Hapus</h5>
-                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+
                     </div>
                     <div class="modal-body">
                         Apakah Anda yakin ingin menghapus data ini?
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="batalBtn" >Batal</button>
                         <form id="deleteForm" method="POST" style="display:inline;">
                             @csrf
                             @method('DELETE')
@@ -368,13 +369,20 @@
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
+          document.getElementById('batalBtn').addEventListener('click', function () {
+        // Refresh halaman setelah modal ditutup
+        window.location.reload();
+    });
         // $(document).ready(function() {
 
         // Ubah status
         $(".statusAkun").change(function() {
             var value = $(this).val();
             var id = $(this).data('id');
-            var modalTolak = new bootstrap.Modal(document.getElementById('penolakanModal'));
+            var modalTolak = new bootstrap.Modal(document.getElementById('penolakanModal'), {
+                backdrop : 'static',
+                keyboard : false
+            });
             console.log(id);
             const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
@@ -404,10 +412,12 @@
         'Sukses!',
         'Akun ditolak!',
         'success'
-    );
-    setTimeout(() => {
-        window.location.reload();
-    }, 500);
+    ).then((result) => {
+        if(result.isConfirmed || result.isDismissed){
+            window.location.reload();
+        }
+    });;;
+
                             },
                             error: function(err) {
                                 console.log(err);
@@ -430,10 +440,12 @@
         'Sukses!',
         'Status telah diubah!',
         'success'
-    );
-    setTimeout(() => {
-        window.location.reload();
-    }, 500);
+    ).then((result) => {
+        if(result.isConfirmed || result.isDismissed){
+            window.location.reload();
+        }
+    });;;
+
                     },
                     error: function(err) {
                         console.log(err);

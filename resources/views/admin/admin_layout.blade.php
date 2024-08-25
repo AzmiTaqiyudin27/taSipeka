@@ -18,12 +18,12 @@
     <link rel="stylesheet" href="{{ asset('assets/compiled/css/table-datatable-jquery.css') }}">
 
 
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
     <script src="https://cdn.ckeditor.com/ckeditor5/35.0.1/classic/ckeditor.js"></script>
     <link rel="stylesheet" href="{{ asset('assets/compiled/css/app.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/compiled/css/app-dark.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/compiled/css/iconly.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
       <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
         integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -111,6 +111,12 @@
                             </ul>
                         </li>
 
+                          <li class="sidebar-item">
+                            <a href="{{ route('datasistem') }}" class='sidebar-link'>
+                                <i class="bi bi-gear-wide-connected"></i>
+                                <span>Data Sistem</span>
+                            </a>
+                        </li>
 
                         <li class="sidebar-item has-sub ">
                             <a href="#" class='sidebar-link'>
@@ -130,12 +136,7 @@
 
                             </ul>
                         </li>
-                          <li class="sidebar-item">
-                            <a href="{{ route('datasistem') }}" class='sidebar-link'>
-                                <i class="bi bi-gear-wide-connected"></i>
-                                <span>Data Sistem</span>
-                            </a>
-                        </li>
+
 
                         <li class="sidebar-item has-sub ">
                             <a href="#" class='sidebar-link'>

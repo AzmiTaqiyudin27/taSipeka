@@ -54,7 +54,7 @@
                         <table class="table row-table" id="table1">
                             <thead>
                                 <tr>
-                                    <th>Tanggal Lapor</th>
+                                    <th>Tanggal Pengajuan</th>
                                     <th>Nama Sistem</th>
                                     <th>Versi</th>
                                     <th>Deskripsi</th>
@@ -70,13 +70,22 @@
                                         <td>{{ $item->nama_sistem }}</td>
                                         <td>{{ $item->versi }}</td>
                                         <td>{{ $item->deskripsi }}</td>
-                                        <td>
+                                     <td>
                                             @php
-                                                $dokumens = explode(',', $item->dokumen);
+                                                $dokumenArray = json_decode($item->dokumen, true);
+
+
                                             @endphp
-                                            @foreach ($dokumens as $dokumen)
-                                                <a href="/dokumen/{{ $dokumen }}">{{ $dokumen }}</a><br>
-                                            @endforeach
+                                            <ul>
+
+                                                @foreach ($dokumenArray as $dokumen)
+                                                <li>
+                                                    <a href="/dokumen/{{ $dokumen }}">{{ $dokumen }}</a><br>
+                                                </li>
+                                                @endforeach
+                                            </ul>
+
+
                                         </td>
                                         <td>
                                             @if ($item->status_approved == '1')

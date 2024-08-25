@@ -59,7 +59,7 @@
                         <table class="table row-table" id="table1">
                             <thead>
                                 <tr>
-                                    <th>Tanggal Lapor</th>
+                                    <th>Tanggal Pengajuan</th>
                                     <th>Nama Sistem</th>
                                     <th>Kendala</th>
                                     <th>Keterangan</th>
@@ -76,13 +76,17 @@
                                         <td>{{ $item->nama_sistem }}</td>
                                         <td>{{ $item->kendala }}</td>
                                         <td>{{ $item->keterangan }}</td>
-                                        <td>
-                                            @php
-                                                $fotos = explode(',', $item->foto);
-                                            @endphp
-                                            @foreach ($fotos as $foto)
-                                                <a href="/foto/{{ $foto }}">{{ $foto }}</a><br>
-                                            @endforeach
+                                        <td   @php
+        // Jika foto disimpan sebagai JSON atau string yang dipisahkan koma
+        $fotos = json_decode($item->foto, true) ?? explode(',', $item->foto);
+    @endphp
+                                            <ul>
+                                                @foreach ($fotos as $foto)
+                                                <li>
+                                                    <a href="/foto/{{ $foto }}">{{ $foto }}</a><br>
+                                                </li>
+                                                @endforeach
+                                            </ul>
                                         </td>
                                         <td>
                                             @if ($item->status_approved == '1')

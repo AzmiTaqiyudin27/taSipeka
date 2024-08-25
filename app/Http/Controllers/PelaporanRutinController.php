@@ -91,51 +91,61 @@ class PelaporanRutinController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
-        // dd($request);
-        $data = $request->except('_token');
-        $user = auth()->user()->id;
-        $data = $request->validate([
-            'tanggal_lapor' => 'required',
-            'nama_sistem' => 'required',
-            'versi' => 'required',
-            'deskripsi' => 'required',
-            'dokumen*' => 'required|file|max:5120',
-        ]);
+{
+    // Ambil user id dari user yang sedang login
+    $user = auth()->user()->id;
 
-        $data['user_id'] = $user;
+    // Validasi input termasuk multiple dokumen
+    $data = $request->validate([
+        'tanggal_lapor' => 'required',
+        'nama_sistem' => 'required',
+        'versi' => 'required',
+        'deskripsi' => 'required',
+        'dokumen.*' => 'required|file|max:5120', // Validasi untuk setiap file
+    ]);
 
-        $files = [];
-        $totalSize = 0;
+    // Tambahkan user_id ke data yang akan disimpan
+    $data['user_id'] = $user;
 
-        // Cek jika ada file yang diunggah
-        if ($request->hasFile('dokumen')) {
-            // Hitung total ukuran file
-            foreach ($request->file('dokumen') as $file) {
-                $totalSize += $file->getSize();
-            }
+    // Array untuk menyimpan nama file yang di-upload
+    $files = [];
+    $totalSize = 0;
 
-            // Konversi 5 MB ke bytes
-            $maxSize = 5 * 1024 * 1024;
-
-            // Periksa apakah total ukuran melebihi 5 MB
-            if ($totalSize > $maxSize) {
-                return back()->withErrors(['dokumen' => 'Total ukuran semua file tidak boleh melebihi 5 MB.']);
-            }
-
-            // Jika ukuran file sudah sesuai, pindahkan file ke direktori yang diinginkan
-            foreach ($request->file('dokumen') as $file) {
-                if ($file->isValid()) {
-                    $dokumen = $file->getClientOriginalName();
-                    $file->move(public_path('dokumen'), $dokumen);
-                    $files[] = $dokumen;
-                }
-            }
-            $data['dokumen'] = implode(", ", $files); // Mengubah array menjadi string
-            PelaporanRutin::create($data);
-            return redirect()->route('pelaporan-rutin.index')->with('suksestambah', 'Data berhasil ditambah');
+    // Cek apakah ada file yang diunggah
+    if ($request->hasFile('dokumen')) {
+        // Hitung total ukuran file
+        foreach ($request->file('dokumen') as $file) {
+            $totalSize += $file->getSize();
         }
+
+        // Batas total ukuran file adalah 5MB
+        $maxSize = 5 * 1024 * 1024;
+
+        // Jika total ukuran melebihi 5MB, kembalikan dengan error
+        if ($totalSize > $maxSize) {
+            return back()->withErrors(['dokumen' => 'Total ukuran semua file tidak boleh melebihi 5 MB.']);
+        }
+
+        // Jika file sesuai dengan aturan, simpan setiap file di direktori yang diinginkan
+        foreach ($request->file('dokumen') as $file) {
+            if ($file->isValid()) {
+                $dokumen = time() . '-' . $file->getClientOriginalName(); // Buat nama unik dengan timestamp
+                $file->move(public_path('dokumen'), $dokumen); // Pindahkan file ke folder publik
+                $files[] = $dokumen; // Tambahkan nama file ke array
+            }
+        }
+
+        // Simpan file dalam format array (misalnya JSON)
+        $data['dokumen'] = json_encode($files); // Simpan sebagai JSON dalam kolom dokumen
     }
+
+    // Simpan data ke database
+    PelaporanRutin::create($data);
+
+    // Redirect ke halaman index dengan pesan sukses
+    return redirect()->route('pelaporan-rutin.index')->with('suksestambah', 'Data berhasil ditambah');
+}
+
     /**
      * Display the specified resource.
      */
@@ -160,54 +170,62 @@ class PelaporanRutinController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
-    {
-        $pelaporanRutin = PelaporanRutin::findOrFail($id);
+   public function update(Request $request, $id)
+{
+    $data = $request->validate([
+        'tanggal_lapor' => 'required|date',
+        'nama_sistem' => 'required|string',
+        'versi' => 'required|string',
+        'deskripsi' => 'required|string',
+        'dokumen_update.*' => 'file|mimes:pdf,docx,doc,xls,xlsx,jpg,jpeg,png|max:5120',
+        'dokumen.*' => 'file|mimes:pdf,docx,doc,xls,xlsx,jpg,jpeg,png|max:5120',
+    ]);
 
-        // Validasi data
-        $data = $request->validate([
-            'tanggal_lapor' => 'required',
-            'nama_sistem' => 'required',
-            'versi' => 'required',
-            'deskripsi' => 'required',
-            'dokumen' => 'nullable|max:2048',
-        ]);
+    $laporan = PelaporanRutin::findOrFail($id);
 
-        // Update data pelaporan
-        $pelaporanRutin->update($data);
+    // Ambil dokumen yang sudah ada
+    $dokumenArray = json_decode($laporan->dokumen, true) ?? [];
 
-        // Handle file dokumen
-           $totalSize = 0;
-
-        // Cek jika ada file yang diunggah
-        if ($request->hasFile('dokumen')) {
-            // Hitung total ukuran file
-            foreach ($request->file('dokumen') as $file) {
-                $totalSize += $file->getSize();
-            }
-
-            // Konversi 5 MB ke bytes
-            $maxSize = 5 * 1024 * 1024;
-
-            // Periksa apakah total ukuran melebihi 5 MB
-            if ($totalSize > $maxSize) {
-                return back()->withErrors(['dokumen' => 'Total ukuran semua file tidak boleh melebihi 5 MB.']);
-            }
-
-            // Jika ukuran file sudah sesuai, pindahkan file ke direktori yang diinginkan
-            foreach ($request->file('dokumen') as $file) {
-                if ($file->isValid()) {
-                    $dokumen = $file->getClientOriginalName();
-                    $file->move(public_path('dokumen'), $dokumen);
-                    $files[] = $dokumen;
+    // Update dokumen yang sudah ada
+    if ($request->has('dokumen_update')) {
+        foreach ($request->file('dokumen_update') as $index => $file) {
+            if ($file) {
+                // Hapus dokumen lama jika diganti
+                if (isset($dokumenArray[$index])) {
+                    // Hapus file lama dari sistem jika diinginkan
+                    unlink(public_path('dokumen/' . $dokumenArray[$index]));
                 }
-            }
-            $pelaporanRutin->dokumen = implode(", ", $files);
-            $pelaporanRutin->save();
-        }
 
-        return redirect()->route('pelaporan-rutin.index')->with('suksesubah', 'Data berhasil diubah');
+                // Simpan file baru
+                $newFilename = time() . '-' . $file->getClientOriginalName();
+                $file->move(public_path('dokumen'), $newFilename);
+                $dokumenArray[$index] = $newFilename;
+            }
+        }
     }
+
+    // Tambah dokumen baru
+    if ($request->hasFile('dokumen')) {
+        foreach ($request->file('dokumen') as $file) {
+            if ($file->isValid()) {
+                $filename = time() . '-' . $file->getClientOriginalName();
+                $file->move(public_path('dokumen'), $filename);
+                $dokumenArray[] = $filename;
+            }
+        }
+    }
+
+    // Simpan dokumen yang sudah diupdate dan baru
+    $laporan->dokumen = json_encode($dokumenArray);
+    $laporan->tanggal_lapor = $data['tanggal_lapor'];
+    $laporan->nama_sistem = $data['nama_sistem'];
+    $laporan->versi = $data['versi'];
+    $laporan->deskripsi = $data['deskripsi'];
+    $laporan->save();
+
+    return redirect()->route('pelaporan-rutin.index')->with('success', 'Data berhasil diubah');
+}
+
 
 
     /**

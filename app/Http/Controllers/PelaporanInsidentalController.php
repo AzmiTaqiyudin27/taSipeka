@@ -61,52 +61,59 @@ class PelaporanInsidentalController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
-    {
-        // dd($request);
-        $data = $request->except('_token');
-        $user = auth()->user()->id;
-        $data = $request->validate([
-            'tanggal_lapor' => 'required',
-            'nama_sistem' => 'required',
-            'kendala' => 'required',
-            'keterangan' => 'required',
-            'foto*' => 'required|file',
-        ]);
+   public function store(Request $request)
+{
+    // Validasi input termasuk file
+    $data = $request->validate([
+        'tanggal_lapor' => 'required|date',
+        'nama_sistem' => 'required|string|max:255',
+        'kendala' => 'required|string|max:255',
+        'keterangan' => 'required|string|max:255',
+        'foto.*' => 'required|file|mimes:jpg,jpeg,png|max:5120', // Validasi untuk setiap file foto
+    ]);
 
-     $files = [];
-$totalSize = 0;
+    // Ambil user id
+    $user = auth()->user()->id;
 
-// Cek jika ada file yang diunggah
-        if ($request->hasFile('foto')) {
-            // Hitung total ukuran file
-            foreach ($request->file('foto') as $file) {
+    // Array untuk menyimpan nama file yang diunggah
+    $files = [];
+    $totalSize = 0;
+
+    // Cek jika ada file yang diunggah
+    if ($request->hasFile('foto')) {
+        foreach ($request->file('foto') as $file) {
+            if ($file->isValid()) {
+                // Tambahkan ukuran file ke totalSize
                 $totalSize += $file->getSize();
-            }
 
-            // Konversi 5 MB ke bytes
-            $maxSize = 5 * 1024 * 1024;
+                // Konversi 5 MB ke bytes
+                $maxSize = 5 * 1024 * 1024;
 
-            // Periksa apakah total ukuran melebihi 5 MB
-            if ($totalSize > $maxSize) {
-                return back()->withErrors(['foto' => 'Total ukuran semua foto tidak boleh melebihi 5 MB.']);
-            }
-
-            // Jika ukuran file sudah sesuai, pindahkan file ke direktori yang diinginkan
-            foreach ($request->file('foto') as $file) {
-                if ($file->isValid()) {
-                    $dokumen = $file->getClientOriginalName();
-                    $file->move(public_path('foto'), $dokumen);
-                    $files[] = $dokumen;
+                // Periksa apakah total ukuran melebihi 5 MB
+                if ($totalSize > $maxSize) {
+                    return back()->withErrors(['foto' => 'Total ukuran semua foto tidak boleh melebihi 5 MB.']);
                 }
+
+                // Simpan file di direktori 'public/foto' dengan nama unik
+                $filename = time() . '-' . $file->getClientOriginalName();
+                $file->move(public_path('foto'), $filename);
+
+                // Tambahkan nama file ke array
+                $files[] = $filename;
             }
         }
-        $data['foto'] = implode(", ", $files); // Mengubah array menjadi string
-        $data['user_id'] = $user;
-        // dd($data);
-        PelaporanInsidental::create($data);
-        return redirect()->route('unitkerja-auditinsidental')->with('suksestambah', 'Data berhasil ditambah');
     }
+
+    // Simpan array file sebagai JSON dalam database
+    $data['foto'] = json_encode($files); // Simpan nama file sebagai JSON
+    $data['user_id'] = $user;
+
+    // Simpan data ke dalam database
+    PelaporanInsidental::create($data);
+
+    // Redirect dengan pesan sukses
+    return redirect()->route('unitkerja-auditinsidental')->with('suksestambah', 'Data berhasil ditambah');
+}
 
     /**
      * Display the specified resource.
@@ -132,54 +139,68 @@ $totalSize = 0;
      * Update the specified resource in storage.
      */
     public function update(Request $request, $id)
-    {
-        $pelaporanInsidental = PelaporanInsidental::findOrFail($id);
+{
+    // Validasi input
+    $data = $request->validate([
+        'tanggal_lapor' => 'required|date',
+        'nama_sistem' => 'required|string|max:255',
+        'kendala' => 'required|string|max:255',
+        'keterangan' => 'required|string|max:255',
+        'foto_update.*' => 'nullable|file|mimes:jpg,jpeg,png|max:5120', // Validasi untuk file baru
+        'foto.*' => 'nullable|file|mimes:jpg,jpeg,png|max:5120', // Validasi untuk foto tambahan
+    ]);
 
-        // Validasi data
-        $data = $request->validate([
-            'tanggal_lapor' => 'required',
-            'nama_sistem' => 'required',
-            'kendala' => 'required',
-            'keterangan' => 'required',
-            'foto' => 'nullable|max:2048',
-        ]);
+    // Ambil data pelaporan yang ingin diupdate
+    $pelaporanInsidental = PelaporanInsidental::findOrFail($id);
 
-        // Update data pelaporan
-        $pelaporanInsidental->update($data);
+    // Ambil foto yang sudah ada dari database
+    $fotoArray = json_decode($pelaporanInsidental->foto, true) ?? [];
 
-        // Handle file dokumen
-        $files = [];
-       $totalSize = 0;
-
-// Cek jika ada file yang diunggah
-        if ($request->hasFile('foto')) {
-            // Hitung total ukuran file
-            foreach ($request->file('foto') as $file) {
-                $totalSize += $file->getSize();
-            }
-
-            // Konversi 5 MB ke bytes
-            $maxSize = 5 * 1024 * 1024;
-
-            // Periksa apakah total ukuran melebihi 5 MB
-            if ($totalSize > $maxSize) {
-                return back()->withErrors(['foto' => 'Total ukuran semua foto tidak boleh melebihi 5 MB.']);
-            }
-
-            // Jika ukuran file sudah sesuai, pindahkan file ke direktori yang diinginkan
-            foreach ($request->file('foto') as $file) {
-                if ($file->isValid()) {
-                    $dokumen = $file->getClientOriginalName();
-                    $file->move(public_path('foto'), $dokumen);
-                    $files[] = $dokumen;
+    // Update foto yang sudah ada
+    if ($request->has('foto_update')) {
+        foreach ($request->file('foto_update') as $index => $file) {
+            if ($file && isset($fotoArray[$index])) {
+                // Hapus foto lama dari server
+                if (file_exists(public_path('foto/' . $fotoArray[$index]))) {
+                    unlink(public_path('foto/' . $fotoArray[$index]));
                 }
-            }
-            $pelaporanInsidental->foto = implode(", ", $files);
-            $pelaporanInsidental->save();
-        }
 
-        return redirect()->route('pelaporan-insidental.index')->with('suksesubah', 'Data berhasil diubah');
+                // Simpan foto baru
+                $newFilename = time() . '-' . $file->getClientOriginalName();
+                $file->move(public_path('foto'), $newFilename);
+                $fotoArray[$index] = $newFilename;
+            }
+        }
     }
+
+    // Tambah foto baru ke daftar yang ada
+    if ($request->hasFile('foto')) {
+        foreach ($request->file('foto') as $file) {
+            if ($file->isValid()) {
+                $filename = time() . '-' . $file->getClientOriginalName();
+                $file->move(public_path('foto'), $filename);
+                $fotoArray[] = $filename;
+            }
+        }
+    }
+
+    // Simpan kembali foto yang sudah diupdate dan baru ke database dalam bentuk JSON
+    $pelaporanInsidental->foto = json_encode($fotoArray);
+
+    // Simpan data non-foto
+    $pelaporanInsidental->tanggal_lapor = $data['tanggal_lapor'];
+    $pelaporanInsidental->nama_sistem = $data['nama_sistem'];
+    $pelaporanInsidental->kendala = $data['kendala'];
+    $pelaporanInsidental->keterangan = $data['keterangan'];
+
+    // Simpan perubahan ke database
+    $pelaporanInsidental->save();
+
+    return redirect()->route('pelaporan-insidental.index')->with('suksestambah', 'Data berhasil diubah');
+}
+
+
+
 
     /**
      * Remove the specified resource from storage.

@@ -65,41 +65,44 @@
                         <table class="table row-table" id="table1">
                             <thead>
                                 <tr>
-                                    {{-- <th><input type="checkbox" id="selectAll"></th> --}}
+                                    <th>Tanggal Audit</th>
                                     <th>Judul</th>
+
                                     <th>Nama Sistem</th>
+                                    <th>Unit Kerja</th>
                                     <th>Versi</th>
                                     <th>Status</th>
                                     <th>Aksi</th>
-
                                 </tr>
                             </thead>
                             <tbody>
+
                                 @foreach ($laporan as $item)
                                     <tr>
-                                        {{-- <td><input type="checkbox" class="rowCheckbox" value="{{ $item->id }}"></td> --}}
+                                        <td>{{ Carbon::parse($item->tanggal_audit)->format('d-m-Y') }}</td>
                                         <td>{{ $item->judul }}</td>
                                         <td>{{ $item->kodeaudit->nama_sistem }}</td>
+                                        <td>{{ $item->unitkerja->username }}</td>
+
                                         <td>{{ $item->versi }}</td>
-                                        <td>{{ $item->status }}</td>
+                                        <td style="text-transform:capitalize ">{{ $item->status }}</td>
+
                                         <td>
-                                            <button type="button" class="btn btn-info tomboldetail" data-bs-toggle="modal"
-                                                data-bs-target="#full-scrn" data-id="{{ $item->id }}">
+                                            {{-- <button type="button" class="tomboldetail btn btn-info" data-bs-toggle="modal"
+                                                data-bs-target="#detailModal" data-id="{{ $item->id }}">Detail</button> --}}
+                                            <button type="button" class="btn btn btn-info tomboldetail"
+                                                data-bs-toggle="modal" data-bs-target="#full-scrn"
+                                                data-id="{{ $item->id }}">
                                                 Detail
                                             </button>
                                         </td>
-
-
-
                                     </tr>
                                 @endforeach
                             </tbody>
                         </table>
                     </div>
-
-
-
                 </div>
+
         </section>
         <!-- Basic Tables end -->
         <!-- Edit modal -->
@@ -228,7 +231,7 @@
             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-full" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="detailModalLabel">Detail Audit</h5>
+                        <h5 class="modal-title" id="detailModalLabel">Detail Pelaporan Audit</h5>
                         <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>

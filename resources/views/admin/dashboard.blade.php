@@ -12,6 +12,7 @@
         <hr>
         <section class="section">
 
+
             <div class="card mt-4">
                 <div class="card-body">
                     <div class="row">
@@ -88,6 +89,11 @@
         <div class="section">
             <div class="card">
                 <div class="card-body">
+                         @if(session()->has('hapusAkun'))
+                  <div class="alert alert-danger" role="alert">
+                {{ session('hapusAkun') }}
+            </div>
+            @endif
                     <div class="table-responsive">
                         <table class="table row-table" id="table1">
                             <thead>
@@ -163,7 +169,7 @@
                         Apakah Anda yakin ingin menghapus data ini?
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="batalBtn" >Batal</button>
                         <form id="deleteForm" action="" method="POST" style="display:inline;">
                             @csrf
                             @method('DELETE')
@@ -205,6 +211,7 @@
                                     <th>Versi</th>
                                     <th>Deskripsi</th>
                                     <th>Dokumen</th>
+                                    <th>Status</th>
                                     {{-- <th>Aksi</th> --}}
                                 </tr>
                             </thead>
@@ -217,11 +224,30 @@
                                         <td>{{ $item->deskripsi }}</td>
                                         <td>
                                             @php
-                                                $dokumens = explode(',', $item->dokumen);
+                                                $dokumenArray = json_decode($item->dokumen, true);
                                             @endphp
-                                            @foreach ($dokumens as $dokumen)
-                                                <a href="/dokumen/{{ $dokumen }}">{{ $dokumen }}</a><br>
-                                            @endforeach
+                                            <ul>
+                                                @foreach ($dokumenArray as $dokumen)
+                                                <li>
+                                                    <a href="/dokumen/{{ $dokumen }}">{{ $dokumen }}</a><br>
+                                                </li>
+                                                @endforeach
+                                            </ul>
+
+
+                                        </td>
+                                       <td>
+                                            @if ($item->status_approved == '1')
+                                                Pending
+                                            @elseif($item->status_approved == '2')
+                                                Diterima
+                                            @else
+                                                <a data-bs-toggle="modal" data-bs-target="#detailModal"
+                                                    data-id="{{ $item->id }}" type="button"
+                                                    class="detailDitolakRutin text-primary cursor-pointer">
+                                                    Ditolak
+                                                </a>
+                                            @endif
                                         </td>
                                         {{-- <td>
                                             <a href="{{ route('pelaporan-rutin.edit', $item->id) }}" class="btn btn-primary">
@@ -275,7 +301,8 @@
                                     <th>Kendala</th>
                                     <th>Keterangan</th>
                                     <th>Foto</th>
-                                    {{-- <th>Aksi</th> --}}
+                                    <th>Status</th>
+                                    <!-- {{-- <th>Aksi</th> --}} -->
                                 </tr>
                             </thead>
                             <tbody>
@@ -285,14 +312,32 @@
                                         <td>{{ $item->nama_sistem }}</td>
                                         <td>{{ $item->kendala }}</td>
                                         <td>{{ $item->keterangan }}</td>
-                                        <td>
-                                            @php
-                                                $fotos = explode(',', $item->foto);
-                                            @endphp
-                                            @foreach ($fotos as $foto)
-                                                <a href="/foto/{{ $foto }}">{{ $foto }}</a><br>
-                                            @endforeach
+                                       <td   @php
+        // Jika foto disimpan sebagai JSON atau string yang dipisahkan koma
+        $fotos = json_decode($item->foto, true) ?? explode(',', $item->foto);
+    @endphp
+                                            <ul>
+                                                @foreach ($fotos as $foto)
+                                                <li>
+                                                    <a href="/foto/{{ $foto }}">{{ $foto }}</a><br>
+                                                </li>
+                                                @endforeach
+                                            </ul>
                                         </td>
+                                           <td>
+                                            @if ($item->status_approved == '1')
+                                                Pending
+                                            @elseif($item->status_approved == '2')
+                                                Diterima
+                                            @else
+                                                <a data-bs-toggle="modal" data-bs-target="#detailModal"
+                                                    data-id="{{ $item->id }}" type="button"
+                                                    class="detailDitolakInsidental text-primary cursor-pointer">
+                                                    Ditolak
+                                                </a>
+                                            @endif
+                                        </td>
+
                                         {{-- <td>
                                             <a href="{{ route('pelaporan-insidental.edit', $item->id) }}" class="btn btn-primary">
                                                 <i class="bi bi-pencil-fill"></i>
@@ -416,6 +461,25 @@
                 </div>
             </div>
         </section>
+          <div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="detailModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="detailModalLabel">Alasan Penolakan</h5>
+                            <button type="button" onclick="resetIsi()" class="close" data-bs-dismiss="modal"
+                                aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p class="alasanditolak">
+                                Tunggu Sebentar...
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
         <!-- modal penolakan -->
         <div class="modal fade" id="penolakanModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel"
@@ -424,15 +488,13 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="deleteModalLabel">Alasan Penolakan</h5>
-                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+
                     </div>
                     <div class="modal-body">
                         <textarea class="form-control" id="alasanTolak" rows="3"></textarea>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="batalBtn" >Batal</button>
                         <form id="deleteForm" action="" method="POST" style="display:inline;">
 
                             <button type="button" id="tombolTolak" class="btn btn-danger">Konfirmasi</button>
@@ -449,6 +511,10 @@
 
 
     <script>
+          document.getElementById('batalBtn').addEventListener('click', function () {
+        // Refresh halaman setelah modal ditutup
+        window.location.reload();
+    });
         $(".tombolhapus").click(function() {
             console.log("kocak");
             var id = $(this).data("id");
@@ -457,12 +523,59 @@
             var action = "{{ route('hapus-user', '') }}/" + id;
             form.attr('action', action);
         });
+         $(".detailDitolakRutin").click(function() {
+            var id = $(this).data('id');
+            var url = "{{ route('pengajuanRutin.alasantolak') }}";
+            $.ajax({
+                url: url,
+                type: "GET",
+                data: {
+                    id: id,
+                    _token: '{{ csrf_token() }}',
+                },
+                success: function(response) {
+                    console.log(response)
+                    $(".alasanditolak").html(response);
+                },
+                error: function(error) {
+                    console.log(error);
+
+                }
+            })
+            console.log(id);
+
+        })
+          $(".detailDitolakInsidental").click(function() {
+            var id = $(this).data('id');
+            var url = "{{ route('pengajuanInsidental.alasantolak') }}";
+            $.ajax({
+                url: url,
+                type: "GET",
+                data: {
+                    id: id,
+                    _token: '{{ csrf_token() }}',
+                },
+                success: function(response) {
+                    console.log(response)
+                    $(".alasanditolak").html(response);
+                },
+                error: function(error) {
+                    console.log(error);
+
+                }
+            })
+            console.log(id);
+
+        })
 
         // Ubah status
         $(".statusAkun").change(function() {
             var value = $(this).val();
             var id = $(this).data('id');
-            var modalTolak = new bootstrap.Modal(document.getElementById('penolakanModal'));
+            var modalTolak = new bootstrap.Modal(document.getElementById('penolakanModal'), {
+                backdrop : 'static',
+                keyboard : false
+            });
             console.log(id);
             const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
@@ -492,10 +605,12 @@
         'Sukses!',
         'Akun ditolak!',
         'success'
-    );
-    setTimeout(() => {
-        window.location.reload();
-    }, 500);
+    ).then((result) => {
+        if(result.isConfirmed || result.isDismissed){
+            window.location.reload();
+        }
+    });;;
+
                             },
                             error: function(err) {
                                 console.log(err);
@@ -518,10 +633,12 @@
         'Sukses!',
         'Berhasil mengubah status akun!',
         'success'
-    );
-    setTimeout(() => {
-        window.location.reload();
-    }, 500);
+    ).then((result) => {
+        if(result.isConfirmed || result.isDismissed){
+            window.location.reload();
+        }
+    });;;
+
                     },
                     error: function(err) {
                         console.log(err);

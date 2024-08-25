@@ -358,8 +358,8 @@
                      ${response.auditInsidental[0].rekomendasi}</textarea>
                 </div>
                 <div class="form-group">
-                    <label for="kesimpulan" class="form-label">Kesimpulan</label>
-                    <textarea name="kesimpulan_audit" id="kesimpulan" class="form-control ckeditor" placeholder="Kesimpulan">
+                    <label for="kesimpulan" class="form-label">Kesimpulan Audit</label>
+                    <textarea name="kesimpulan_audit" id="kesimpulan" class="form-control ckeditor" placeholder="Kesimpulan Audit">
                      ${response.auditInsidental[0].kesimpulan_audit}</textarea>
                 </div>
 
@@ -496,8 +496,8 @@
                     </textarea>
                 </div>
                 <div class="form-group">
-                    <label for="kesimpulan" class="form-label">Kesimpulan</label>
-                    <textarea name="kesimpulan_audit" id="kesimpulan" class="form-control ckeditor" placeholder="Kesimpulan">
+                    <label for="kesimpulan" class="form-label">Kesimpulan Audit</label>
+                    <textarea name="kesimpulan_audit" id="kesimpulan" class="form-control ckeditor" placeholder="Kesimpulan Audit">
                     ${response.auditProses.kesimpulan_audit}
                     </textarea>
                 </div>
@@ -633,8 +633,8 @@
                     </textarea>
                 </div>
                 <div class="form-group">
-                    <label for="kesimpulan" class="form-label">Kesimpulan</label>
-                    <textarea name="kesimpulan_audit" id="kesimpulan" class="form-control ckeditor" placeholder="Kesimpulan">
+                    <label for="kesimpulan" class="form-label">Kesimpulan Audit</label>
+                    <textarea name="kesimpulan_audit" id="kesimpulan" class="form-control ckeditor" placeholder="Kesimpulan Audit">
 
                     </textarea>
                 </div>

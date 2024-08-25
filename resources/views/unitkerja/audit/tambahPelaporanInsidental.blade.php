@@ -53,11 +53,15 @@
                             <input type="longText" name="keterangan" id="keterangan" class="form-control"
                                 placeholder="keterangan" required>
                         </div>
-                        <div class="form-group">
-                            <label for="foto" class="form-label">Foto</label>
-                            <input type="file" name="foto[]" id="foto" class="form-control" placeholder="foto"
-                                required multiple>
-                        </div>
+                       <div class="form-group" id="fileInputsContainer">
+        <label for="foto" class="form-label">Foto</label>
+        <input type="file" name="foto[]" id="fotoInput" class="form-control mb-2" multiple>
+    </div>
+
+    <!-- Tombol untuk menambah input file -->
+    <div class="form-group">
+        <button type="button" class="btn btn-secondary" id="addFileInputBtn">Tambah File</button>
+    </div>
                         <div class="form-group">
                             <button type="submit" class="btn btn-primary">Tambah</button>
                         </div>
@@ -65,4 +69,17 @@
                 </div>
             </div>
         </div>
+        <script>
+    document.getElementById('addFileInputBtn').addEventListener('click', function () {
+        // Buat elemen input file baru
+        var newFileInput = document.createElement('input');
+        newFileInput.type = 'file';
+        newFileInput.name = 'foto[]';
+        newFileInput.classList.add('form-control', 'mb-2');
+        newFileInput.multiple = true;
+
+        // Tambahkan input file baru ke container
+        document.getElementById('fileInputsContainer').appendChild(newFileInput);
+    });
+</script>
     @endsection

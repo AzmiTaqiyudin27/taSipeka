@@ -99,7 +99,7 @@ class UserController extends Controller
     $user->unit_kerja()->delete();
     $user->auditsRutin()->delete();
         $user->delete();
-        return redirect()->back()->with('success', 'Akun berhasil dihapus');
+        return redirect()->back()->with('hapusAkun', 'Akun berhasil dihapus');
     }
 
     public function activate($id){
@@ -119,10 +119,10 @@ class UserController extends Controller
 
 
     }
-    
+
     public function changeStatus(Request $request, $id){
         $user = User::findOrFail($id);
-      
+
         if($user){
             $user->is_active = $request->status;
             if($request->alasan){

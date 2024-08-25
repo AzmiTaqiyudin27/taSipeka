@@ -1,3 +1,7 @@
+
+@php
+    use Carbon\Carbon;
+@endphp
 @extends('admin.admin_layout')
 @section('content')
     <div class="page-heading">
@@ -51,14 +55,16 @@
 
 
             <div class="card mt-4">
-                <div class="card-body">
+                  <div class="card-body">
                     <div class="table-responsive">
                         <table class="table row-table" id="table1">
                             <thead>
                                 <tr>
+                                    <th>Tanggal Audit</th>
                                     <th>Judul</th>
 
                                     <th>Nama Sistem</th>
+                                    <th>Unit Kerja</th>
                                     <th>Versi</th>
                                     <th>Status</th>
                                     <th>Aksi</th>
@@ -68,9 +74,11 @@
 
                                 @foreach ($laporan as $item)
                                     <tr>
+                                        <td>{{ Carbon::parse($item->tanggal_audit)->format('d-m-Y') }}</td>
                                         <td>{{ $item->judul }}</td>
 
                                         <td>{{ $item->nama_sistem }}</td>
+                                        <td>{{ $item->unitkerja }}</td>
                                         <td>{{ $item->versi }}</td>
                                         <td>{{ $item->status }}</td>
 
@@ -104,7 +112,7 @@
                 <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-full" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="detailModalLabel">Detail Audit</h5>
+                            <h5 class="modal-title" id="detailModalLabel">Detail Pelaporan Audit</h5>
                             <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -156,17 +164,14 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="detailModalLabel">Detail Audit</h5>
+                        <h5 class="modal-title" id="detailModalLabel">Detail Pelaporan Audit</h5>
                         <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
                         <table class="table row-table">
-                            <tr>
-                                <td>Unit Kerja</td>
-                                <td> <span id="detailUnit"></span></td>
-                            </tr>
+
                             <tr>
                                 <td>Pendahuluan</td>
                                 <td>: <span id="detailPendahuluan"></span></td>

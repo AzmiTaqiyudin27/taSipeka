@@ -115,11 +115,20 @@
                                         <td>{{ $item->deskripsi }}</td>
                                         <td>
                                             @php
-                                                $dokumens = explode(',', $item->dokumen);
+                                                $dokumenArray = json_decode($item->dokumen, true);
+
+
                                             @endphp
-                                            @foreach ($dokumens as $dokumen)
-                                                <a href="/dokumen/{{ $dokumen }}">{{ $dokumen }}</a><br>
-                                            @endforeach
+                                            <ul>
+
+                                                @foreach ($dokumenArray as $dokumen)
+                                                <li>
+                                                    <a href="/dokumen/{{ $dokumen }}">{{ $dokumen }}</a><br>
+                                                </li>
+                                                @endforeach
+                                            </ul>
+
+
                                         </td>
 
                                         <td>
@@ -200,13 +209,17 @@
                                         <td>{{ $item->nama_sistem }}</td>
                                         <td>{{ $item->kendala }}</td>
                                         <td>{{ $item->keterangan }}</td>
-                                        <td>
-                                            @php
-                                                $fotos = explode(',', $item->foto);
-                                            @endphp
-                                            @foreach ($fotos as $foto)
-                                                <a href="/foto/{{ $foto }}">{{ $foto }}</a><br>
-                                            @endforeach
+                                        <td   @php
+        // Jika foto disimpan sebagai JSON atau string yang dipisahkan koma
+        $fotos = json_decode($item->foto, true) ?? explode(',', $item->foto);
+    @endphp
+                                            <ul>
+                                                @foreach ($fotos as $foto)
+                                                <li>
+                                                    <a href="/foto/{{ $foto }}">{{ $foto }}</a><br>
+                                                </li>
+                                                @endforeach
+                                            </ul>
                                         </td>
 
                                         <td>
@@ -259,7 +272,7 @@
                         <textarea class="form-control" id="alasanTolak" rows="3"></textarea>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="batalBtn" >Batal</button>
                         <form id="deleteForm" action="" method="POST" style="display:inline;">
 
                             <button type="button" id="tombolTolak" class="btn btn-danger">Konfirmasi</button>
@@ -293,7 +306,7 @@
                         <table class="table row-table" id="table13">
                             <thead>
                                 <tr>
-                                    <th>Tanggal Pelaporan</th>
+                                    <th>Tanggal Audit</th>
                                     <th>Nama Sistem</th>
                                     <th>Judul</th>
                                     <th>Versi</th>
@@ -342,7 +355,7 @@
                         <table class="table row-table" id="table14">
                             <thead>
                                 <tr>
-                                    <th>Tanggal Pelaporan</th>
+                                    <th>Tanggal Audit</th>
                                     <th>Nama Sistem</th>
                                     <th>Judul</th>
                                     <th>Versi</th>
@@ -380,6 +393,10 @@
 
     <script>
         console.log("lah");
+          document.getElementById('batalBtn').addEventListener('click', function () {
+        // Refresh halaman setelah modal ditutup
+        window.location.reload();
+    });
 
         $(".status").change(function() {
             var modalTolak = new bootstrap.Modal(document.getElementById('penolakanModal'));
@@ -413,10 +430,12 @@
         'Sukses!',
         'Pengajuan telah ditolak!',
         'success'
-    );
-    setTimeout(() => {
-        window.location.reload();
-    }, 500);
+    ).then((result) => {
+        if(result.isConfirmed || result.isDismissed){
+            window.location.reload();
+        }
+    });;
+
 
                             },
                             error: function(err) {
@@ -441,10 +460,12 @@
         'Sukses!',
         'Status berhasil diperbarui',
         'success'
-    );
-    setTimeout(() => {
-        window.location.reload();
-    }, 500);
+    ).then((result) => {
+        if(result.isConfirmed || result.isDismissed){
+            window.location.reload();
+        }
+    });;
+
                     },
                     error: function() {
                         alert("Gagal diperbarui");
@@ -487,10 +508,12 @@
         'Sukses!',
         'Pengajuan telah ditolak!',
         'success'
-    );
-    setTimeout(() => {
-        window.location.reload();
-    }, 500);
+    ).then((result) => {
+        if(result.isConfirmed || result.isDismissed){
+            window.location.reload();
+        }
+    });;
+
                             },
                             error: function(err) {
                                 console.log(err);
@@ -514,10 +537,12 @@
         'Sukses!',
         'Status berhasil diperbarui!',
         'success'
-    );
-    setTimeout(() => {
-        window.location.reload();
-    }, 500);
+    ).then((result) => {
+        if(result.isConfirmed || result.isDismissed){
+            window.location.reload();
+        }
+    });;
+
                     },
                     error: function(error) {
                         console.error(error);

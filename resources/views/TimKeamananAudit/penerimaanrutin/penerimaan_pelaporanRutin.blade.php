@@ -14,7 +14,7 @@
                     <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="/auth/auth/dashboard-audit">Dashboard</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">Pelaporan Audit Sistem Informasi Rutin
+                            <li class="breadcrumb-item active" aria-current="page">Penerimaan Pengajuan Audit Sistem Informasi Rutin
                             </li>
                         </ol>
                     </nav>
@@ -63,13 +63,22 @@
                                         <td>{{ $item->nama_sistem }}</td>
                                         <td>{{ $item->versi }}</td>
                                         <td>{{ $item->deskripsi }}</td>
-                                        <td style="word-wrap: break-word; width: 30px; overflow-x: hidden;">
+                                         <td>
                                             @php
-                                                $dokumens = explode(',', $item->dokumen);
+                                                $dokumenArray = json_decode($item->dokumen, true);
+
+
                                             @endphp
-                                            @foreach ($dokumens as $dokumen)
-                                                <a href="/dokumen/{{ $dokumen }}">File {{$loop->index + 1}}</a><br>
-                                            @endforeach
+                                            <ul>
+
+                                                @foreach ($dokumenArray as $dokumen)
+                                                <li>
+                                                    <a href="/dokumen/{{ $dokumen }}">{{ $dokumen }}</a><br>
+                                                </li>
+                                                @endforeach
+                                            </ul>
+
+
                                         </td>
                                         <td>
                                             <select name="status_approved" data-id="{{ $item->id }}"
@@ -100,15 +109,13 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="deleteModalLabel">Alasan Penolakan</h5>
-                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
+
                         </div>
                         <div class="modal-body">
                             <textarea class="form-control" id="alasanTolak" rows="3"></textarea>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                            <button type="button" class="btn btn-secondary" id="batalBtn" data-bs-dismiss="modal">Batal</button>
                             <form id="deleteForm" action="" method="POST" style="display:inline;">
 
                                 <button type="button" id="tombolTolak" class="btn btn-danger">Konfirmasi</button>
@@ -129,9 +136,16 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
+         document.getElementById('batalBtn').addEventListener('click', function () {
+        // Refresh halaman setelah modal ditutup
+        window.location.reload();
+    });
         console.log("lah");
         $(".status").change(function() {
-            var modalTolak = new bootstrap.Modal(document.getElementById('penolakanModal'));
+            var modalTolak = new bootstrap.Modal(document.getElementById('penolakanModal'), {
+             backdrop: 'static', // Mengatur backdrop agar tidak bisa diklik
+            keyboard: false // Mengatur agar tidak bisa ditutup dengan keyboard
+            });
             var id = $(this).data("id");
             var status = $(this).val();
 
@@ -161,10 +175,12 @@
         'Sukses',
         'Pengajuan telah ditolak!',
         'success'
-    );
-                                  setTimeout(() => {
-        window.location.reload();
-    }, 500)
+    ).then((result) => {
+        if(result.isConfirmed || result.isDismissed){
+            window.location.reload();
+        }
+    });;
+
                             },
                             error: function(err) {
                                 console.log(err);
@@ -188,10 +204,12 @@
         'Sukses',
         'Berhasil Memperbarui Status!',
         'success'
-    );
-    setTimeout(() => {
-        window.location.reload();
-    }, 500)
+    ).then((result) => {
+        if(result.isConfirmed || result.isDismissed){
+            window.location.reload();
+        }
+    });;
+
 
                         console.log("berhasil memperbarui status")
                     },

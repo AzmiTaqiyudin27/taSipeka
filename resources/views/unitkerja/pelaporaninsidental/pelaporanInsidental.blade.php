@@ -76,13 +76,17 @@
                                         <td>{{ $item->nama_sistem }}</td>
                                         <td>{{ $item->kendala }}</td>
                                         <td>{{ $item->keterangan }}</td>
-                                        <td>
-                                            @php
-                                                $fotos = explode(',', $item->foto);
-                                            @endphp
-                                            @foreach ($fotos as $foto)
-                                                <a href="/foto/{{ $foto }}">{{ $foto }}</a><br>
-                                            @endforeach
+                                        <td   @php
+        // Jika foto disimpan sebagai JSON atau string yang dipisahkan koma
+        $fotos = json_decode($item->foto, true) ?? explode(',', $item->foto);
+    @endphp
+                                            <ul>
+                                                @foreach ($fotos as $foto)
+                                                <li>
+                                                    <a href="/foto/{{ $foto }}">{{ $foto }}</a><br>
+                                                </li>
+                                                @endforeach
+                                            </ul>
                                         </td>
                                         <td>
                                             @if ($item->status_approved == '1')
@@ -152,6 +156,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
         integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+           <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         function resetIsi() {
             $(".alasanditolak").html("Tunggu Sebentar...");
@@ -167,8 +172,15 @@
                     _token: '{{ csrf_token() }}',
                 },
                 success: function(response) {
-                    alert("Berhasil menghapus pengajuan ditolak");
-                    window.location.reload();
+                     Swal.fire(
+        'Sukses!',
+        'Pengajuan dihapus!',
+        'success'
+    ).then((result) => {
+        if(result.isConfirmed || result.isDismissed){
+            window.location.reload();
+        }
+    });
                 },
                 error: function(error) {
                     console.log(error);
