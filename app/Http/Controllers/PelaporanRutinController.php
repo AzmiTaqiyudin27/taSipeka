@@ -129,7 +129,8 @@ class PelaporanRutinController extends Controller
         // Jika file sesuai dengan aturan, simpan setiap file di direktori yang diinginkan
         foreach ($request->file('dokumen') as $file) {
             if ($file->isValid()) {
-                $dokumen = time() . '-' . $file->getClientOriginalName(); // Buat nama unik dengan timestamp
+                $dokumen = $file->getClientOriginalName(); 
+                // $dokumen = time() . '-' . $file->getClientOriginalName(); // Buat nama unik dengan timestamp
                 $file->move(public_path('dokumen'), $dokumen); // Pindahkan file ke folder publik
                 $files[] = $dokumen; // Tambahkan nama file ke array
             }
@@ -197,6 +198,7 @@ class PelaporanRutinController extends Controller
                 }
 
                 // Simpan file baru
+                // $newFilename = time() . '-' . $file->getClientOriginalName();
                 $newFilename = time() . '-' . $file->getClientOriginalName();
                 $file->move(public_path('dokumen'), $newFilename);
                 $dokumenArray[$index] = $newFilename;
@@ -208,6 +210,7 @@ class PelaporanRutinController extends Controller
     if ($request->hasFile('dokumen')) {
         foreach ($request->file('dokumen') as $file) {
             if ($file->isValid()) {
+                // $filename = time() . '-' . $file->getClientOriginalName();
                 $filename = time() . '-' . $file->getClientOriginalName();
                 $file->move(public_path('dokumen'), $filename);
                 $dokumenArray[] = $filename;

@@ -71,11 +71,7 @@ public function authenticate(Request $request): RedirectResponse
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         return redirect('/login');
-    }
-
-    public function me()
-    {
-        return response()->json(Auth::user());
+        // bisa ditulis pakai ini return redirect()->to("/login") ini pake nama url kalo atasnya nama route nya
     }
 
     public function register(Request $request): RedirectResponse

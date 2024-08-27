@@ -75,6 +75,7 @@ $role = auth()->user()->role;
 
         // Buat instance baru dari model AuditRutin
         $auditRutin = new AuditRutin();
+        //new AuditRutin 
         $auditRutin->user_id = $validatedData['user_id'];
         $auditRutin->unitkerja_id = $validatedData['unitkerja_id'];
         $auditRutin->judul = $validatedData['judul'];
@@ -159,6 +160,8 @@ $role = auth()->user()->role;
 
         return response($auditRutin);
     }
+
+    
 
     public function getAudit($id){
         $auditRutin = AuditRutin::where('kode_audit', $id)->where('status', 'draft')->get();

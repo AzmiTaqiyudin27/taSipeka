@@ -14,14 +14,14 @@ class HasilAuditInsidentalController extends Controller
         public function index(){ $role = auth()->user()->role;
 
         if ($role == 'admin') {
-        $view = 'admin.hasilaudit.admin_hasilinsidental';
+        $view = 'admin.hasilinsidental.admin_hasilinsidental';
     } else if ($role == 'pimpinan') {
-        $view = 'pimpinan.hasilaudit.pimpinan_hasilinsidental';
+        $view = 'pimpinan.hasilinsidental.pimpinan_hasilinsidental';
     } else if ($role == 'unitkerja') {
         $view = 'unitkerja.hasilinsidental.unitkerja_hasilinsidental';
 
     } else if ($role == 'rektor') {
-        $view = 'rektor.hasilaudit.pimpinan_hasilinsidental';
+        $view = 'rektor.hasilinsidental.rektor_hasilinsidental';
     } else {
         $view = 'TimKeamananAudit.hasilinsidental.keamananaudit_hasilInsidental';
     }

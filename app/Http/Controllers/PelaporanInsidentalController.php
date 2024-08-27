@@ -95,7 +95,8 @@ class PelaporanInsidentalController extends Controller
                 }
 
                 // Simpan file di direktori 'public/foto' dengan nama unik
-                $filename = time() . '-' . $file->getClientOriginalName();
+                $filename =  $file->getClientOriginalName();
+                // $filename = time() . '-' . $file->getClientOriginalName();
                 $file->move(public_path('foto'), $filename);
 
                 // Tambahkan nama file ke array
@@ -166,7 +167,8 @@ class PelaporanInsidentalController extends Controller
                 }
 
                 // Simpan foto baru
-                $newFilename = time() . '-' . $file->getClientOriginalName();
+                // $newFilename = time() . '-' . $file->getClientOriginalName();
+                $newFilename =  $file->getClientOriginalName();
                 $file->move(public_path('foto'), $newFilename);
                 $fotoArray[$index] = $newFilename;
             }
@@ -177,7 +179,8 @@ class PelaporanInsidentalController extends Controller
     if ($request->hasFile('foto')) {
         foreach ($request->file('foto') as $file) {
             if ($file->isValid()) {
-                $filename = time() . '-' . $file->getClientOriginalName();
+                // $filename = time() . '-' . $file->getClientOriginalName();
+                $filename =  $file->getClientOriginalName();
                 $file->move(public_path('foto'), $filename);
                 $fotoArray[] = $filename;
             }

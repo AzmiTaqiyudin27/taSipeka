@@ -27,18 +27,18 @@ class HasilAuditRutinController extends Controller
         $listUnitkerja = User::where('role', 'unitkerja')->get();
 
         if ($role == 'admin') {
-        $view = 'admin.hasilaudit.unitkerja_hasilRutin';
+        $view = 'admin.hasilrutin.admin_hasilRutin';
     } else if ($role == 'pimpinan') {
-        $view = 'pimpinan.hasilaudit.unitkerja_hasilRutin';
+        $view = 'pimpinan.hasilrutin.pimpinan_hasilRutin';
     } else if ($role == 'unitkerja') {
-        $view = 'unitkerja.hasilaudit.unitkerja_hasilRutin';
+        $view = 'unitkerja.hasilrutin.unitkerja_hasilRutin';
 
     } else if ($role == 'rektor') {
-        $view = 'rektor.hasilaudit.unitkerja_hasilRutin';
+        $view = 'rektor.hasilrutin.rektor_hasilRutin';
     }
 
     else {
-        $view = 'TimKeamananAudit.hasilaudit.keamananaudit_hasilRutin';
+        $view = 'TimKeamananAudit.hasilrutin.keamananaudit_hasilRutin';
     }
 
     // $laporan = DB::table('kode_audits')

@@ -93,7 +93,7 @@
                                         <td>
 
                                             <button type="button" class="tomboledit btn btn-warning" data-bs-toggle="modal"
-                                                data-bs-target="#editModal" data-id="{{ $item->id }}">Edit</button>
+                                                data-bs-target="#editModal" data-id="{{ $item->id }}">Ubah</button>
                                             <button type="button" class="tombolhapus btn btn-danger" data-bs-toggle="modal"
                                                 data-bs-target="#deleteModal" data-id="{{ $item->id }}">Hapus</button>
 
@@ -139,7 +139,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="deleteModalLabel">Edit Akun</h5>
+                        <h5 class="modal-title" id="deleteModalLabel">Ubah Akun</h5>
                         <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -155,7 +155,7 @@
                                     placeholder="Email" required>
                             </div>
                             <div class="form-group">
-                                <label for="nama_sistem_edit" class="form-label">Nama</label>
+                                <label for="nama_sistem_edit" class="form-label">Username</label>
                                 <input type="text" name="username_edit" id="nama" class="form-control"
                                     placeholder="Nama" required>
                             </div>
@@ -182,7 +182,7 @@
 
 
                             <div class="form-group">
-                                <button type="submit" class="btn btn-primary">Edit</button>
+                                <button type="submit" class="btn btn-primary">Ubah</button>
                                 <button type="button" class="btn btn-info editpassword">Ubah Password</button>
                             </div>
                         </form>
