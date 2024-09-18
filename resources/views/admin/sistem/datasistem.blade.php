@@ -75,7 +75,7 @@
                                 @foreach ($laporan as $item)
                                     <tr>
                                         {{-- <td><input type="checkbox" class="rowCheckbox" value="{{ $item->id }}"></td> --}}
-                                        <td>{{ $item->kode_audit_rutin }}</td>
+                                        <td>{{ $item->kode_audit }}</td>
                                         <td>{{ $item->nama_sistem }}</td>
                                         <td>{{ $item->audit_rutin_count }}</td>
                                     </tr>
@@ -106,7 +106,7 @@
                             @method('PUT')
                             <div class="form-group">
                                 <label for="kode_audit_edit" class="form-label">Kode Audit</label>
-                                <input type="text" name="kode_audit_rutin" id="kode_audit_edit" class="form-control"
+                                <input type="text" name="kode_audit" id="kode_audit_edit" class="form-control"
                                     placeholder="Kode Audit" required>
                             </div>
                             <div class="form-group">
@@ -163,7 +163,7 @@
 
                             <div class="form-group">
                                 <label for="kode_audit_edit" class="form-label">Kode Audit</label>
-                                <input type="text" name="kode_audit_rutin" id="kode_audit" class="form-control"
+                                <input type="text" name="kode_audit" id="kode_audit" class="form-control"
                                     placeholder="Kode Audit" required>
                             </div>
                             <div class="form-group">
@@ -240,7 +240,7 @@
                 success: function(response) {
                     // Assuming response is JSON, you can parse and display it as needed
                     console.log(response);
-                    $("#kode_audit_edit").val(response.kode_audit_rutin);
+                    $("#kode_audit_edit").val(response.kode_audit);
                     $("#nama_sistem_edit").val(response.nama_sistem);
 
 

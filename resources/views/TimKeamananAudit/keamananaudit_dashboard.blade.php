@@ -27,7 +27,7 @@
                         <div class="card mx-1 bg-info text-white col-md-3 col-lg-2">
                             <div class="card-body">
                                 <h5 class="card-title">
-                                    Jumlah Audit Rutin
+                                    Jumlah Penlaporan Audit Rutin
                                 </h5>
                                 <p class="card-text">
                                     {{ $jumlahaudit }}
@@ -37,7 +37,7 @@
                         <div class="card mx-1 bg-primary text-white col-md-3 col-lg-2">
                             <div class="card-body">
                                 <h5 class="card-title">
-                                    Jumlah Audit Insidental
+                                    Jumlah Pelaporan Audit Insidental
                                 </h5>
                                 <p class="card-text">
                                     {{ $jumlahinsidental }}
@@ -47,20 +47,20 @@
                         <div class="card mx-1 bg-info text-white col-md-3 col-lg-2">
                             <div class="card-body">
                                 <h5 class="card-title">
-                                    Jumlah Pelaporan Rutin
+                                    Jumlah Pengajuan Rutin
                                 </h5>
                                 <p class="card-text">
-                                    {{ $jumlahpelaporanrutin }}
+                                    {{ $jumlahpengajuanrutin }}
                                 </p>
                             </div>
                         </div>
                         <div class="card mx-1 bg-primary text-white col-md-3 col-lg-2">
                             <div class="card-body">
                                 <h5 class="card-title">
-                                    Jumlah Pelaporan Insidental
+                                    Jumlah Pengajuan Insidental
                                 </h5>
                                 <p class="card-text">
-                                    {{ $jumlahpelaporaninsidental }}
+                                    {{ $jumlahpengajuaninsidental }}
                                 </p>
                             </div>
                         </div>

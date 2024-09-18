@@ -57,7 +57,7 @@
                                 @foreach ($laporan as $item)
                                     <tr>
                                         <td>{{ $item->judul }}</td>
-                                        <td>{{ $item->kode_audit_rutin }}</td>
+                                        <td>{{ $item->kode_audit }}</td>
                                         <td>{{ $item->nama_sistem }}</td>
 
                                         <td>

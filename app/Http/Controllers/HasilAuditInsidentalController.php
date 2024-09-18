@@ -14,16 +14,16 @@ class HasilAuditInsidentalController extends Controller
         public function index(){ $role = auth()->user()->role;
 
         if ($role == 'admin') {
-        $view = 'admin.hasilinsidental.admin_hasilinsidental';
+        $view = 'admin.hasilaudit.hasilinsidental';
     } else if ($role == 'pimpinan') {
-        $view = 'pimpinan.hasilinsidental.pimpinan_hasilinsidental';
+        $view = 'pimpinan.hasilaudit.hasilinsidental';
     } else if ($role == 'unitkerja') {
-        $view = 'unitkerja.hasilinsidental.unitkerja_hasilinsidental';
+        $view = 'unitkerja.hasilaudit.hasilinsidental';
 
     } else if ($role == 'rektor') {
-        $view = 'rektor.hasilinsidental.rektor_hasilinsidental';
+        $view = 'rektor.hasilaudit.hasilinsidental';
     } else {
-        $view = 'TimKeamananAudit.hasilinsidental.keamananaudit_hasilInsidental';
+        $view = 'TimKeamananAudit.hasilaudit.hasilInsidental';
     }
         $laporan = KodeAudit::all();
         $unitkerja = User::where('role', 'unitkerja')->get();
@@ -40,7 +40,7 @@ class HasilAuditInsidentalController extends Controller
 
         if($role == "unitkerja"){
               $auditInsidental = DB::table('audit_insidentals')
-    // ->join('kode_audits', 'audit_insidentals.kode_audit', '=', 'kode_audits.kode_audit_rutin')
+    // ->join('kode_audits', 'audit_insidentals.kode_audit', '=', 'kode_audits.kode_audit')
     ->join('users as user_creator', 'audit_insidentals.user_id', '=', 'user_creator.id')
     ->join('users as unitkerja', 'audit_insidentals.unitkerja_id', '=', 'unitkerja.id')
     ->select('audit_insidentals.*', 'user_creator.username as creator_username', 'unitkerja.username as unitkerja_name')
@@ -51,7 +51,7 @@ class HasilAuditInsidentalController extends Controller
 }
     else if($role == "pimpinan"){
               $auditInsidental = DB::table('audit_insidentals')
-    // ->join('kode_audits', 'audit_insidentals.kode_audit', '=', 'kode_audits.kode_audit_rutin')
+    // ->join('kode_audits', 'audit_insidentals.kode_audit', '=', 'kode_audits.kode_audit')
     ->join('users as user_creator', 'audit_insidentals.user_id', '=', 'user_creator.id')
     ->join('users as unitkerja', 'audit_insidentals.unitkerja_id', '=', 'unitkerja.id')
     ->select('audit_insidentals.*', 'user_creator.username as creator_username', 'unitkerja.username as unitkerja_name')
@@ -63,7 +63,7 @@ class HasilAuditInsidentalController extends Controller
 
 else{
               $auditInsidental = DB::table('audit_insidentals')
-    // ->join('kode_audits', 'audit_insidentals.kode_audit', '=', 'kode_audits.kode_audit_rutin')
+    // ->join('kode_audits', 'audit_insidentals.kode_audit', '=', 'kode_audits.kode_audit')
     ->join('users as user_creator', 'audit_insidentals.user_id', '=', 'user_creator.id')
     ->join('users as unitkerja', 'audit_insidentals.unitkerja_id', '=', 'unitkerja.id')
     ->select('audit_insidentals.*', 'user_creator.username as creator_username', 'unitkerja.username as unitkerja_name')

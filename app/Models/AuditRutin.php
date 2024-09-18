@@ -24,7 +24,7 @@ class AuditRutin extends Model
 
     public function kodeAudit()
     {
-        return $this->belongsTo(KodeAudit::class, 'kode_audit', 'kode_audit_rutin');
+        return $this->belongsTo(KodeAudit::class, 'kode_audit', 'kode_audit');
     }
     public function unitkerja(){
         return $this->belongsTo(User::class, 'unitkerja_id');

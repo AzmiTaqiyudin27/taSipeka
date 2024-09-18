@@ -27,25 +27,25 @@ class HasilAuditRutinController extends Controller
         $listUnitkerja = User::where('role', 'unitkerja')->get();
 
         if ($role == 'admin') {
-        $view = 'admin.hasilrutin.admin_hasilRutin';
+        $view = 'admin.hasilaudit.hasilRutin';
     } else if ($role == 'pimpinan') {
-        $view = 'pimpinan.hasilrutin.pimpinan_hasilRutin';
+        $view = 'pimpinan.hasilaudit.hasilRutin';
     } else if ($role == 'unitkerja') {
-        $view = 'unitkerja.hasilrutin.unitkerja_hasilRutin';
+        $view = 'unitkerja.hasilaudit.hasilRutin';
 
     } else if ($role == 'rektor') {
-        $view = 'rektor.hasilrutin.rektor_hasilRutin';
+        $view = 'rektor.hasilaudit.hasilRutin';
     }
 
     else {
-        $view = 'TimKeamananAudit.hasilrutin.keamananaudit_hasilRutin';
+        $view = 'TimKeamananAudit.hasilaudit.keamananaudit_hasilRutin';
     }
 
     // $laporan = DB::table('kode_audits')
     //     ->select('kode_audits.*', DB::raw('
     //         (SELECT count(*)
     //          FROM audit_rutins
-    //          WHERE kode_audits.kode_audit_rutin = audit_rutins.kode_audit
+    //          WHERE kode_audits.kode_audit = audit_rutins.kode_audit
     //         ) as audit_rutin_count
     //     '))
     //     ->get();
@@ -60,7 +60,7 @@ class HasilAuditRutinController extends Controller
     }
 
     public function show($kode){
-        $kodeAudit = KodeAudit::where("kode_audit_rutin", $kode)->first();
+        $kodeAudit = KodeAudit::where("kode_audit", $kode)->first();
         $auditProses = AuditRutin::where("kode_audit", $kode)->where("status", "proses")->get();
         $auditDiedit = AuditRutin::where("kode_audit", $kode)->where("status", "diedit")->get();
 

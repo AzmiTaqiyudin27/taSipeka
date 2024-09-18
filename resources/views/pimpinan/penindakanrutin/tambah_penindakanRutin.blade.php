@@ -7,9 +7,9 @@
         <div class="page-title">
             <div class="row">
                 <div class="col-12 col-md-6 order-md-1 order-last">
-                    <h3 class="namasistem">{{ $kodeaudit->nama_sistem }} | {{ $kodeaudit->kode_audit_rutin }}</h3>
+                    <h3 class="namasistem">{{ $kodeaudit->nama_sistem }} | {{ $kodeaudit->kode_audit }}</h3>
                     <input type="hidden" class="namas" value="{{ $kodeaudit->nama_sistem }}">
-                    <input type="hidden" class="kodes" value="{{ $kodeaudit->kode_audit_rutin }}">
+                    <input type="hidden" class="kodes" value="{{ $kodeaudit->kode_audit }}">
                 </div>
                 <div class="col-12 col-md-6 order-md-2 order-first">
                     <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
@@ -144,7 +144,7 @@
                                     <input type="date" value="{{ $auditDiedit[0]->tanggal_audit }}" name="tanggal_audit"
                                         id="tanggal_audit" class="form-control" placeholder="Tanggal Audit" required>
                                 </div>
-                                <input type="hidden" name="kode_audit" value="{{ $kodeaudit->kode_audit_rutin }}">
+                                <input type="hidden" name="kode_audit" value="{{ $kodeaudit->kode_audit }}">
                                 <input type="hidden" name="user_id" value="{{ $userid }}">
                                 <div class="form-group">
                                     <label for="versi" class="form-label">Versi</label>
@@ -220,7 +220,7 @@
                             <input type="date" name="tanggal_audit" id="tanggal_audit" class="form-control"
                                 placeholder="Tanggal Lapor" required>
                         </div>
-                        <input type="hidden" name="kode_audit" value="{{ $kodeaudit->kode_audit_rutin }}">
+                        <input type="hidden" name="kode_audit" value="{{ $kodeaudit->kode_audit }}">
                         <input type="hidden" name="user_id" value="{{ $userid }}">
                         <div class="form-group">
                             <label for="versi" class="form-label">Versi</label>
@@ -381,7 +381,7 @@
                             <input type="date" name="tanggal_audit" id="tglaudit" class="form-control"
                                 placeholder="Tanggal Lapor" required>
                         </div>
-                        <input type="hidden" name="kode_audit" value="{{ $kodeaudit->kode_audit_rutin }}">
+                        <input type="hidden" name="kode_audit" value="{{ $kodeaudit->kode_audit }}">
                         <input type="hidden" name="user_id" value="{{ $userid }}">
                         <div class="form-group">
                             <label for="versi" class="form-label">Versi</label>

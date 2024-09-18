@@ -14,6 +14,6 @@ class KodeAudit extends Model
 
     public function auditsRutin()
     {
-        return $this->hasMany(AuditRutin::class, 'kode_audit', 'kode_audit_rutin');
+        return $this->hasMany(AuditRutin::class, 'kode_audit', 'kode_audit');
     }
 }

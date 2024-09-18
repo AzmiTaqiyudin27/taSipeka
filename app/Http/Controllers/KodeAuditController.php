@@ -26,12 +26,12 @@ class KodeAuditController extends Controller
     {
 
          $validatedData = $request->validate([
-        'kode_audit_rutin' => 'required|max:255',
+        'kode_audit' => 'required|max:255',
         'nama_sistem' => 'required',
          ]);
 
          $kodeaudit = new KodeAudit();
-         $kodeaudit->kode_audit_rutin = $validatedData['kode_audit_rutin'];
+         $kodeaudit->kode_audit = $validatedData['kode_audit'];
          $kodeaudit->nama_sistem = $validatedData['nama_sistem'];
         $kodeaudit->save();
 
@@ -44,13 +44,13 @@ class KodeAuditController extends Controller
 
         // Validasi data
          $validatedData = $request->validate([
-        'kode_audit_rutin' => 'required|max:255',
+        'kode_audit' => 'required|max:255',
         'nama_sistem' => 'required',
          ]);
 
         // Update data pelaporan
         $kodeaudit = KodeAudit::findOrFail($id);
-    $kodeaudit->kode_audit_rutin = $validatedData['kode_audit_rutin'];
+    $kodeaudit->kode_audit = $validatedData['kode_audit'];
     $kodeaudit->nama_sistem = $validatedData['nama_sistem'];
 
     $kodeaudit->save();
@@ -90,7 +90,7 @@ class KodeAuditController extends Controller
 
     public function auditRutin()
     {
-        return $this->hasOne(AuditRutin::class, 'kode_audit_rutin_id');
+        return $this->hasOne(AuditRutin::class, 'kode_audit_id');
     }
 
     public function getData($id){
@@ -109,7 +109,7 @@ class KodeAuditController extends Controller
     ->select('kode_audits.*', DB::raw('
         (SELECT count(*)
          FROM audit_rutins
-         WHERE kode_audits.kode_audit_rutin = audit_rutins.kode_audit
+         WHERE kode_audits.kode_audit = audit_rutins.kode_audit
         ) as audit_rutin_count
     '))
     ->get();

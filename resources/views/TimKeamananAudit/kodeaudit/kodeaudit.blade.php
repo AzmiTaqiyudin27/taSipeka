@@ -61,7 +61,7 @@
                                     <tr>
                                         <td>{{ $no++ }}</td>
                                         <!-- Checkbox added -->
-                                        <td>{{ $item->kode_audit_rutin }}</td>
+                                        <td>{{ $item->kode_audit }}</td>
                                         <td>
                                             <a href="{{ route('audit-code.edit', $item->id) }}"
                                                 class="btn btn-warning">Update</a>

@@ -22,7 +22,7 @@
                                     Jumlah Pengajuan Rutin
                                 </h5>
                                 <p class="card-text">
-                                    {{ $jumlahpelaporanrutin }}
+                                    {{ $jumlahpengajuanrutin }}
                                 </p>
                             </div>
                         </div>
@@ -32,7 +32,7 @@
                                     Jumlah Pengajuan Insidental
                                 </h5>
                                 <p class="card-text">
-                                    {{ $jumlahpelaporaninsidental }}
+                                    {{ $jumlahpengajuaninsidental }}
                                 </p>
                             </div>
                         </div>
@@ -115,7 +115,7 @@
                                         </td>
                                         <td>
                                             @if ($item->status_approved == '1')
-                                                <a href="/auth/pelaporan-rutin/edit/{{ $item->id }}"
+                                                <a href="/auth/pengajuan-rutin/edit/{{ $item->id }}"
                                                     class="tbledit btn btn-warning" data-id="{{ $item->id }}"><i
                                                         class="bi bi-pencil-square"></i></a>
                                                 <button class="tblhapusrutin btn btn-danger"
@@ -131,10 +131,10 @@
                                         </td>
 
                                         {{-- <td>
-                                            <a href="{{ route('pelaporan-rutin.edit', $item->id) }}" class="btn btn-primary">
+                                            <a href="{{ route('pengajuan-rutin.edit', $item->id) }}" class="btn btn-primary">
                                                 <i class="bi bi-pencil-fill"></i>
                                             </a>
-                                            <form action="{{ route('pelaporan-rutin.delete', $item->id) }}" method="POST" style="display:inline;">
+                                            <form action="{{ route('pengajuan-rutin.delete', $item->id) }}" method="POST" style="display:inline;">
                                                 @method('delete')
                                                 @csrf
                                                 <button type="submit" class="btn btn-danger">
@@ -172,11 +172,11 @@
 
         <section class="section">
 
-            {{-- <a href="{{ route('pelaporan-insidental.printPDF') }}" class="btn btn-info float-lg-end">
+            {{-- <a href="{{ route('pengajuan-insidental.printPDF') }}" class="btn btn-info float-lg-end">
                 <i class="bi bi-printer"></i> Cetak PDF
             </a> --}}
 
-            {{-- <a href="/pelaporan-insidental/create" class="btn btn-secondary mt-4 float-lg-end">
+            {{-- <a href="/pengajuan-insidental/create" class="btn btn-secondary mt-4 float-lg-end">
                 Search
             </a> --}}
             <div class="card mt-4">
@@ -231,7 +231,7 @@
                                         <td>
 
                                             @if ($item->status_approved == '1')
-                                                <a href="/auth/pelaporan-insidental/edit/{{ $item->id }}"
+                                                <a href="/auth/pengajuan-insidental/edit/{{ $item->id }}"
                                                     class="tbledit btn btn-warning" data-id="{{ $item->id }}"><i
                                                         class="bi bi-pencil-square"></i></a>
                                                 <button class="tblhapusinsidental btn btn-danger"

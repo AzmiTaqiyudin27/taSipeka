@@ -8,7 +8,7 @@ use App\Models\KodeAudit;
 use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use App\Models\PelaporanRutin;
+use App\Models\PengajuanRutin;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
@@ -16,14 +16,14 @@ use Illuminate\Support\Facades\Auth;
 class AuditRutinController extends Controller
 {
     public function index(){
-        $data = PelaporanRutin::all();
-        return view('TimKeamananAudit.penerimaanrutin.penerimaan_pelaporanRutin', [
+        $data = PengajuanRutin::all();
+        return view('TimKeamananAudit.penerimaanrutin.penerimaan_pengajuanRutin', [
             'laporan' => $data
         ]);
     }
 
 
-    public function penindakan(){
+    public function pelaporan(){
         $data = DB::table('audit_rutins')
         ->select('pelaporan_rutin_id', DB::raw('COUNT(*) as total'))
         ->groupBy('pelaporan_rutin_id')
@@ -35,7 +35,7 @@ class AuditRutinController extends Controller
 
         $user = auth()->user();
 
-        return view('TimKeamananAudit.penindakanrutin.penindakan_pelaporanRutin', [
+        return view('TimKeamananAudit.pelaporanrutin.pelaporan_pengajuanRutin', [
             'data' => $data,
             'role' => $user
         ]);
@@ -49,9 +49,9 @@ public function create()
 
     $role = auth()->user()->role;
     if ($role == 'admin') {
-        $view = 'admin.penindakanrutin.tambah_penindakanRutin';
+        $view = 'admin.pelaporanrutin.tambah_pelaporanRutin';
     }  else {
-        $view = 'TimKeamananAudit.penindakanrutin.tambah_penindakanRutin';
+        $view = 'TimKeamananAudit.pelaporanrutin.tambah_pelaporanRutin';
     }
 
     return view($view, [
@@ -161,7 +161,7 @@ public function proses(Request $request, $pelaporan_rutin_id)
 
         AuditRutin::create($data);
 
-        return redirect()->route('penindakan-rutin.penindakan')->with('suksestambah', 'Data berhasil ditambah');
+        return redirect()->route('pelaporan-rutin.pelaporan')->with('suksestambah', 'Data berhasil ditambah');
     }
 
     public function storeProses(Request $request)
@@ -186,7 +186,7 @@ public function proses(Request $request, $pelaporan_rutin_id)
 
         AuditRutin::create($data);
 
-    return redirect()->route('penindakan-rutin.penindakan')->with('suksessimpan', 'Data berhasil disimpan!');
+    return redirect()->route('pelaporan-rutin.pelaporan')->with('suksessimpan', 'Data berhasil disimpan!');
 }
 
     public function update(Request $request, $pelaporan_rutin_id)
@@ -196,7 +196,7 @@ public function proses(Request $request, $pelaporan_rutin_id)
 
     // Jika data tidak ditemukan, berikan respons error atau handle sesuai kebutuhan aplikasi Anda
     if (!$penindakrutin) {
-        return redirect()->route('penindakan-rutin.penindakan')->with('error', 'Data tidak ditemukan');
+        return redirect()->route('pelaporan-rutin.pelaporan')->with('error', 'Data tidak ditemukan');
     }
 
     // Validasi data dari request
@@ -220,10 +220,10 @@ public function proses(Request $request, $pelaporan_rutin_id)
         $penindakrutin->update($data);
     } catch (\Exception $e) {
         // Tangani jika terjadi kesalahan saat melakukan update
-        return redirect()->route('penindakan-rutin.penindakan')->with('error', 'Gagal memperbarui data');
+        return redirect()->route('pelaporan-rutin.pelaporan')->with('error', 'Gagal memperbarui data');
     }
 
-    return redirect()->route('penindakan-rutin.penindakan')->with('suksesedit', 'Data berhasil diperbarui');
+    return redirect()->route('pelaporan-rutin.pelaporan')->with('suksesedit', 'Data berhasil diperbarui');
 }
 
     private function generateUniqueId($role)

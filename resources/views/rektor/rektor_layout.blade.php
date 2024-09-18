@@ -86,15 +86,15 @@
                             <ul class="submenu">
 
 
-                                <li class="submenu-item  ">
+                                {{-- <li class="submenu-item  ">
                                     <a href="{{ route('pimpinan-pelaporanauditrutin') }}"
                                         class="submenu-link">Rutin</a>
-                                </li>
+                                </li> --}}
 
-                                <li class="submenu-item  ">
+                                {{-- <li class="submenu-item  ">
                                     <a href="{{ route('pimpinan-pelaporanauditinsidental') }}"
                                         class="submenu-link">Insidental</a>
-                                </li>
+                                </li> --}}
                             </ul>
                         </li> -->
 

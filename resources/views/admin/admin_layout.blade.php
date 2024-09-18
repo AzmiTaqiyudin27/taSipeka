@@ -103,7 +103,7 @@
 
 
                                 <li class="submenu-item  ">
-                                    <a href="{{ route('pelaporan-rutin.index') }}" class="submenu-link">Rutin</a>
+                                    <a href="{{ route('pengajuan-rutin.index') }}" class="submenu-link">Rutin</a>
                                 </li>
                                 <li class="submenu-item  ">
                                     <a href="{{ route('admin-auditinsidental') }}" class="submenu-link">Insidental</a>
@@ -126,10 +126,10 @@
 
                             <ul class="submenu">
                                 <li class="submenu-item  ">
-                                    <a href="{{ route('penindakan-rutin.penindakan') }}" class="submenu-link">Rutin</a>
+                                    <a href="{{ route('pelaporan-rutin.pelaporan') }}" class="submenu-link">Rutin</a>
                                 </li>
                                 <li class="submenu-item  ">
-                                    <a href="{{ route('penindakan-insidental.penindakan') }}"
+                                    <a href="{{ route('pelaporan-insidental.pelaporan') }}"
                                         class="submenu-link">Insidental</a>
                                 </li>
 
@@ -170,7 +170,7 @@
 
 
                         <li class="sidebar-item ">
-                            <a href="{{ route('pelaporan-rutin.profile') }}" class='sidebar-link'>
+                            <a href="{{ route('profile') }}" class='sidebar-link'>
                                 <i class="bi bi-person"></i>
                                 <span>Profile</span>
                             </a>

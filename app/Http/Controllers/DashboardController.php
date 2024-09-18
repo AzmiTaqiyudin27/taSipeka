@@ -6,24 +6,24 @@ use App\Models\KodeAudit;
 use App\Models\AuditRutin;
 use App\Models\User;
 use Illuminate\Http\Request;
-use App\Models\PelaporanRutin;
+use App\Models\PengajuanRutin;
 use App\Models\AuditInsidental;
-use App\Models\PelaporanInsidental;
+use App\Models\PengajuanInsidental;
 use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
     public function index(){
-         $datainsidental = PelaporanInsidental::all();
-        $datarutin = PelaporanRutin::all();
+         $datainsidental = PengajuanInsidental::all();
+        $datarutin = PengajuanRutin::all();
         $user = Auth::user();
         $auditRutin = AuditRutin::all();
         $auditInsidental = AuditInsidental::all();
         $jumlahaudit = AuditRutin::count();
         $jumlahsistem = KodeAudit::count();
         $jumlahinsidental = AuditInsidental::count();
-        $jumlahpelaporanrutin = PelaporanRutin::count();
-        $jumlahpelaporaninsidental = PelaporanInsidental::count();
+        $jumlahpengajuanrutin = PengajuanRutin::count();
+        $jumlahpengajuaninsidental = PengajuanInsidental::count();
         $userNonAktif = User::where('is_active', false)->get();
         return view('admin.dashboard',[
             'laporanrutin' => $datarutin,
@@ -33,8 +33,8 @@ class DashboardController extends Controller
             'jumlahaudit' => $jumlahaudit,
             'jumlahsistem' => $jumlahsistem,
             'jumlahinsidental' => $jumlahinsidental,
-            'jumlahpelaporanrutin' => $jumlahpelaporanrutin,
-            'jumlahpelaporaninsidental' => $jumlahpelaporaninsidental,
+            'jumlahpengajuanrutin' => $jumlahpengajuanrutin,
+            'jumlahpengajuaninsidental' => $jumlahpengajuaninsidental,
             'user' => $user,
             'userNonAktif' => $userNonAktif
         ]);
@@ -43,15 +43,15 @@ class DashboardController extends Controller
         $user = Auth::user();
         $id = $user->id;
         $unitkerjaid = auth()->user()->unitkerja_id;
-        $datainsidental = PelaporanInsidental::all();
-        $datarutin = PelaporanRutin::all();
+        $datainsidental = PengajuanInsidental::all();
+        $datarutin = PengajuanRutin::all();
          $auditRutin = AuditRutin::all();
         $auditInsidental = AuditInsidental::all();
         $jumlahaudit = AuditRutin::count();
         $jumlahsistem = KodeAudit::count();
                 $jumlahinsidental = AuditInsidental::count();
-        $jumlahpelaporanrutin = PelaporanRutin::where('user_id', $unitkerjaid  )->count();
-        $jumlahpelaporaninsidental = PelaporanInsidental::where('user_id', $unitkerjaid)->count();
+        $jumlahpengajuanrutin = PengajuanRutin::where('user_id', $unitkerjaid  )->count();
+        $jumlahpengajuaninsidental = PengajuanInsidental::where('user_id', $unitkerjaid)->count();
         return view('pimpinan.dashboard',[
             'laporanrutin' => $datarutin,
             'laporaninsidental' => $datainsidental,
@@ -60,8 +60,8 @@ class DashboardController extends Controller
             'jumlahsistem' => $jumlahsistem,
             'auditinsidental' => $auditInsidental,
                         'jumlahinsidental' => $jumlahinsidental,
-            'jumlahpelaporanrutin' => $jumlahpelaporanrutin,
-            'jumlahpelaporaninsidental' => $jumlahpelaporaninsidental,
+            'jumlahpengajuanrutin' => $jumlahpengajuanrutin,
+            'jumlahpengajuaninsidental' => $jumlahpengajuaninsidental,
             'user' => $user
         ]);
     }
@@ -70,15 +70,15 @@ class DashboardController extends Controller
         $user = Auth::user();
         $id = $user->id;
         $unitkerjaid = auth()->user()->unitkerja_id;
-        $datainsidental = PelaporanInsidental::all();
-        $datarutin = PelaporanRutin::all();
+        $datainsidental = PengajuanInsidental::all();
+        $datarutin = PengajuanRutin::all();
          $auditRutin = AuditRutin::all();
         $auditInsidental = AuditInsidental::all();
         $jumlahaudit = AuditRutin::count();
         $jumlahsistem = KodeAudit::count();
                 $jumlahinsidental = AuditInsidental::count();
-        $jumlahpelaporanrutin = PelaporanRutin::count();
-        $jumlahpelaporaninsidental = PelaporanInsidental::count();
+        $jumlahpengajuanrutin = PengajuanRutin::count();
+        $jumlahpengajuaninsidental = PengajuanInsidental::count();
         return view('rektor.dashboard',[
             'laporanrutin' => $datarutin,
             'laporaninsidental' => $datainsidental,
@@ -87,8 +87,8 @@ class DashboardController extends Controller
             'jumlahsistem' => $jumlahsistem,
             'auditinsidental' => $auditInsidental,
                         'jumlahinsidental' => $jumlahinsidental,
-            'jumlahpelaporanrutin' => $jumlahpelaporanrutin,
-            'jumlahpelaporaninsidental' => $jumlahpelaporaninsidental,
+            'jumlahpengajuanrutin' => $jumlahpengajuanrutin,
+            'jumlahpengajuaninsidental' => $jumlahpengajuaninsidental,
             'user' => $user
         ]);
     }
@@ -96,14 +96,14 @@ class DashboardController extends Controller
 
         $user = Auth::user();
         $id = $user->id;
-        $datainsidental = PelaporanInsidental::where("user_id", $id)->get();
-        $datarutin = PelaporanRutin::where("user_id",$id)->get();
+        $datainsidental = PengajuanInsidental::where("user_id", $id)->get();
+        $datarutin = PengajuanRutin::where("user_id",$id)->get();
         $auditRutin = AuditRutin::where('unitkerja_id', $id)->get();
         $auditInsidental = AuditInsidental::where('unitkerja_id', $id)->get();
         $jumlahaudit = AuditRutin::count();
         $jumlahsistem = KodeAudit::count();$jumlahinsidental = AuditInsidental::count();
-        $jumlahpelaporanrutin = PelaporanRutin::where("user_id", $id)->count();
-        $jumlahpelaporaninsidental = PelaporanInsidental::where("user_id", $id)->count();
+        $jumlahpengajuanrutin = PengajuanRutin::where("user_id", $id)->count();
+        $jumlahpengajuaninsidental = PengajuanInsidental::where("user_id", $id)->count();
 
         return view('unitkerja.unitkerja_dashboard', [
            'laporanrutin' => $datarutin,
@@ -113,21 +113,21 @@ class DashboardController extends Controller
             'jumlahaudit' => $jumlahaudit,
             'jumlahsistem' => $jumlahsistem,
             'jumlahinsidental' => $jumlahinsidental,
-            'jumlahpelaporanrutin' => $jumlahpelaporanrutin,
-            'jumlahpelaporaninsidental' => $jumlahpelaporaninsidental,
+            'jumlahpengajuanrutin' => $jumlahpengajuanrutin,
+            'jumlahpengajuaninsidental' => $jumlahpengajuaninsidental,
             'user' => $user
         ]);
     }
 
     public function audit(){
-       $datainsidental = PelaporanInsidental::where('status_approved', '1')->get();
-        $datarutin = PelaporanRutin::where('status_approved', '1')->get();
+       $datainsidental = PengajuanInsidental::where('status_approved', '1')->get();
+        $datarutin = PengajuanRutin::where('status_approved', '1')->get();
         $user = Auth::user();
         $auditRutin = AuditRutin::with('unitkerja')->with('kodeaudit')->get();
         $auditInsidental = AuditInsidental::with('unitkerja')->with('kodeaudit')->get();
                 $jumlahinsidental = AuditInsidental::count();
-        $jumlahpelaporanrutin = PelaporanRutin::count();
-        $jumlahpelaporaninsidental = PelaporanInsidental::count();
+        $jumlahpengajuanrutin = PengajuanRutin::count();
+        $jumlahpengajuaninsidental = PengajuanInsidental::count();
         $jumlahaudit = AuditRutin::count();
         $jumlahsistem = KodeAudit::count();
 
@@ -139,8 +139,8 @@ class DashboardController extends Controller
             'jumlahaudit' => $jumlahaudit,
             'jumlahsistem' => $jumlahsistem,
                         'jumlahinsidental' => $jumlahinsidental,
-            'jumlahpelaporanrutin' => $jumlahpelaporanrutin,
-            'jumlahpelaporaninsidental' => $jumlahpelaporaninsidental,
+            'jumlahpengajuanrutin' => $jumlahpengajuanrutin,
+            'jumlahpengajuaninsidental' => $jumlahpengajuaninsidental,
             'user' => $user
         ]);
     }

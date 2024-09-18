@@ -134,10 +134,10 @@
 
                             <ul class="submenu">
                                 <li class="submenu-item  ">
-                                    <a href="{{ route('penindakan-rutin.penindakan') }}" class="submenu-link">Rutin</a>
+                                    <a href="{{ route('pelaporan-rutin.pelaporan') }}" class="submenu-link">Rutin</a>
                                 </li>
                                 <li class="submenu-item  ">
-                                    <a href="{{ route('penindakan-insidental.penindakan') }}"
+                                    <a href="{{ route('pelaporan-insidental.pelaporan') }}"
                                         class="submenu-link">Insidental</a>
                                 </li>
 
@@ -165,7 +165,7 @@
                         </li>
 
                         <li class="sidebar-item ">
-                            <a href="{{ route('pelaporan-rutin.profile') }}" class='sidebar-link'>
+                            <a href="{{ route('profile') }}" class='sidebar-link'>
                                 <i class="bi bi-person"></i>
                                 <span>Profile</span>
                             </a>

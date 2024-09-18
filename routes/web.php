@@ -3,13 +3,13 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\PelaporanRutinController;
-use App\Http\Controllers\PelaporanInsidentalController;
+use App\Http\Controllers\PengajuanRutinController;
+use App\Http\Controllers\PengajuanInsidentalController;
 use App\Http\Controllers\HasilAuditRutinController;
 use App\Http\Controllers\HasilAuditInsidentalController;
 use App\Http\Controllers\AuditInsidentalController;
 use App\Http\Controllers\AuditRutinController;
-use App\Http\Controllers\AuditRutinPenindakanController;
+use App\Http\Controllers\AuditRutinPelaporanController;
 use App\Http\Controllers\KodeAuditController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ImageUploadController;
@@ -39,9 +39,9 @@ Route::get('/', function () {
 // Route::get('auditInsidental', [AuditInsidentalController::class,"index"])->name('auditInsidental.index');
 
 
-// Route::resource('pelaporan-rutin', PelaporanRutinController::class);
+// Route::resource('pengajuan-rutin', PengajuanRutinController::class);
 
-// Route::resource('pelaporan-insidental', PelaporanInsidentalController::class);
+// Route::resource('pengajuan-insidental', PengajuanInsidentalController::class);
 
 
 
@@ -82,11 +82,11 @@ Route::group(['prefix' => 'auth'], function () {
     // pimpinan
     Route::get('dashboard-pimpinan', [DashboardController::class, "pimpinan"])->name('pimpinan.dashboard');
         Route::get('dashboard-rektor', [DashboardController::class, 'rektor'])->name('dashboard-rektor');
-    Route::get('auditinsidental-pimpinan', [AuditInsidentalController::class, 'penindakan'])->name('pimpinan-auditinsidental');
+    Route::get('auditinsidental-pimpinan', [AuditInsidentalController::class, 'pelaporan'])->name('pimpinan-auditinsidental');
     Route::get('hasilauditinsidental-pimpinan', [HasilAuditInsidentalController::class, 'index'])->name('pimpinan-hasilauditinsidental');
     Route::get('hasilauditinsidental-unitkerja', [HasilAuditInsidentalController::class, 'index'])->name('unitkerja-hasilauditinsidental');
-    Route::get('pelaporan-rutin-pimpinan', [PelaporanRutinController::class,"index"])->name('pimpinan-pelaporanauditrutin');
-    Route::get('pelaporan-insidental-pimpinan', [PelaporanInsidentalController::class,"index"])->name('pimpinan-pelaporanauditinsidental');
+    Route::get('pengajuan-rutin-pimpinan', [PengajuanRutinController::class,"index"])->name('pimpinan-pengajuanauditrutin');
+    Route::get('pengajuan-insidental-pimpinan', [PengajuanInsidentalController::class,"index"])->name('pimpinan-pengajuanauditinsidental');
     Route::get('dashboard-user', [DashboardController::class, 'pimpinan'])->name('dashboard-pimpinan');
 
 
@@ -95,62 +95,62 @@ Route::group(['prefix' => 'auth'], function () {
     Route::get('auth/dashboard-audit', [DashboardController::class, 'audit'])->name('dashboard-audit');
     Route::get('hasil-insidental', [HasilAuditInsidentalController::class,"index"])->name('hasil-insidental.index');
     Route::get('penerimaan-insidental', [AuditInsidentalController::class,"index"])->name('penerimaan-insidental.insidentalpenerimaan');
-    Route::get('penindakan-insidental', [AuditInsidentalController::class,"penindakan"])->name('penindakan-insidental.penindakan');
+    Route::get('pelaporan-insidental', [AuditInsidentalController::class,"pelaporan"])->name('pelaporan-insidental.pelaporan');
     Route::get('audit-rutinhasil', [HasilAuditRutinController::class, "index"])->name("hasil-rutin.hasilrutin");
-    Route::get('penindakan-insidental/create', [AuditInsidentalController::class,"create"])->name('penindakan-insidental.create');
+    Route::get('pelaporan-insidental/create', [AuditInsidentalController::class,"create"])->name('pelaporan-insidental.create');
     Route::post('ckeditor/upload', [ImageUploadController::class, 'upload'])->name('ckeditor.upload');
     Route::get('datasistem', [KodeAuditController::class, 'datasistem'])->name('datasistem');
     // penerimaan audit rutin
     Route::get('penerimaan-rutin', [AuditRutinController::class,"index"])->name('penerimaan-rutin.index');
-    Route::get('auditinsidental-unitkerja', [PelaporanInsidentalController::class, 'index'])->name('unitkerja-auditinsidental');
-    // penindakan audit rutin
-    Route::get('penindakan-rutin', [AuditRutinPenindakanController::class,"index"])->name('penindakan-rutin.penindakan')->middleware('auth');
+    Route::get('auditinsidental-unitkerja', [PengajuanInsidentalController::class, 'index'])->name('unitkerja-auditinsidental');
+    // pelaporan audit rutin
+    Route::get('pelaporan-rutin', [AuditRutinPelaporanController::class,"index"])->name('pelaporan-rutin.pelaporan')->middleware('auth');
     Route::get('audit-rutin', [HasilAuditRutinController::class,"index"])->name('hasil-rutin.hasil')->middleware('auth');
-    Route::get('tambah-penindakan-audit-rutin', [AuditRutinPenindakanController::class, "show"])->name("tambah-penindakan-rutin")->middleware('auth');
-    Route::get('data-penindakan-audit-rutin/{id}', [AuditRutinPenindakanController::class, 'getAudit'])->name("getAudit");
-    Route::get('penindakan-audit-rutin-get/{id}', [AuditRutinPenindakanController::class, "getData"])->name("penindakan-rutin.getData");
-    Route::post('penindakan-audit-rutin/tambah', [AuditRutinPenindakanController::class, "store"])->name("tambahAuditRutin");
-    Route::put('penidnakan-audit-rutin/update/{kode}', [AuditRutinPenindakanController::class, "update"])->name("penindakan-rutin.update");
-    Route::delete('penindakan-audit-rutin/destroy/{kode}', [AuditRutinPenindakanController::class, "destroy"])->name("penindakan-rutin.destroy");
-    Route::get('penindakan-rutin/create', [AuditRutinController::class,"create"])->name('penindakan-rutin.create');
-    Route::get('penindakan-rutin/detail', [AuditRutinController::class,"getAuditDetail"])->name('penindakan-rutin.getAuditDetail');
-    Route::get('penindakan-rutin/getDataAudit', [AuditRutinController::class,"getDataAudit"])->name('penindakan-rutin.getDataAudit');
-    Route::post('penindakan-rutin/proses/{pelaporan_rutin_id}', [AuditRutinController::class, "proses"])->name('penindakan-rutin.proses');
-    Route::post('/penindakan-rutin/storeProses', [AuditRutinController::class, 'storeProses'])->name('penindakan-rutin.storeProses');
-    Route::post('penindakan-rutin/tambah-versi', [AuditRutinController::class, 'storeProses'])->name('penindakan-rutin.tambah-versi');
-    Route::post('penindakan-rutin/printSelected', [AuditRutinController::class, 'printSelected'])->name('penindakan-rutin.printSelected');
-    Route::get('penindakan-rutin/printPDF', [AuditRutinController::class, 'printPDF'])->name('penindakan-rutin.printPDF');
-    // penindakan audit insidental
-    Route::get('penindakan-audit-insidental/{kode}', [AuditInsidentalController::class, "show"])->name("penindakan-insidental.show")->middleware('auth');
-    Route::get('data-penindakan-audit-insidental/{id}', [AuditInsidentalController::class, 'getAudit'])->name("getAuditInsidental");
-        Route::put('penidnakan-audit-insidental/update/{kode}', [AuditInsidentalController::class, "perbarui"])->name("penindakan-insidental.update");
-    Route::post('penindakan-audit-insidental', [AuditInsidentalController::class, "store"])->name("penindakan-insidental.store")->middleware('auth');
+    Route::get('tambah-pelaporan-audit-rutin', [AuditRutinPelaporanController::class, "show"])->name("tambah-pelaporan-rutin")->middleware('auth');
+    Route::get('data-pelaporan-audit-rutin/{id}', [AuditRutinPelaporanController::class, 'getAudit'])->name("getAudit");
+    Route::get('pelaporan-audit-rutin-get/{id}', [AuditRutinPelaporanController::class, "getData"])->name("pelaporan-rutin.getData");
+    Route::post('pelaporan-audit-rutin/tambah', [AuditRutinPelaporanController::class, "store"])->name("tambahAuditRutin");
+    Route::put('penidnakan-audit-rutin/update/{kode}', [AuditRutinPelaporanController::class, "update"])->name("pelaporan-rutin.update");
+    Route::delete('pelaporan-audit-rutin/destroy/{kode}', [AuditRutinPelaporanController::class, "destroy"])->name("pelaporan-rutin.destroy");
+    Route::get('pelaporan-rutin/create', [AuditRutinController::class,"create"])->name('pelaporan-rutin.create');
+    Route::get('pelaporan-rutin/detail', [AuditRutinController::class,"getAuditDetail"])->name('pelaporan-rutin.getAuditDetail');
+    Route::get('pelaporan-rutin/getDataAudit', [AuditRutinController::class,"getDataAudit"])->name('pelaporan-rutin.getDataAudit');
+    Route::post('pelaporan-rutin/proses/{pengajuan_rutin_id}', [AuditRutinController::class, "proses"])->name('pelaporan-rutin.proses');
+    Route::post('/pelaporan-rutin/storeProses', [AuditRutinController::class, 'storeProses'])->name('pelaporan-rutin.storeProses');
+    Route::post('pelaporan-rutin/tambah-versi', [AuditRutinController::class, 'storeProses'])->name('pelaporan-rutin.tambah-versi');
+    Route::post('pelaporan-rutin/printSelected', [AuditRutinController::class, 'printSelected'])->name('pelaporan-rutin.printSelected');
+    Route::get('pelaporan-rutin/printPDF', [AuditRutinController::class, 'printPDF'])->name('pelaporan-rutin.printPDF');
+    // pelaporan audit insidental
+    Route::get('pelaporan-audit-insidental/{kode}', [AuditInsidentalController::class, "show"])->name("pelaporan-insidental.show")->middleware('auth');
+    Route::get('data-pelaporan-audit-insidental/{id}', [AuditInsidentalController::class, 'getAudit'])->name("getAuditInsidental");
+        Route::put('penidnakan-audit-insidental/update/{kode}', [AuditInsidentalController::class, "perbarui"])->name("pelaporan-insidental.update");
+    Route::post('pelaporan-audit-insidental', [AuditInsidentalController::class, "store"])->name("pelaporan-insidental.store")->middleware('auth');
     // Update status pengajuan
-    Route::put('pengajuan-rutin-updatestatus', [PelaporanRutinController::class, 'updateStatus'])->name('pengajuanRutin.updateStatus');
-    Route::put('pengajuan-insidental-updatestatus', [PelaporanInsidentalController::class, 'updateStatus'])->name('pengajuanInsidental.updateStatus');
+    Route::put('pengajuan-rutin-updatestatus', [PengajuanRutinController::class, 'updateStatus'])->name('pengajuanRutin.updateStatus');
+    Route::put('pengajuan-insidental-updatestatus', [PengajuanInsidentalController::class, 'updateStatus'])->name('pengajuanInsidental.updateStatus');
     // hapus pengajuan ditolak
-    Route::get('pengajuan-rutin-ditolak', [PelaporanRutinController::class, 'alasanDitolak'])->name('pengajuanRutin.alasantolak');
-    Route::delete('pengajuan-rutin-hapus', [PelaporanRutinController::class, 'hapusPengajuan'])->name('pengajuanRutin.hapus');
-    Route::delete('pengajuan-insidental-hapus', [PelaporanInsidentalController::class, 'hapusPengajuan'])->name('pengajuanInsidental.hapus');
-    Route::get('pengajuan-insidental-ditolak', [PelaporanInsidentalController::class, 'alasanDitolak'])->name('pengajuanInsidental.alasantolak');
+    Route::get('pengajuan-rutin-ditolak', [PengajuanRutinController::class, 'alasanDitolak'])->name('pengajuanRutin.alasantolak');
+    Route::delete('pengajuan-rutin-hapus', [PengajuanRutinController::class, 'hapusPengajuan'])->name('pengajuanRutin.hapus');
+    Route::delete('pengajuan-insidental-hapus', [PengajuanInsidentalController::class, 'hapusPengajuan'])->name('pengajuanInsidental.hapus');
+    Route::get('pengajuan-insidental-ditolak', [PengajuanInsidentalController::class, 'alasanDitolak'])->name('pengajuanInsidental.alasantolak');
 
     // Unitkerja
     Route::get('dashboard-unitkerja', [DashboardController::class, 'unitkerja'])->name('dashboard-unitkerja');
 
-    // Pelaporan Unit Kerja
-    Route::get('pelaporan-rutin', [PelaporanRutinController::class,"index"])->name('pelaporan-rutin.index');
-    Route::post('pelaporan-rutin/store', [PelaporanRutinController::class,"store"])->name('pelaporan-rutin.store');
-    Route::get('pelaporan-rutin/create', [PelaporanRutinController::class,"create"])->name('pelaporan-rutin.create');
-    Route::get('/pelaporan-rutin/edit/{id}', [PelaporanRutinController::class,"edit"])->name('pelaporan-rutin.edit');
-    Route::put('pelaporan-rutin/update/{id}', [PelaporanRutinController::class, 'update'])->name('pelaporan-rutin.update');
-    Route::delete('pelaporan-rutin/delete/{id}', [PelaporanRutinController::class, "delete"])->name('pelaporan-rutin.delete');
-    Route::get('pelaporan-rutin/profile', [ProfileController::class, "profile"])->name('pelaporan-rutin.profile');
-    Route::get('pelaporan-insidental', [PelaporanInsidentalController::class,"index"])->name('pelaporan-insidental.index');
-    Route::get('pelaporan-insidental/create', [PelaporanInsidentalController::class,"create"])->name('pelaporan-insidental.create');
-    Route::post('pelaporan-insidental/store', [PelaporanInsidentalController::class,"store"])->name('pelaporan-insidental.store');
-    Route::get('pelaporan-insidental/edit/{id}', [PelaporanInsidentalController::class,"edit"])->name('pelaporan-insidental.edit');
-    Route::put('pelaporan-insidental/update/{id}', [PelaporanInsidentalController::class, 'update'])->name('pelaporan-insidental.update');
-    Route::delete('pelaporan-insidental/delete/{id}', [PelaporanInsidentalController::class, "delete"])->name('pelaporan-insidental.delete');
+    // Pengajuan Unit Kerja
+    Route::get('pengajuan-rutin', [PengajuanRutinController::class,"index"])->name('pengajuan-rutin.index');
+    Route::post('pengajuan-rutin/store', [PengajuanRutinController::class,"store"])->name('pengajuan-rutin.store');
+    Route::get('pengajuan-rutin/create', [PengajuanRutinController::class,"create"])->name('pengajuan-rutin.create');
+    Route::get('/pengajuan-rutin/edit/{id}', [PengajuanRutinController::class,"edit"])->name('pengajuan-rutin.edit');
+    Route::put('pengajuan-rutin/update/{id}', [PengajuanRutinController::class, 'update'])->name('pengajuan-rutin.update');
+    Route::delete('pengajuan-rutin/delete/{id}', [PengajuanRutinController::class, "delete"])->name('pengajuan-rutin.delete');
+    Route::get('profile', [ProfileController::class, "profile"])->name('profile');
+    Route::get('pengajuan-insidental', [PengajuanInsidentalController::class,"index"])->name('pengajuan-insidental.index');
+    Route::get('pengajuan-insidental/create', [PengajuanInsidentalController::class,"create"])->name('pengajuan-insidental.create');
+    Route::post('pengajuan-insidental/store', [PengajuanInsidentalController::class,"store"])->name('pengajuan-insidental.store');
+    Route::get('pengajuan-insidental/edit/{id}', [PengajuanInsidentalController::class,"edit"])->name('pengajuan-insidental.edit');
+    Route::put('pengajuan-insidental/update/{id}', [PengajuanInsidentalController::class, 'update'])->name('pengajuan-insidental.update');
+    Route::delete('pengajuan-insidental/delete/{id}', [PengajuanInsidentalController::class, "delete"])->name('pengajuan-insidental.delete');
 
     // rektor
     Route::get('rektor/profile', [ProfileController::class, "profile"])->name('rektor.profile');

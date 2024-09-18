@@ -6,9 +6,9 @@
         <div class="page-title">
             <div class="row">
                 <div class="col-12 col-md-6 order-md-1 order-last">
-                    <h3 class="namasistem">{{ $kodeaudit->nama_sistem }} | {{ $kodeaudit->kode_audit_rutin }}</h3>
+                    <h3 class="namasistem">{{ $kodeaudit->nama_sistem }} | {{ $kodeaudit->kode_audit }}</h3>
                     <input type="hidden" class="namas" value="{{ $kodeaudit->nama_sistem }}">
-                    <input type="hidden" class="kodes" value="{{ $kodeaudit->kode_audit_rutin }}">
+                    <input type="hidden" class="kodes" value="{{ $kodeaudit->kode_audit }}">
                 </div>
                 <div class="col-12 col-md-6 order-md-2 order-first">
                     <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
@@ -132,7 +132,7 @@
                                         <input type="text" name="pendahuluan" id="pendahuluan" class="form-control"
                                             placeholder="Pendahuluan" required>
                                     </div>
-                                    <input type="hidden" name="kode_audit" value="{{ $kodeaudit->kode_audit_rutin }}">
+                                    <input type="hidden" name="kode_audit" value="{{ $kodeaudit->kode_audit }}">
                                     <input type="hidden" name="user_id" value="{{ $userid }}">
                                     <div class="form-group">
                                         <label for="cakupan_audit" class="form-label">Cakupan Audit</label>
@@ -282,7 +282,7 @@
                                     placeholder="Pendahuluan" required>
                             </div>
 
-                            <input type="hidden" name="kode_audit_edit" value="{{ $kodeaudit->kode_audit_rutin }}">
+                            <input type="hidden" name="kode_audit_edit" value="{{ $kodeaudit->kode_audit }}">
                             <input type="hidden" name="user_id_edit" value="{{ $userid }}">
 
                             <div class="form-group">

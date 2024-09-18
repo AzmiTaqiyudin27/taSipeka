@@ -82,7 +82,7 @@
                         {{-- <li class="sidebar-item has-sub ">
                             <a href="#" class='sidebar-link'>
                                 <i class="bi bi-book"></i>
-                                <span>Penindakan Audit</span>
+                                <span>pelaporan Audit</span>
                             </a>
 
                             <ul class="submenu">
@@ -105,7 +105,7 @@
                             <ul class="submenu">
 
 
-                                <li class="submenu-item  ">
+                                {{-- <li class="submenu-item  ">
                                     <a href="{{ route('pimpinan-pelaporanauditrutin') }}"
                                         class="submenu-link">Rutin</a>
                                 </li>
@@ -114,7 +114,7 @@
                                     <a href="{{ route('pimpinan-pelaporanauditinsidental') }}"
                                         class="submenu-link">Insidental</a>
                                 </li>
-                            </ul>
+                            </ul> --}}
                         </li> -->
 
                         <li class="sidebar-item has-sub ">
@@ -138,7 +138,7 @@
                         </li>
 
                         <li class="sidebar-item ">
-                            <a href="{{ route('pelaporan-rutin.profile') }}" class='sidebar-link'>
+                            <a href="{{ route('profile') }}" class='sidebar-link'>
                                 <i class="bi bi-person"></i>
                                 <span>Profile</span>
                             </a>

@@ -97,7 +97,7 @@
 
 
                                 <li class="submenu-item  ">
-                                    <a href="{{ route('pelaporan-rutin.index') }}" class="submenu-link">Rutin</a>
+                                    <a href="{{ route('pengajuan-rutin.index') }}" class="submenu-link">Rutin</a>
                                 </li>
 
 
@@ -129,7 +129,7 @@
                         </li>
 
                         <li class="sidebar-item ">
-                            <a href="{{ route('pelaporan-rutin.profile') }}" class='sidebar-link'>
+                            <a href="{{ route('profile') }}" class='sidebar-link'>
                                 <i class="bi bi-person"></i>
                                 <span>Profile</span>
                             </a>

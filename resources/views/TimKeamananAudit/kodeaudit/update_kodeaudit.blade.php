@@ -47,9 +47,9 @@
                             @method('put')
                             @csrf
                             <div class="form-group">
-                                <label for="kode_audit_rutin" class="form-label">Kode Audit</label>
-                                <input type="text" name="kode_audit_rutin" id="kode_audit_rutin" class="form-control"
-                                    placeholder="Kode Audit" value="{{ $laporan->kode_audit_rutin }}" required">
+                                <label for="kode_audit" class="form-label">Kode Audit</label>
+                                <input type="text" name="kode_audit" id="kode_audit" class="form-control"
+                                    placeholder="Kode Audit" value="{{ $laporan->kode_audit }}" required">
                             </div>
 
                             <div class="form-group">

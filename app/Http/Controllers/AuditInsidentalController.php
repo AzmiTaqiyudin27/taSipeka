@@ -10,7 +10,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\AuditInsidental;
 use Illuminate\Support\Facades\DB;
-use App\Models\PelaporanInsidental;
+use App\Models\PengajuanInsidental;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 
@@ -21,25 +21,25 @@ class AuditInsidentalController extends Controller
         $role = auth()->user()->role;
 
         if ($role == 'admin') {
-        $view = 'admin.auditinsidental.admin_insidental';
+            $view = 'admin.penerimaanpengajuaninsidental.admin_pengajuaninsidental';
     } else if ($role == 'pimpinan') {
-        $view = 'pimpinan.pelaporan.pimpinan_insidental';
+        $view = 'pimpinan.pengajuan.pimpinan_insidental';
     } else if ($role == 'unitkerja') {
-        $view = 'unitkerja.audit.unitkerja_insidental';
+        $view = 'unitkerja.pengajuaninsidental.pengajuanInsidental';
     } else {
-        $view = 'TimKeamananAudit.penerimaaninsidental.penerimaan_pelaporanInsidental';
+        $view = 'TimKeamananAudit.penerimaaninsidental.penerimaan_pengajuanInsidental';
     }
     //    $laporan = DB::table('kode_audits')
     // ->select('kode_audits.*', DB::raw('
     //     (SELECT count(*)
     //      FROM audit_insidentals
-    //      WHERE kode_audits.kode_audit_rutin = audit_insidentals.kode_audit
+    //      WHERE kode_audits.kode_audit = audit_insidentals.kode_audit
     //     ) as audit_insidental_count
     // '))->get();
     // return view($view, [
     //     "laporan" => $laporan
     // ]);
-$data = PelaporanInsidental::all();
+$data = PengajuanInsidental::all();
 $user = Auth::user();
         //  dd($data);
         return view($view, [
@@ -49,16 +49,16 @@ $user = Auth::user();
     }
 
 
-    public function penindakan(){
+    public function pelaporan(){
          $role = auth()->user()->role;
          if ($role == 'admin') {
-        $view = 'admin.penindakaninsidental.penindakan_pelaporanInsidental';
+        $view = 'admin.pelaporaninsidental.pelaporanInsidental';
     } else if ($role == 'pimpinan') {
         $view = 'pimpinan.auditinsidental.pimpinan_insidental';
     } else if ($role == 'unitkerja') {
         $view = 'unitkerja.audit.unitkerja_insidental';
     } else {
-        $view = 'TimKeamananAudit.penindakaninsidental.penindakan_pelaporanInsidental';
+        $view = 'TimKeamananAudit.pelaporaninsidental.pelaporanInsidental';
     }
 
 // Eksekusi query menggunakan Query Builder
@@ -66,9 +66,9 @@ $user = Auth::user();
         $user = auth()->user();
 
         $data = DB::table('audit_insidentals')
-    ->join('kode_audits', 'audit_insidentals.kode_audit', '=', 'kode_audits.kode_audit_rutin')
+    ->join('kode_audits', 'audit_insidentals.kode_audit', '=', 'kode_audits.kode_audit')
     ->join('users', 'audit_insidentals.unitkerja_id', '=', 'users.id')
-    ->select('audit_insidentals.*','audit_insidentals.judul' ,'kode_audits.kode_audit_rutin', 'kode_audits.nama_sistem', 'users.username as unitkerja' )->get();
+    ->select('audit_insidentals.*','audit_insidentals.judul' ,'kode_audits.kode_audit', 'kode_audits.nama_sistem', 'users.username as unitkerja' )->get();
 
     return view($view,[
             'laporan' => $data,
@@ -93,9 +93,9 @@ public function create()
 
     $role = auth()->user()->role;
     if ($role == 'admin') {
-        $view = 'admin.penindakaninsidental.tambah_penindakanInsidental';
+        $view = 'admin.pelaporaninsidental.tambah_pelaporanInsidental';
     }  else {
-        $view = 'TimKeamananAudit.penindakaninsidental.tambah_penindakanInsidental';
+        $view = 'TimKeamananAudit.pelaporaninsidental.tambah_pelaporanInsidental';
     }
 
     return view($view, [
@@ -131,7 +131,7 @@ public function create()
     public function getData($kode){
 
         $audit = DB::table('audit_insidentals')
-    ->join('kode_audits', 'audit_insidentals.kode_audit', '=', 'kode_audits.kode_audit_rutin')
+    ->join('kode_audits', 'audit_insidentals.kode_audit', '=', 'kode_audits.kode_audit')
     ->join('users as user_creator', 'audit_insidentals.user_id', '=', 'user_creator.id')
     ->join('users as unitkerja', 'audit_insidentals.unitkerja_id', '=', 'unitkerja.id')
     ->select('audit_insidentals.*', 'kode_audits.*', 'user_creator.username as creator_username', 'unitkerja.username as unitkerja_name')
@@ -143,7 +143,7 @@ public function create()
     public function ambil($kode, $unitkerja){
 
         $audit = DB::table('audit_insidentals')
-    ->join('kode_audits', 'audit_insidentals.kode_audit', '=', 'kode_audits.kode_audit_rutin')
+    ->join('kode_audits', 'audit_insidentals.kode_audit', '=', 'kode_audits.kode_audit')
     ->join('users as user_creator', 'audit_insidentals.user_id', '=', 'user_creator.id')
     ->join('users as unitkerja', 'audit_insidentals.unitkerja_id', '=', 'unitkerja.id')
     ->select('audit_insidentals.*', 'kode_audits.*', 'user_creator.username as creator_username', 'unitkerja.username as unitkerja_name')
@@ -156,15 +156,15 @@ public function proses(Request $request, $pelaporan_rutin_id)
 {
     try {
         // Ambil data dengan kode terbaru berdasarkan tanggal
-        $penindakrutin = AuditRutin::where('pelaporan_rutin_id', $pelaporan_rutin_id)
+        $pelaporrutin = AuditRutin::where('pelaporan_rutin_id', $pelaporan_rutin_id)
                                     ->orderBy('created_at', 'desc') // Urutkan berdasarkan tanggal terbaru
                                     ->first();
 
-        if (!$penindakrutin) {
+        if (!$pelaporrutin) {
             return response()->json(['error' => 'Data tidak ditemukan'], 404);
         }
 
-        $penindakrutin->update(['status' => 'terproses']);
+        $pelaporrutin->update(['status' => 'terproses']);
 
         return response()->json(['success' => 'Data berhasil diproses']);
     } catch (\Exception $e) {
@@ -197,7 +197,7 @@ public function proses(Request $request, $pelaporan_rutin_id)
 
         AuditRutin::create($data);
 
-    return redirect()->route('penindakan-rutin.penindakan')->with('suksessimpan', 'Data berhasil disimpan!');
+    return redirect()->route('pelaporan-rutin.pelaporan')->with('suksessimpan', 'Data berhasil disimpan!');
 }
 
     public function update(Request $request, $id)
@@ -248,14 +248,14 @@ public function proses(Request $request, $pelaporan_rutin_id)
 
 
       public function show($kode){
-        $kodeAudit = KodeAudit::where("kode_audit_rutin", $kode)->first();
+        $kodeAudit = KodeAudit::where("kode_audit", $kode)->first();
         $auditInsidental = AuditInsidental::where("kode_audit", $kode)->get();
         $role = auth()->user()->role;
 
         if ($role == 'admin') {
-        $view = 'admin.penindakanrutin.tambah_penindakanRutin';
+        $view = 'admin.pelaporanrutin.tambah_pelaporanRutin';
     } else if ($role == 'pimpinan') {
-        $view = 'pimpinan.penindakanrutin.tambahPelaporanInsidental';
+        $view = 'pimpinan.pelaporanrutin.tambahPelaporanInsidental';
     } else {
         $view = 'unitkerja.audit.tambahPelaporanInsidental';
     }
@@ -292,29 +292,29 @@ public function proses(Request $request, $pelaporan_rutin_id)
 
 
         // Create a new AuditInsidental instance and save the data
-        $penindakanInsidental = new AuditInsidental();
-        $penindakanInsidental->unitkerja_id = $request->unitkerja_id;
-        $penindakanInsidental->user_id = $request->user_id;
-        $penindakanInsidental->judul = $request->judul;
-        $penindakanInsidental->tanggal_audit = $request->tanggal_audit;
-        $penindakanInsidental->kode_audit = $request->kode_audit;
-        $penindakanInsidental->versi = $request->versi;
-        $penindakanInsidental->pendahuluan = $request->pendahuluan;
-        $penindakanInsidental->cakupan_audit = $request->cakupan_audit;
-        $penindakanInsidental->tujuan_audit = $request->tujuan_audit;
-        $penindakanInsidental->metodologi_audit = $request->metodologi_audit;
-        $penindakanInsidental->hasil_audit = $request->hasil_audit;
-        $penindakanInsidental->rekomendasi = $request->rekomendasi;
-        $penindakanInsidental->kesimpulan_audit = $request->kesimpulan_audit;
-        $penindakanInsidental->status = $request->status;
+        $pelaporanInsidental = new AuditInsidental();
+        $pelaporanInsidental->unitkerja_id = $request->unitkerja_id;
+        $pelaporanInsidental->user_id = $request->user_id;
+        $pelaporanInsidental->judul = $request->judul;
+        $pelaporanInsidental->tanggal_audit = $request->tanggal_audit;
+        $pelaporanInsidental->kode_audit = $request->kode_audit;
+        $pelaporanInsidental->versi = $request->versi;
+        $pelaporanInsidental->pendahuluan = $request->pendahuluan;
+        $pelaporanInsidental->cakupan_audit = $request->cakupan_audit;
+        $pelaporanInsidental->tujuan_audit = $request->tujuan_audit;
+        $pelaporanInsidental->metodologi_audit = $request->metodologi_audit;
+        $pelaporanInsidental->hasil_audit = $request->hasil_audit;
+        $pelaporanInsidental->rekomendasi = $request->rekomendasi;
+        $pelaporanInsidental->kesimpulan_audit = $request->kesimpulan_audit;
+        $pelaporanInsidental->status = $request->status;
 
-        $penindakanInsidental->save();
+        $pelaporanInsidental->save();
 
         // Redirect to a desired route with a success message
         // return redirect()->back()->with('suksessimpan', 'Data Audit insidental berhasil ditambahkan');
 
 
-        return redirect()->route('penindakan-insidental.penindakan')->with('suksessimpan', 'Data berhasil disimpan!');
+        return redirect()->route('pelaporan-insidental.pelaporan')->with('suksessimpan', 'Data berhasil disimpan!');
 
     }
 

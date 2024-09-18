@@ -52,7 +52,7 @@
                                     Jumlah Pengajuan Rutin
                                 </h5>
                                 <p class="card-text">
-                                    {{ $jumlahpelaporanrutin }}
+                                    {{ $jumlahpengajuanrutin }}
                                 </p>
                             </div>
                         </div>
@@ -62,7 +62,7 @@
                                     Jumlah Pengajuan Insidental
                                 </h5>
                                 <p class="card-text">
-                                    {{ $jumlahpelaporaninsidental }}
+                                    {{ $jumlahpengajuaninsidental }}
                                 </p>
                             </div>
                         </div>
@@ -363,7 +363,7 @@
 
 
 
-        <!-- Penindakan Audit Rutin -->
+        <!-- pelaporan Audit Rutin -->
         <div class="page-title mt-5">
             <div class="row">
                 <div class="col-12 col-md-6 order-md-1 order-last">

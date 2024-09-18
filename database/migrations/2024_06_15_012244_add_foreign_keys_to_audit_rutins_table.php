@@ -21,7 +21,7 @@ public function up()
 public function down()
 {
     Schema::table('audit_rutins', function (Blueprint $table) {
-        $table->dropForeign(['kode_audit_rutins']);
+        $table->dropForeign(['kode_audits']);
     });
 }
 
