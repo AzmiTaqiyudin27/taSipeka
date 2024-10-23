@@ -62,7 +62,6 @@
                                 <tr>
                                     <th>Tanggal Audit</th>
                                     <th>Judul</th>
-
                                     <th>Nama Sistem</th>
                                     <th>Unit Kerja</th>
                                     <th>Versi</th>
@@ -83,6 +82,9 @@
                                         <td style="text-transform:capitalize ">{{ $item->status }}</td>
 
                                         <td>
+                                            @if($item->status == 'draft')
+                                            <a href="{{ 'edit-pelaporan-audit-rutin/'. $item->id }}" class="btn btn-warning">Edit</a>
+                                            @endif
                                             {{-- <button type="button" class="tomboldetail btn btn-info" data-bs-toggle="modal"
                                                 data-bs-target="#detailModal" data-id="{{ $item->id }}">Detail</button> --}}
                                             <button type="button" class="btn btn btn-info tomboldetail"

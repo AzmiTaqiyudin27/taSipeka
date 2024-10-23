@@ -11,14 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('pelaporan_rutins', function (Blueprint $table) {
+        Schema::create('pengajuan_rutins', function (Blueprint $table) {
             $table->id();
             $table->foreignId("user_id");
-            $table->dateTime("tanggal_lapor");
+            $table->dateTime("tanggal_pengajuan");
             $table->string("nama_sistem");
             $table->string("versi");
             $table->longText("deskripsi");
             $table->text("dokumen");
+            $table->integer("status_approved");
+            $table->longText("is_ditolak");
             $table->timestamps();
         });
     }

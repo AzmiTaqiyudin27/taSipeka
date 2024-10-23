@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('kode_audits', function (Blueprint $table) {
             $table->id();
             $table->string('kode_audit');
+            $table->string('nama_sistem');
             $table->timestamps();
         });
     }

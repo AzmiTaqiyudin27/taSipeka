@@ -49,7 +49,7 @@
                         <table class="table row-table" id="table1">
                             <thead>
                                 <tr>
-                                    <th>Tanggal Lapor</th>
+                                    <th>Tanggal Pengajuan</th>
                                     <th>Nama Sistem</th>
                                     <th>Kendala</th>
                                     <th>Keterangan</th>

@@ -1,5 +1,10 @@
 @extends('TimKeamananAudit.keamananaudit_layout')
 @section('content')
+<form action="/auth/generate-pdf" method="POST">
+    @csrf
+    <input type="text" name="ids" id="ids">
+<button type="submit">Generate</button>
+</form>
     <div class="page-heading">
         <div class="page-title">
             <div class="row">
@@ -85,36 +90,38 @@
 
 
                             </div>
-
-                            <button type="button" class="btn my-3 btn-secondary" id="printSelected">Cetak Data
-                                Terpilih</button>
-                            {{-- <button id="excel" class="d-none  btn btn-info">Export Excel</button> --}}
-                            <table class="table row-table" id="tablehasil">
-                                <thead>
-                                    <tr>
-                                        <th><input type="checkbox" id="selectAll"></th>
-                                        <th>Tanggal Audit</th>
-                                        <th>Judul</th>
-                                        <th>Unit Kerja</th>
-                                        <th>Nama Sistem</th>
-                                        <th>Versi</th>
-                                        <th>Status</th>
-                                        <th>Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="tbody">
-                                    <tr>
-                                        <td class="text-center" colspan="9">Belum Menampilkan Data</td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <form action="/auth/generate-pdf" method="POST"> 
+                                @csrf
+                                <button type="submit" class="btn my-3 btn-secondary" id="printSelectedCheckbox">Cetak Data Terpilih</button>
+                                
+                                <table class="table row-table" id="tablehasil">
+                                    <thead>
+                                        <tr>
+                                            <th><input type="checkbox" id="selectAll"></th>
+                                            <th>Tanggal Audit</th>
+                                            <th>Judul</th>
+                                            <th>Unit Kerja</th>
+                                            <th>Nama Sistem</th>
+                                            <th>Versi</th>
+                                            <th>Status</th>
+                                            <th>Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="tbody">
+                                        <tr>
+                                            <td><input type="checkbox" class="rowCheckbox" name="test[]" value="34"></td>
+                                            <td>26/08/2024</td>
+                                            <td>tes</td>
+                                            <td>Fakultas Kedokteran</td>
+                                            <td>tes untuk sistem kedokteran 1</td>
+                                            <td>1</td>
+                                            <td>proses</td>
+                                            <td><button type="button" class="tomboldetail btn btn-info" data-id="34">Detail</button></td>
+                                        </tr>
+                                        <!-- Tambahkan baris lain di sini -->
+                                    </tbody>
+                                </table>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -246,7 +253,7 @@ $.ajax({
                 var row = `
                     <tr>
                         ${item.status === 'proses'
-                            ? '<td><input type="checkbox" class="rowCheckbox" value="' + item.id + '"></td>'
+                            ? '<td><input type="checkbox" name="ids[]" class="rowCheckbox" value="' + item.id + '"></td>'
                             : '<td> - </td>'}
                         <td>${formatDate(item.tanggal_audit)}</td>
                         <td>${item.judul}</td>
@@ -596,7 +603,7 @@ $.ajax({
                                 var id = item.id;
                                 var row = `
                                 <tr>
-                                <td><input type="checkbox" class="rowCheckbox" value='${id}'></td>
+                                <td><input type="checkbox" class="rowCheckbox" name="id[]" value='${id}'></td>
                                <td>${formatDate(item.tanggal_audit)}</td>
                                 <td>${item.judul}</td>
                                 <td>${item.unit_kerja.username}</td>
@@ -871,4 +878,70 @@ $.ajax({
                 })
     </script>
     @endpush
+
+
+
+<script>
+    // Checkbox "Select All"
+    document.getElementById('selectAll').onclick = function () {
+        const checkboxes = document.querySelectorAll('.rowCheckbox');
+        checkboxes.forEach(checkbox => checkbox.checked = this.checked);
+    };
+
+    // Event listener untuk tombol cetak
+    function printClicked () {
+        alert('Cetak PDF');
+        const selectedIds = [];
+        const checkboxes = document.querySelectorAll('.rowCheckbox:checked');
+        
+        checkboxes.forEach(checkbox => {
+            selectedIds.push(checkbox.value);
+        });
+
+        if (selectedIds.length > 0) {
+            // Mengirim ID terpilih ke server menggunakan AJAX
+            // fetch('/generate-pdf', { // Ganti dengan route PHP yang sesuai
+            //     method: 'POST',
+            //     headers: {
+            //         'Content-Type': 'application/json',
+            //     },
+            //     body: JSON.stringify({ ids: selectedIds }),
+            // })
+            // .then(response => response.blob())
+            // .then(blob => {
+            //     // Buat link untuk mendownload PDF
+            //     const url = window.URL.createObjectURL(blob);
+            //     const a = document.createElement('a');
+            //     a.style.display = 'none';
+            //     a.href = url;
+            //     a.download = 'combined.pdf'; // Nama file PDF yang diunduh
+            //     document.body.appendChild(a);
+            //     a.click();
+            //     window.URL.revokeObjectURL(url);
+            // })
+            // .catch(error => console.error('Error:', error));
+        } else {
+            alert('Pilih setidaknya satu data untuk dicetak.');
+        }
+    };
+</script>
+
+<script>
+    // Pilih semua checkbox saat checkbox 'select all' dicentang
+    document.getElementById('selectAll').addEventListener('change', function() {
+        const checkboxes = document.querySelectorAll('.rowCheckbox');
+        checkboxes.forEach((checkbox) => {
+            checkbox.checked = this.checked;
+        });
+    });
+
+    // Opsi untuk memvalidasi pengiriman form
+    document.getElementById('pdfForm').addEventListener('submit', function(event) {
+        const checkedBoxes = document.querySelectorAll('.rowCheckbox:checked');
+        if (checkedBoxes.length === 0) {
+            event.preventDefault(); // Mencegah pengiriman form jika tidak ada checkbox yang dipilih
+            alert('Silakan pilih setidaknya satu data.');
+        }
+    });
+</script>
 

@@ -11,14 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('pelaporan_insidentals', function (Blueprint $table) {
+        Schema::create('pengajuan_insidentals', function (Blueprint $table) {
             $table->id();
             $table->foreignId("user_id");
-            $table->dateTime("tanggal_lapor");
+            $table->dateTime("tanggal_pengajuan");
             $table->string("nama_sistem");
             $table->string("kendala");
-            $table->string("keterangan");
+            $table->longText("keterangan");
             $table->text("foto");
+            $table->integer("status_approved");
+            $table->longText("is_ditolak");
             $table->timestamps();
         });
     }

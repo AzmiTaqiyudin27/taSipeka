@@ -13,17 +13,20 @@ return new class extends Migration
     {
         Schema::create('audit_rutins', function (Blueprint $table) {
             $table->id();
-            $table->string("pelaporan_rutin_id");
-            $table->foreignId("user_id");
-            $table->dateTime("tanggal_audit");
-            $table->string("nama_sistem");
+            $table->string("kode_audit");
+            $table->bigInteger("user_id");
+            $table->bigInteger("unitkerja_id");
+            $table->dateTime("tanggal_mulai");
+            $table->dateTime("tanggal_selesai");
             $table->string("versi");
-            $table->string("keamanan_sistem");
-            $table->string("bahasa_pemrograman");
-            $table->string("farmework");
-            $table->string("maksimum_penyimpanan");
-            $table->string("maksimum_pengguna");
-            $table->string("pengguna_sistem");
+            $table->string("pendahuluan");
+            $table->string("judul");
+            $table->string("cakupan_audit");
+            $table->string("tujuan_audit");
+            $table->string("rekomendasi");
+            $table->string("metodologi_audit");
+            $table->string("kesimpulan_audit");
+            $table->string("hasil_audit");
             $table->string("status");
             $table->timestamps();
         });

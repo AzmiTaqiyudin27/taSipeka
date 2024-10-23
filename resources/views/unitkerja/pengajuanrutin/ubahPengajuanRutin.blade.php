@@ -34,8 +34,8 @@
     @method('put')
     @csrf
     <div class="form-group">
-        <label for="tanggal_lapor" class="form-label">Tanggal Lapor</label>
-        <input type="date" name="tanggal_lapor" id="tanggal_lapor" class="form-control" placeholder="Tanggal Lapor"
+        <label for="tanggal_lapor" class="form-label">Tanggal Pengajuan</label>
+        <input type="date" name="tanggal_lapor" id="tanggal_lapor" class="form-control"  value="{{  date('Y-m-d'); }}"placeholder="Tanggal Lapor"
                value="{{ $laporan->tanggal_lapor }}" required>
     </div>
 

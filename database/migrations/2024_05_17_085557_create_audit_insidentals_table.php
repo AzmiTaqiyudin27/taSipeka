@@ -13,15 +13,21 @@ return new class extends Migration
     {
         Schema::create('audit_insidentals', function (Blueprint $table) {
             $table->id();
-            $table->foreignId("pelaporan_insidental_id");
-            $table->foreignId("user_id");
+            $table->foreignId("kode_audit");
+            $table->bigInteger("user_id");
+            $table->bigInteger("unitkerja_id");
+            $table->dateTime("tanggal_mulai");
+            $table->dateTime("tanggal_selesai");
+            $table->string("versi");
             $table->string("pendahuluan");
+            $table->string("judul");
             $table->string("cakupan_audit");
             $table->string("tujuan_audit");
-            $table->string("metodologi_audit");
-            $table->string("hasil_audit");
             $table->string("rekomendasi");
+            $table->string("metodologi_audit");
             $table->string("kesimpulan_audit");
+            $table->string("hasil_audit");
+            $table->string("status");
             $table->timestamps();
         });
     }
