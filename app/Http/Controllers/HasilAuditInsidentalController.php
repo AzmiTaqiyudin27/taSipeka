@@ -23,7 +23,7 @@ class HasilAuditInsidentalController extends Controller
     } else if ($role == 'rektor') {
         $view = 'rektor.hasilaudit.hasilinsidental';
     } else {
-        $view = 'TimKeamananAudit.hasilaudit.hasilInsidental';
+        $view = 'TimKeamananAudit.hasilaudit.keamananaudit_hasilInsidental';
     }
         $laporan = KodeAudit::all();
         $unitkerja = User::where('role', 'unitkerja')->get();

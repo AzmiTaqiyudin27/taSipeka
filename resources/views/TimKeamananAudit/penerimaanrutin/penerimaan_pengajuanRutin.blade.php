@@ -66,11 +66,8 @@
                                          <td>
                                             @php
                                                 $dokumenArray = json_decode($item->dokumen, true);
-
-
                                             @endphp
                                             <ul>
-
                                                 @foreach ($dokumenArray as $dokumen)
                                                 <li>
                                                     <a href="/dokumen/{{ $dokumen }}">{{ $dokumen }}</a><br>

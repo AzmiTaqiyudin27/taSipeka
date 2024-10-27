@@ -83,12 +83,6 @@ class HasilAuditRutinController extends Controller
             'user_id' => 'required',
             'kode_audit' => 'required|max:255',
             'versi' => 'required',
-            'keamanan_sistem' => 'required',
-            'bahasa_pemrograman' => 'required',
-            'framework' => 'required',
-            'maksimum_penyimpanan' => 'required',
-            'maksimum_pengguna' => 'required',
-            'pengguna_sistem' => 'required',
             'status' => 'required',
         ]);
 
@@ -98,12 +92,6 @@ class HasilAuditRutinController extends Controller
         $auditRutin->user_id = $validatedData['user_id'];
         $auditRutin->kode_audit = $validatedData['kode_audit'];
         $auditRutin->versi = $validatedData['versi'];
-        $auditRutin->keamanan_sistem = $validatedData['keamanan_sistem'];
-        $auditRutin->bahasa_pemrograman = $validatedData['bahasa_pemrograman'];
-        $auditRutin->framework = $validatedData['framework'];
-        $auditRutin->maksimum_penyimpanan = $validatedData['maksimum_penyimpanan'];
-        $auditRutin->maksimum_pengguna = $validatedData['maksimum_pengguna'];
-        $auditRutin->pengguna_sistem = $validatedData['pengguna_sistem'];
         $auditRutin->status = $validatedData['status'];
 
         // Simpan ke dalam database
@@ -119,12 +107,6 @@ class HasilAuditRutinController extends Controller
         'user_id' => 'required',
         'kode_audit' => 'required|max:255',
         'versi' => 'required',
-        'keamanan_sistem' => 'required',
-        'bahasa_pemrograman' => 'required',
-        'framework' => 'required',
-        'maksimum_penyimpanan' => 'required',
-        'maksimum_pengguna' => 'required',
-        'pengguna_sistem' => 'required',
         'status' => 'required',
     ]);
 
@@ -134,12 +116,6 @@ class HasilAuditRutinController extends Controller
     $auditRutin->user_id = $validatedData['user_id'];
     $auditRutin->kode_audit = $validatedData['kode_audit'];
     $auditRutin->versi = $validatedData['versi'];
-    $auditRutin->keamanan_sistem = $validatedData['keamanan_sistem'];
-    $auditRutin->bahasa_pemrograman = $validatedData['bahasa_pemrograman'];
-    $auditRutin->framework = $validatedData['framework'];
-    $auditRutin->maksimum_penyimpanan = $validatedData['maksimum_penyimpanan'];
-    $auditRutin->maksimum_pengguna = $validatedData['maksimum_pengguna'];
-    $auditRutin->pengguna_sistem = $validatedData['pengguna_sistem'];
     $auditRutin->status = $validatedData['status'];
 
     // Simpan perubahan ke dalam database
@@ -170,7 +146,7 @@ class HasilAuditRutinController extends Controller
     public function getDataByFilter($id, $unitkerja, $dari, $sampai){
             // Query untuk mendapatkan data antara dua tanggal berdasarkan id
             $auditRutin = AuditRutin::with('unitKerja')->where('kode_audit', $id)->where('unitkerja_id', $unitkerja )
-                ->whereBetween('tanggal_audit', [$dari, $sampai])
+                ->whereBetween('tanggal_proses', [$dari, $sampai])
                 ->get();
 
             // Kembalikan hasil query dalam format JSON
@@ -185,7 +161,7 @@ class HasilAuditRutinController extends Controller
         return response($auditRutin);
     }
 
-    public function getAuditInsidentalGet(Request $request)
+    public function getAuditRutinGet(Request $request)
 {
 
     // Inisialisasi query dasar
@@ -195,7 +171,7 @@ class HasilAuditRutinController extends Controller
     if ($request->sistem && $request->unitkerja && $request->dari && $request->sampai) {
         $query->where('kode_audit', $request->sistem)
               ->where('unitkerja_id', $request->unitkerja)
-              ->whereBetween('tanggal_audit', [$request->dari, $request->sampai]);
+              ->whereBetween('tanggal_proses', [$request->dari, $request->sampai]);
     }
     // Cek apakah request unitkerja dan sistem ada
     elseif ($request->sistem && $request->unitkerja) {
@@ -205,12 +181,12 @@ class HasilAuditRutinController extends Controller
     // Cek apakah request sistem, dari dan sampai ada
     elseif ($request->sistem && $request->dari && $request->sampai) {
         $query->where('kode_audit', $request->sistem)
-              ->whereBetween('tanggal_audit', [$request->dari, $request->sampai]);
+              ->whereBetween('tanggal_proses', [$request->dari, $request->sampai]);
     }
     // Cek apakah request unitkerja, dari dan sampai ada
     elseif ($request->unitkerja && $request->dari && $request->sampai) {
         $query->where('unitkerja_id', $request->unitkerja)
-              ->whereBetween('tanggal_audit', [$request->dari, $request->sampai]);
+              ->whereBetween('tanggal_proses', [$request->dari, $request->sampai]);
     }
     // Cek request satu per satu untuk kombinasi lainnya
     else {
@@ -221,14 +197,14 @@ class HasilAuditRutinController extends Controller
             $query->where('unitkerja_id', $request->unitkerja);
         }
         if ($request->dari && $request->sampai) {
-            $query->whereBetween('tanggal_audit', [$request->dari, $request->sampai]);
+            $query->whereBetween('tanggal_proses', [$request->dari, $request->sampai]);
         }
     }
 
     // Jalankan query dan dapatkan hasilnya
-    $auditInsidental = $query->orderBy('tanggal_audit', 'asc')->get();
+    $auditRutin = $query->orderBy('tanggal_proses', 'asc')->get();
 
     // Kembalikan hasil query dalam format JSON
-    return response()->json($auditInsidental);
+    return response()->json($auditRutin);
 }
 }

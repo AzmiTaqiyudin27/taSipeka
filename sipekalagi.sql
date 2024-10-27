@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 18, 2024 at 03:27 PM
+-- Generation Time: Oct 24, 2024 at 10:38 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -75,6 +75,7 @@ CREATE TABLE `audit_rutins` (
   `metodologi_audit` longtext DEFAULT NULL,
   `kesimpulan_audit` longtext DEFAULT NULL,
   `hasil_audit` longtext DEFAULT NULL,
+  `lampiran` varchar(255) NOT NULL,
   `status` varchar(20) DEFAULT 'draft',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -84,9 +85,13 @@ CREATE TABLE `audit_rutins` (
 -- Dumping data for table `audit_rutins`
 --
 
-INSERT INTO `audit_rutins` (`id`, `kode_audit`, `user_id`, `unitkerja_id`, `tanggal_audit`, `versi`, `pendahuluan`, `judul`, `cakupan_audit`, `tujuan_audit`, `rekomendasi`, `metodologi_audit`, `kesimpulan_audit`, `hasil_audit`, `status`, `created_at`, `updated_at`) VALUES
-(34, 'A001', 2, 6, '2024-08-26', '1', '<p>tes</p><figure class=\"image\"><img src=\"/storage/uploads/1724988078_tes foto.png\"></figure><figure class=\"image\"><img src=\"/storage/uploads/1724631192_tes foto.png\"></figure>', 'tes', '<p>tes</p>', '<p><strong>tes</strong></p>', '<p>tes</p>', '<p>tes</p>', '<p>tes</p>', '<p>tes</p>', 'proses', '2024-08-25 17:13:24', '2024-08-29 20:21:26'),
-(35, 'A002', 2, 12, '2024-08-26', '1', '<p>tes</p>', 'tes', '<p>tes</p><figure class=\"image\"><img src=\"/storage/uploads/1724988099_tes foto.png\"></figure><figure class=\"image\"><img src=\"/storage/uploads/1724631232_tes foto.png\"></figure>', '<p>tes</p>', '<p>tes</p>', '<p>tes</p>', '<p>tes</p>', '<p>tes</p>', 'proses', '2024-08-25 17:14:00', '2024-08-29 20:21:43');
+INSERT INTO `audit_rutins` (`id`, `kode_audit`, `user_id`, `unitkerja_id`, `tanggal_audit`, `versi`, `pendahuluan`, `judul`, `cakupan_audit`, `tujuan_audit`, `rekomendasi`, `metodologi_audit`, `kesimpulan_audit`, `hasil_audit`, `lampiran`, `status`, `created_at`, `updated_at`) VALUES
+(34, 'A001', 2, 6, '2024-08-26', '1', '<p>tes</p><figure class=\"image\"><img src=\"/storage/uploads/1724988078_tes foto.png\"></figure><figure class=\"image\"><img src=\"/storage/uploads/1724631192_tes foto.png\"></figure>', 'tes', '<p>tes</p>', '<p><strong>tes</strong></p>', '<p>tes</p>', '<p>tes</p>', '<p>tes</p>', '<p>tes</p>', '[\"Azmi Taqiyudin-resume (5).pdf\",\"Azmi Taqiyudin-resume (5).pdf\"]', 'proses', '2024-08-25 17:13:24', '2024-08-29 20:21:26'),
+(35, 'A002', 2, 12, '2024-08-26', '1', '<p>tes</p>', 'tes', '<p>tes</p><figure class=\"image\"><img src=\"/storage/uploads/1724988099_tes foto.png\"></figure><figure class=\"image\"><img src=\"/storage/uploads/1724631232_tes foto.png\"></figure>', '<p>tes</p>', '<p>tes</p>', '<p>tes</p>', '<p>tes</p>', '<p>tes</p>', '[\"Azmi Taqiyudin-resume (5).pdf\",\"Azmi Taqiyudin-resume (5).pdf\"]', 'proses', '2024-08-25 17:14:00', '2024-08-29 20:21:43'),
+(38, 'A003', 2, 27, '2024-10-31', '4', '<p>tesss</p>', 'yaull', '&&&&&&&&&&<p>tes</p>', '<p>tes</p>', NULL, '<p>tes</p>', '<p>tes</p><p><img src=\"/storage/uploads/1728277041_logo unsoed.png\"><img src=\"/storage/uploads/1728277041_logo_unsoed_transparent.png\"></p>}}', '<p>tes</p>', '[\"Azmi Taqiyudin-resume (5).pdf\",\"Azmi Taqiyudin-resume (5).pdf\"]', 'draft', '2024-10-06 21:57:31', '2024-10-06 23:13:02'),
+(39, 'A001', 2, 6, '2024-08-26', '1', '<p>zzxczxczxc</p><figure class=\"image\"><img src=\"/storage/uploads/1724988078_tes foto.png\"></figure><figure class=\"image\"><img src=\"/storage/uploads/1724631192_tes foto.png\"></figure>', 'tes', '<p>zxczxc</p>', '<p>xzczxc</p>', '<p>tes</p>', '<p>zxc</p>', '<p>zxczxc</p>', '<p>tes</p>', '[\"Azmi Taqiyudin-resume (5).pdf\",\"Azmi Taqiyudin-resume (5).pdf\"]', 'draft', '2024-10-08 22:24:14', '2024-10-08 22:24:14'),
+(40, 'A002', 2, 12, '2024-08-26', '1', '<p>tes</p>', 'tes', '<p>tes</p><figure class=\"image\"><img src=\"/storage/uploads/1724988099_tes foto.png\"></figure><figure class=\"image\"><img src=\"/storage/uploads/1724631232_tes foto.png\"></figure>', '<p>tes</p>', '<p>tes</p>', '<p>tes</p>', '<p>tes</p>', '<p>tes</p>', '[\"Form dan lampiran keringanan UKT terbaru.docx\",\"format keringanan UKT Genap 20232024  final.docx\"]', 'Status', '2024-10-09 01:52:42', '2024-10-09 01:52:42'),
+(41, 'A002', 2, 12, '2024-08-26', '1', '<p>tes</p>', 'tes', '<p>tes</p><figure class=\"image\"><img src=\"/storage/uploads/1724988099_tes foto.png\"></figure><figure class=\"image\"><img src=\"/storage/uploads/1724631232_tes foto.png\"></figure>', '<p>tes</p>', '<p>tes</p>', '<p>tes</p>', '<p>tes</p>', '<p>tes</p>', '[\"Form dan lampiran keringanan UKT terbaru.docx\"]', 'Status', '2024-10-09 20:59:23', '2024-10-09 20:59:23');
 
 -- --------------------------------------------------------
 
@@ -152,7 +157,9 @@ CREATE TABLE `kode_audits` (
 
 INSERT INTO `kode_audits` (`id`, `kode_audit`, `nama_sistem`, `created_at`, `updated_at`) VALUES
 (9, 'A001', 'tes untuk sistem kedokteran 1', '2024-08-24 22:24:45', '2024-08-24 22:24:45'),
-(10, 'A002', 'tes sistem teknik 1', '2024-08-24 23:10:18', '2024-08-24 23:10:18');
+(10, 'A002', 'tes sistem teknik 1', '2024-08-24 23:10:18', '2024-08-24 23:10:18'),
+(12, 'A003', 'TES AJA', '2024-10-06 21:56:43', '2024-10-06 21:56:43'),
+(13, 'A004', 'tes lagi', '2024-10-09 20:49:17', '2024-10-09 20:49:17');
 
 -- --------------------------------------------------------
 
@@ -252,7 +259,9 @@ CREATE TABLE `pengajuan_rutins` (
 
 INSERT INTO `pengajuan_rutins` (`id`, `user_id`, `tanggal_lapor`, `nama_sistem`, `versi`, `deskripsi`, `dokumen`, `status_approved`, `is_ditolak`, `created_at`, `updated_at`) VALUES
 (47, 6, '2024-08-25 00:00:00', 'tes bulan agustus sistem fakultas kedokteran 1', '1', 'tesss', '[\"1724987928-image (1).png\"]', '2', NULL, '2024-08-25 07:55:44', '2024-09-10 20:30:23'),
-(51, 6, '2024-08-25 00:00:00', 'tes bulan agustus sistem fakultas kedokteran 2', '1', 'tes', '[\"1724987918-logo unsoed.png\"]', '3', 'tes', '2024-08-29 20:17:34', '2024-09-10 20:30:32');
+(51, 6, '2024-08-25 00:00:00', 'tes bulan agustus sistem fakultas kedokteran 2', '1', 'tes', '[\"1724987918-logo unsoed.png\"]', '3', 'tes', '2024-08-29 20:17:34', '2024-09-10 20:30:32'),
+(54, 12, '2024-10-07 00:00:00', 'tes', '1', 'TES', '[\"logo unsoed.png\",\"logo_unsoed_transparent.png\"]', '1', NULL, '2024-10-06 20:28:16', '2024-10-06 20:28:16'),
+(55, 12, '2024-10-09 00:00:00', 'tes', '1', 'TES', '[\"Azmi Taqiyudin-resume (5).pdf\",\"buku rekening bri.jpg\"]', '1', NULL, '2024-10-08 22:10:47', '2024-10-08 22:10:47');
 
 -- --------------------------------------------------------
 
@@ -295,7 +304,8 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`, `created_at`, `updated_at`) VALUES
-('YhN0W5YujU3kjV2vlqJqg4ADxXHHClTp7MUOE5Ga', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36 Edg/128.0.0.0', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiZmZldlkxNFdrMGpncG9Zc2gzT2twblJtOHU5MkFIS3d5dmlnTUFmTiI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mjc6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9sb2dpbiI7fX0=', 1726026332, NULL, NULL);
+('RzCJ2bj0cwji3mBW1UDMDB1fkGeSMfelh4HzRc68', 2, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36 Edg/129.0.0.0', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoicUEwb09NSnRrS1BhdlFPZ1Vya0dBWUVDeTB3T0VDdlcwRDg4cHRjVyI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDk6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9hdXRoL3BlbGFwb3Jhbi1ydXRpbi9jcmVhdGUiO31zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aToyO30=', 1728464590, NULL, NULL),
+('upMPUL7F7IHBnye9RBOhZ92UxLf7QDHEe21WEinH', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36 Edg/129.0.0.0', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoidkZUUHhZZm9xM1JQQ0tyS09CcEN2YTB6YWM5WVZCTVZIbG1DYWNnUiI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mjc6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9sb2dpbiI7fX0=', 1728533151, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -350,7 +360,8 @@ ALTER TABLE `audit_insidentals`
 --
 ALTER TABLE `audit_rutins`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `Baru` (`kode_audit`);
+  ADD KEY `Baru` (`kode_audit`),
+  ADD KEY `kode_audit` (`kode_audit`);
 
 --
 -- Indexes for table `dokumen_lapor_insidentals`
@@ -439,7 +450,7 @@ ALTER TABLE `audit_insidentals`
 -- AUTO_INCREMENT for table `audit_rutins`
 --
 ALTER TABLE `audit_rutins`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
 
 --
 -- AUTO_INCREMENT for table `dokumen_lapor_insidentals`
@@ -463,7 +474,7 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT for table `kode_audits`
 --
 ALTER TABLE `kode_audits`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `migrations`
@@ -481,7 +492,7 @@ ALTER TABLE `pengajuan_insidentals`
 -- AUTO_INCREMENT for table `pengajuan_rutins`
 --
 ALTER TABLE `pengajuan_rutins`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
 
 --
 -- AUTO_INCREMENT for table `personal_access_tokens`

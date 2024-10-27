@@ -150,13 +150,21 @@
                         var id = response.auditRutin[0].id;
                         var action = "{{ route('pelaporan-rutin.update', '') }}/" + id;
                         form.attr("action", action)
+
+    // Event untuk tombol "Proses"
+   
                         var selectedUnitKerjaId = response.auditRutin[0].unitkerja_id;
                         var data = `
                           @method('PUT')
                         <div class="form-group">
-                                    <label for="tanggal_audit" class="form-label">Tanggal Audit</label>
-                                    <input type="date" value="${response.auditRutin[0].tanggal_audit}" name="tanggal_audit"
-                                        id="tanggal_audit" class="form-control" required placeholder="Tanggal Audit">
+                                    <label for="tanggal_awal" class="form-label">Tanggal Awal</label>
+                                    <input type="date" value="${response.auditRutin[0].tanggal_awal}" name="tanggal_awal"
+                                        id="tanggal_awal" class="form-control" required placeholder="Tanggal Awal">
+                                </div>
+                                <div class="form-group">
+                                    <label for="tanggal_akhir" class="form-label">Tanggal Akhir</label>
+                                    <input type="date" value="${response.auditRutin[0].tanggal_akhir}" name="tanggal_akhir"
+                                        id="tanggal_akhir" class="form-control" required placeholder="Tanggal Akhir">
                                 </div>
                                     <div class="form-group">
                                     <label for="" class="form-label">Unitkerja</label>
@@ -174,59 +182,58 @@
 
                                  <div class="form-group">
                     <label for="judul" class="form-label">Judul</label>
-                    <input type="text" value="${response.auditRutin[0].judul}" name="judul" id="judul" class="form-control" placeholder="Judul" >
+                    <input type="text" value="${response.auditRutin[0].judul ? response.auditRutin[0].judul : ""}" name="judul" id="judul" class="form-control" placeholder="Judul" >
                 </div>
                              <div class="form-group">
                                     <label for="versi" class="form-label">Versi</label>
                                     <input type="text" name="versi" id="versi" class="form-control"
-                                        placeholder="Versi" value="${response.auditRutin[0].versi}">
+                                        placeholder="Versi" value="${response.auditRutin[0].versi ? response.auditRutin[0].versi : ""}">
                                 </div>
 
                                <div class="form-group">
                     <label for="pendahuluan" class="form-label">Pendahuluan</label>
                     <textarea name="pendahuluan" id="pendahuluan" class="form-control ckeditor" placeholder="Pendahuluan">
-                    ${response.auditRutin[0].pendahuluan}
+                    ${response.auditRutin[0].pendahuluan ? response.auditRutin[0].pendahuluan : ""}
                     </textarea>
                 </div>
 
                 <div class="form-group">
                     <label for="cakupan_audit" class="form-label">Cakupan Audit</label>
                     <textarea name="cakupan_audit" id="cakupan_audit"  class="form-control ckeditor" placeholder="Cakupan Audit">
-                    ${response.auditRutin[0].cakupan_audit}
+                    ${response.auditRutin[0].cakupan_audit ? response.auditRutin[0].cakupan_audit : ""}
                     </textarea>
                 </div>
 
                 <div class="form-group">
                     <label for="tujuan_audit" class="form-label">Tujuan Audit</label>
                     <textarea name="tujuan_audit" id="tujuan_audit" class="form-control ckeditor" placeholder="Tujuan Audit">
-                    ${response.auditRutin[0].tujuan_audit}
+                    ${response.auditRutin[0].tujuan_audit ? response.auditRutin[0].tujuan_audit : ""}
                     </textarea>
                 </div>
 
                 <div class="form-group">
                     <label for="metodologi_audit" class="form-label">Metodologi Audit</label>
                     <textarea name="metodologi_audit" id="metodologi_audit" class="form-control ckeditor" placeholder="Metodologi Audit">
-                    ${response.auditRutin[0].metodologi_audit}
+                    ${response.auditRutin[0].metodologi_audit ? response.auditRutin[0].metodologi_audit : ""}
                     </textarea>
                 </div>
 
                 <div class="form-group">
                     <label for="hasil_audit" class="form-label">Hasil Audit</label>
                     <textarea name="hasil_audit" id="hasil_audit" class="form-control ckeditor" placeholder="Hasil Audit">
-                     ${response.auditRutin[0].hasil_audit}</textarea>
+                     ${response.auditRutin[0].hasil_audit ? response.auditRutin[0].hasil_audit : ""}</textarea>
                 </div>
 
                 <div class="form-group">
                     <label for="rekomendasi" class="form-label">Rekomendasi</label>
                     <textarea name="rekomendasi" id="rekomendasi" class="form-control ckeditor" placeholder="Rekomendasi">
-                     ${response.auditRutin[0].rekomendasi}</textarea>
+                     ${response.auditRutin[0].rekomendasi ? response.auditRutin[0].rekomendasi : ""}</textarea>
                 </div>
                 <div class="form-group">
                     <label for="kesimpulan" class="form-label">Kesimpulan Audit</label>
                     <textarea name="kesimpulan_audit" id="kesimpulan" class="form-control ckeditor" placeholder="Kesimpulan Audit">
-                     ${response.auditRutin[0].kesimpulan_audit}</textarea>
+                     ${response.auditRutin[0].kesimpulan_audit ? response.auditRutin[0].kesimpulan_audit : ""}</textarea>
                 </div>
-
 
                                 <div class="form-group">
                                     <label for="status" class="form-label">Status</label>
@@ -239,16 +246,67 @@
                                     </select>
                                 </div>
 
-                                    
+                                      <div class="formtambahan">
+                                <div id="fileInputsContainer" class="form-group">
+    <label for="lampiran" class="form-label">Lampiran</label>
+    
+   
+    <br>
+        ${response.auditRutin[0].lampiran ? `Sudah adalah lampiran yaitu ${response.auditRutin[0].lampiran}` : "Belum ada lampiran"}
 
+    <input 
+        type="file" 
+        name="lampiran[]" 
+        id="lampiran" 
+        class="form-control mb-3" 
+        placeholder="Lampiran"
+    >
+</div>
 
+                            
+                                <!-- Elemen untuk Menampilkan Nama File yang Dipilih -->
+                                <div class="form-group">
+                                    <label>File yang Dipilih:</label>
+                                    <ul id="fileList"></ul> <!-- Ini adalah tempat nama file yang akan ditampilkan -->
+                                </div>
+                            
+                                <!-- Tombol untuk menambahkan input file lagi -->
+                                <div class="form-group">
+                                    <button type="button" id="addFileInputBtn" class="btn btn-primary" onclick="addFormTambahan()">Tambah File Lain</button>
+                                </div>
+                            </div>
+
+                         <div class="form-group">
+                                    <label for="tanggal_proses" class="form-label">Tanggal Proses</label>
+                                    <input type="date" value="${response.auditRutin[0].tanggal_proses}" name="tanggal_proses"
+                                        id="tanggal_proses" class="form-control" placeholder="Tanggal Proses">
+                                </div>
 
                                 <div class="form-group">
-                                    <button type="submit" class="btn btn-primary">Update</button>
-                                </div>`;
+    <button type="submit" class="btn btn-primary" id="updateButton">Update</button>
+    <button type="button" class="btn btn-success" id="processButton">Proses</button>
+</div> `;
+
+                                
 
 
                         $(".formtambahan").append(data);
+                        
+
+                         // Event untuk tombol "Update"
+    $("#updateButton").on("click", function() {
+        form.attr("action", "{{ route('pelaporan-rutin.update', '') }}/" + id);
+        form.submit(); // Submit form
+
+    });
+
+    // Event untuk tombol "Proses"
+    $("#processButton").on("click", function() {
+        console.log("Cek proses 1")
+
+        form.attr("action", "{{ route('pelaporan-rutin.prosess', '') }}/" + id); // Ganti dengan route proses
+        form.submit(); // Submit form
+    });
                         document.querySelectorAll('.ckeditor').forEach(function(
                             editorElement) {
                             ClassicEditor
@@ -291,13 +349,19 @@
                         var id = response.auditProses.id;
                         var action = "{{ route('tambahAuditRutin') }}";
                         form.attr("action", action)
+
                         var selectedUnitKerjaId = response.auditProses.unitkerja_id;
                         var data = `
 
-                        <div class="form-group">
-                                    <label for="tanggal_audit" class="form-label">Tanggal Audit</label>
-                                    <input type="date" value="${response.auditProses.tanggal_audit}" name="tanggal_audit"
-                                        id="tanggal_audit" class="form-control" placeholder="Tanggal Audit required">
+                       <div class="form-group">
+                                    <label for="tanggal_awal" class="form-label">Tanggal Awal</label>
+                                    <input type="date" value="${response.auditProses.tanggal_awal}" name="tanggal_awal"
+                                        id="tanggal_awal" class="form-control" required placeholder="Tanggal Awal">
+                                </div>
+                                <div class="form-group">
+                                    <label for="tanggal_akhir" class="form-label">Tanggal Akhir</label>
+                                    <input type="date" value="${response.auditProses.tanggal_akhir}" name="tanggal_akhir"
+                                        id="tanggal_akhir" class="form-control" required placeholder="Tanggal Akhir">
                                 </div>
                                     <div class="form-group">
                                     <label for="" class="form-label">Unitkerja</label>
@@ -409,13 +473,33 @@
                                     <button type="button" id="addFileInputBtn" class="btn btn-primary" onclick="addFormTambahan()">Tambah File Lain</button>
                                 </div>
                             </div>
-    
+                        <div class="form-group">
+                                    <label for="tanggal_proses" class="form-label">Tanggal Proses</label>
+                                    <input type="date" value="${response.auditProses.tanggal_proses}" name="tanggal_proses"
+                                        id="tanggal_proses" class="form-control" placeholder="Tanggal Proses">
+                                </div>
                                 <div class="form-group">
-                                    <button type="submit" class="btn btn-primary">Tambah</button>
+                                    <button type="submit" class="btn btn-primary" id="updateButton">Update</button>
+                                    <button type="button" class="btn btn-success" id="processButton">Proses</button>
                                 </div>`;
 
                                 
                         $(".formtambahan").append(data);
+                        
+
+                        $("#updateButton").on("click", function() {
+        form.attr("action", "{{ route('tambahAuditRutin') }}");
+        form.submit(); // Submit form
+
+    });
+
+                        // Event untuk tombol "Proses"
+                        $("#processButton").on("click", function() {
+                            console.log("Cek proses 2")
+
+        form.attr("action", "{{ route('pelaporan-rutin.prosess', '') }}/" + id); // Ganti dengan route proses
+        form.submit(); // Submit form
+    });
                         document.querySelectorAll('.ckeditor').forEach(function(
                             editorElement) {
                             ClassicEditor
@@ -460,7 +544,8 @@
 
                     }
                     else {
-                        console.log("anjay");
+                        console.log("tes1");
+                        console.log(response);
 
 
                         var form = $(".formTambahAudit");
@@ -470,9 +555,12 @@
                         var data = `
 
                         <div class="form-group">
-                                    <label for="tanggal_audit" class="form-label">Tanggal Audit</label>
-                                    <input type="date"  name="tanggal_audit"
-                                        id="tanggal_audit" class="form-control" value="" required placeholder="Tanggal Audit">
+                                    <label for="tanggal_awal" class="form-label">Tanggal Awal</label>
+                                    <input type="date" name="tanggal_awal" id="tanggal_awal" class="form-control" required placeholder="Tanggal Awal">
+                                </div>
+                                <div class="form-group">
+                                    <label for="tanggal_akhir" class="form-label">Tanggal Akhir</label>
+                                    <input type="date" name="tanggal_akhir" id="tanggal_akhir" class="form-control" required placeholder="Tanggal Akhir">
                                 </div>
                                     <div class="form-group">
                                     <label for="" class="form-label">Unitkerja</label>
@@ -546,7 +634,10 @@
 
                     </textarea>
                 </div>
-
+                                <div class="form-group">
+                                    <label for="tanggal_proses" class="form-label">Tanggal Proses</label>
+                                    <input type="date" name="tanggal_proses" id="tanggal_proses" class="form-control" required placeholder="Tanggal Proses">
+                                </div>
 
                                 <div class="form-group">
                                     <label for="status" class="form-label">Status</label>
@@ -559,15 +650,63 @@
                                     </select>
                                 </div>
 
+                                  <div class="formtambahan">
+                                <div id="fileInputsContainer" class="form-group">
+    <label for="lampiran" class="form-label">Lampiran</label>
+    
+   
+    <br>
+       
+    <input 
+        type="file" 
+        name="lampiran[]" 
+        id="lampiran" 
+        class="form-control mb-3" 
+        placeholder="Lampiran"
+    >
+</div>
+
+                            
+                                <!-- Elemen untuk Menampilkan Nama File yang Dipilih -->
+                                <div class="form-group">
+                                    <label>File yang Dipilih:</label>
+                                    <ul id="fileList"></ul> <!-- Ini adalah tempat nama file yang akan ditampilkan -->
+                                </div>
+                            
+                                <!-- Tombol untuk menambahkan input file lagi -->
+                                <div class="form-group">
+                                    <button type="button" id="addFileInputBtn" class="btn btn-primary" onclick="addFormTambahan()">Tambah File Lain</button>
+                                </div>
+                            </div>
+                                <div class="form-group">
+                                    <label for="tanggal_proses" class="form-label">Tanggal Proses</label>
+                                    <input type="date" name="tanggal_proses" id="tanggal_proses" class="form-control" required placeholder="Tanggal Proses">
+                                </div>
 
                                 <div class="form-group">
-                                    <button type="submit" class="btn btn-primary">Tambah</button>
+                                    <button type="submit" class="btn btn-primary" id="updateButton">Tambah</button>
+                                    <button type="button" class="btn btn-success processButton" id="processButton">Proses</button>
+</div>
                                 </div>`;
 
-                                      // Menambah input file baru saat tombol 'Tambah File Lain' diklik
+                                                              // Menambah input file baru saat tombol 'Tambah File Lain' diklik
      
 
                         $(".formtambahan").append(data);
+                        $("#updateButton").on("click", function() {
+        form.attr("action", "{{ route('tambahAuditRutin') }}");
+        form.submit(); // Submit form
+
+    });
+
+                        // Event untuk tombol "Proses"
+                        $(".processButton").on("click", function() {
+                            console.log("Cek proses 3")
+
+        form.attr("action", "{{ route('pelaporan-rutin.prosesss', '') }}"); // Ganti dengan route proses
+        form.attr("method", "POST"); // Ubah form method menjadi POST
+        form.submit(); // Submit form
+    });
                         document.querySelectorAll('.ckeditor').forEach(function(
                             editorElement) {
                             ClassicEditor

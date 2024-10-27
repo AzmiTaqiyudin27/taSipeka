@@ -110,6 +110,8 @@ Route::group(['prefix' => 'auth'], function () {
     Route::get('pelaporan-audit-rutin-get/{id}', [AuditRutinPelaporanController::class, "getData"])->name("pelaporan-rutin.getData");
     Route::post('pelaporan-audit-rutin/tambah', [AuditRutinPelaporanController::class, "store"])->name("tambahAuditRutin");
     Route::put('pelaporan-audit-rutin/update/{id}', [AuditRutinPelaporanController::class, "update"])->name("pelaporan-rutin.update");
+    Route::put('pelaporan-audit-rutin/proses/{id}', [AuditRutinPelaporanController::class, "proses"])->name("pelaporan-rutin.prosess");
+    Route::post('pelaporan-audit-rutin/proses', [AuditRutinPelaporanController::class, "prosess"])->name("pelaporan-rutin.prosesss");
     Route::delete('pelaporan-audit-rutin/destroy/{id}', [AuditRutinPelaporanController::class, "destroy"])->name("pelaporan-rutin.destroy");
     Route::get('pelaporan-rutin/create', [AuditRutinController::class, "create"])->name('pelaporan-rutin.create');
     Route::get('pelaporan-rutin/detail', [AuditRutinController::class, "getAuditDetail"])->name('pelaporan-rutin.getAuditDetail');
@@ -188,6 +190,6 @@ Route::group(['prefix' => 'auth'], function () {
     Route::get('/hasil-audit-unitkerja/{unitkerja}', [HasilAuditRutinController::class, 'getAuditByUnitkerja'])->name('hasil-rutin-byUnitkerja');
     Route::get('/hasil-audit-insidental-unitkerja/{unitkerja}', [AuditInsidentalController::class, 'getAuditByUnitkerja'])->name('hasil-insidental-byUnitkerja');
     Route::get('/hasil-audit-insidental-get/', [AuditInsidentalController::class, 'getAuditInsidentalGet'])->name('hasil-insidental-get');
-    Route::get('/hasil-audit-rutin-get/', [HasilAuditRutinController::class, 'getAuditInsidentalGet'])->name('hasil-insidental-get');
+    Route::get('/hasil-audit-rutin-get/', [HasilAuditRutinController::class, 'getAuditRutinGet'])->name('hasil-rutin-get');
     Route::post('/generate-pdf', [PDFController::class, 'generatePDF'])->name('pdf.generate');
 });

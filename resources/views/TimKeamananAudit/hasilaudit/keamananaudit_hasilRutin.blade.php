@@ -2,8 +2,8 @@
 @section('content')
 <form action="/auth/generate-pdf" method="POST">
     @csrf
-    <input type="text" name="ids" id="ids">
-<button type="submit">Generate</button>
+    
+
 </form>
     <div class="page-heading">
         <div class="page-title">
@@ -104,22 +104,10 @@
                                             <th>Nama Sistem</th>
                                             <th>Versi</th>
                                             <th>Status</th>
+                                            <th>Tanggal Proses</th>
                                             <th>Aksi</th>
                                         </tr>
                                     </thead>
-                                    <tbody class="tbody">
-                                        <tr>
-                                            <td><input type="checkbox" class="rowCheckbox" name="test[]" value="34"></td>
-                                            <td>26/08/2024</td>
-                                            <td>tes</td>
-                                            <td>Fakultas Kedokteran</td>
-                                            <td>tes untuk sistem kedokteran 1</td>
-                                            <td>1</td>
-                                            <td>proses</td>
-                                            <td><button type="button" class="tomboldetail btn btn-info" data-id="34">Detail</button></td>
-                                        </tr>
-                                        <!-- Tambahkan baris lain di sini -->
-                                    </tbody>
                                 </table>
                             </form>
                         </div>
@@ -255,11 +243,12 @@ $.ajax({
                         ${item.status === 'proses'
                             ? '<td><input type="checkbox" name="ids[]" class="rowCheckbox" value="' + item.id + '"></td>'
                             : '<td> - </td>'}
-                        <td>${formatDate(item.tanggal_audit)}</td>
+                        <td>${formatDate(item.tanggal_awal)} sampai ${formatDate(item.tanggal_akhir)}</td>
                         <td>${item.judul}</td>
                         <td>${item.unit_kerja.username}</td>
                         <td>${item.kodeaudit.nama_sistem}</td>
                         <td>${item.versi}</td>
+                        <td>${formatDate(item.tanggal_proses)}</td>
                         <td>${item.status}</td>
                         <td><button type="button" class="tomboldetail btn btn-info"
                                     data-bs-toggle="modal" data-bs-target="#full-scrn"
@@ -293,7 +282,7 @@ $.ajax({
                     },
                     error: function(xhr) {
                         // Handle error
-                        alert('Error fetching data');
+                        alert('Error fetching data1');
                     }
                 });
             });
@@ -307,12 +296,13 @@ $.ajax({
                                         <td></td>
                                         <td></td>
                                         <td></td>
+                                        <td></td>
                                     </tr>`);
         }
     },
     error: function() {
         // Handle any errors during the AJAX request
-        alert('Error fetching data');
+        alert('Error fetching data2');
     }
 });
         $("#unitkerjaSelect").change(function() {
@@ -418,7 +408,7 @@ $.ajax({
                             },
                             error: function(xhr) {
                                 // Handle error
-                                alert('Error fetching data');
+                                alert('Error fetching data3');
                             }
                         });
                     })
@@ -540,7 +530,7 @@ $.ajax({
                             },
                             error: function(xhr) {
                                 // Handle error
-                                alert('Error fetching data');
+                                alert('Error fetching data4');
                             }
                         });
                     })
@@ -553,7 +543,7 @@ $.ajax({
                 },
                 error: function(xhr) {
                     console.log(xhr);
-                    alert('Error fetching data');
+                    alert('Error fetching data5');
                 }
             });
         });
@@ -662,7 +652,7 @@ $.ajax({
                                 },
                                 error: function(xhr) {
                                     // Handle error
-                                    alert('Error fetching data');
+                                    alert('Error fetching data6');
                                 }
                             });
                         })
@@ -685,7 +675,7 @@ $.ajax({
         });
 
         $('#printSelected').click(function() {
-            console.log("kocak");
+            console.log("tes");
             var selectedData = [];
             var ajaxPromises = [];
 
@@ -717,7 +707,7 @@ $.ajax({
                     selectedData.push(
                         rowData); // Memasukkan rowData ke dalam selectedData
                 }).catch(function(xhr, status, error) {
-                    console.error('Error fetching data:',
+                    console.error('Error fetching data7:',
                         error); // Tangani error jika ada
 
                 });
