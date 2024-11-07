@@ -17,7 +17,7 @@ class ImageUploadController extends Controller
             ]]);
         }
             $filename = time() . '_' . $file->getClientOriginalName();
-            $path = $file->storeAs('public/uploads', $filename);
+            $path = $file->storeAs('public/storage', $filename);
             $url = Storage::url($path);
 
             return response()->json([
