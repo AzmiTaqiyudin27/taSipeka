@@ -69,7 +69,7 @@
                         <tbody>
                             @foreach ($laporan as $item)
                                 <tr>
-                                    <td>{{ date('d-m-Y', strtotime($item->tanggal_awal)) }} sampai {{ date('d-m-Y', strtotime($item->tanggal_akhir)) }}</td>
+                                    <td>{{ Carbon::parse($item->tanggal_audit)->format('d-m-Y') }}</td>
                                     <td>{{ $item->judul }}</td>
                                     <td>{{ $item->kodeaudit->nama_sistem }}</td>
                                     <td>{{ $item->unitkerja->username }}</td>

@@ -65,7 +65,7 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="loading d-none">
+                            <div id="loading_text" class="loading d-none">
                                 <p>Loading...</p>
                             </div>
                             <div class="formtambahan">
@@ -135,7 +135,6 @@
         });
 
         $(".pilihsistem").change(function() {
-            console.log($(this).val());
             var id = $(this).val();
             var url = "{{ route('getAudit', '') }}/" + id;
             $(".formtambahan").empty();
@@ -145,7 +144,8 @@
                 method: 'GET',
                 success: function(response) {
                     $(".loading").toggleClass("d-none");
-                    console.log(response);
+                    console.log(response.auditRutin[0]);
+                    // console.log(response.auditRutin[0] asdscds? ( response.auditRutin[0].lampiran.length ==  0? "Ga punya lampiran" : `Sudah ada lampiran yaitu ${response.auditRutin[0].lampiran}`) : "Ga punya audit Rutin" );
                     if (response.auditRutin.length > 0) {
                         var form = $(".formTambahAudit");
                         var id = response.auditRutin[0].id;
@@ -158,14 +158,9 @@
                         var data = `
                           @method('PUT')
                         <div class="form-group">
-                                    <label for="tanggal_awal" class="form-label">Tanggal Awal</label>
-                                    <input type="date" value="${response.auditRutin[0].tanggal_awal}" name="tanggal_awal"
-                                        id="tanggal_awal" class="form-control" required placeholder="Tanggal Awal">
-                                </div>
-                                <div class="form-group">
-                                    <label for="tanggal_akhir" class="form-label">Tanggal Akhir</label>
-                                    <input type="date" value="${response.auditRutin[0].tanggal_akhir}" name="tanggal_akhir"
-                                        id="tanggal_akhir" class="form-control" required placeholder="Tanggal Akhir">
+                                    <label for="tanggal_audit" class="form-label">Tanggal Audit</label>
+                                    <input type="date" value="${response.auditInsidental[0].tanggal_audit}" name="tanggal_audit"
+                                        id="tanggal_audit" required class="form-control" placeholder="Tanggal Audit">
                                 </div>
                                     <div class="form-group">
                                     <label for="" class="form-label">Unitkerja</label>
@@ -191,11 +186,11 @@
                                         placeholder="Versi" value="${response.auditRutin[0].versi ? response.auditRutin[0].versi : ""}">
                                 </div>
 
-                               <div class="form-group">
-                    <label for="pendahuluan" class="form-label">Pendahuluan</label>
-                    <textarea name="pendahuluan" id="pendahuluan" class="form-control ckeditor" placeholder="Pendahuluan">
-                    ${response.auditRutin[0].pendahuluan ? response.auditRutin[0].pendahuluan : ""}
-                    </textarea>
+                    <div class="form-group">
+                        <label for="pendahuluan" class="form-label">Pendahuluan</label>
+                        <textarea name="pendahuluan" id="pendahuluan" class="form-control ckeditor" placeholder="Pendahuluan">
+                        ${response.auditRutin[0].pendahuluan ? response.auditRutin[0].pendahuluan : ""}
+                        </textarea>
                 </div>
 
                 <div class="form-group">
@@ -249,22 +244,12 @@
 
                                       <div class="formtambahan">
                                 <div id="fileInputsContainer" class="form-group">
-    <label for="lampiran" class="form-label">Lampiran</label>
-    
-   
-    <br>
-        ${response.auditRutin[0].lampiran ? `Sudah adalah lampiran yaitu ${response.auditRutin[0].lampiran}` : "Belum ada lampiran"}
+                                    <label for="lampiran" class="form-label">Lampiran</label>  
+                                    <br>${response.auditRutin[0] == null ?  `Belum ada lampiran` : ( response.auditRutin[0].lampiran.length ==  0? "Belum ada lampiran" : `Sudah adalah lampiran yaitu ${response.auditRutin[0].lampiran}`)}
 
-    <input 
-        type="file" 
-        name="lampiran[]" 
-        id="lampiran" 
-        class="form-control mb-3" 
-        placeholder="Lampiran"
-    >
-</div>
+                                        <input type="file" name="lampiran[]" id="lampiran" class="form-control mb-3" placeholder="Lampiran">
+                                    </div>
 
-                            
                                 <!-- Elemen untuk Menampilkan Nama File yang Dipilih -->
                                 <div class="form-group">
                                     <label>File yang Dipilih:</label>
@@ -355,14 +340,9 @@
                         var data = `
 
                        <div class="form-group">
-                                    <label for="tanggal_awal" class="form-label">Tanggal Awal</label>
-                                    <input type="date" value="${response.auditProses.tanggal_awal}" name="tanggal_awal"
-                                        id="tanggal_awal" class="form-control" required placeholder="Tanggal Awal">
-                                </div>
-                                <div class="form-group">
-                                    <label for="tanggal_akhir" class="form-label">Tanggal Akhir</label>
-                                    <input type="date" value="${response.auditProses.tanggal_akhir}" name="tanggal_akhir"
-                                        id="tanggal_akhir" class="form-control" required placeholder="Tanggal Akhir">
+                                    <label for="tanggal_audit" class="form-label">Tanggal Audit</label>
+                                    <input type="date"  name="tanggal_audit" value="${response.auditProses.tanggal_audit}"
+                                        id="tanggal_audit" required class="form-control" placeholder="Tanggal Audit">
                                 </div>
                                     <div class="form-group">
                                     <label for="" class="form-label">Unitkerja</label>
@@ -388,12 +368,12 @@
                                         placeholder="Versi" value="${response.auditProses.versi}">
                                 </div>
 
-                               <div class="form-group">
-                    <label for="pendahuluan" class="form-label">Pendahuluan</label>
-                    <textarea name="pendahuluan" id="pendahuluan" class="form-control ckeditor" placeholder="Pendahuluan">
-                    ${response.auditProses.pendahuluan}
-                    </textarea>
-                </div>
+                    <div class="form-group">
+                        <label for="pendahuluan" class="form-label">Pendahuluan</label>
+                        <textarea name="pendahuluan" id="pendahuluan" class="form-control ckeditor" placeholder="Pendahuluan">
+                        ${response.auditProses.pendahuluan}
+                        </textarea>
+                    </div>
 
                 <div class="form-group">
                     <label for="cakupan_audit" class="form-label">Cakupan Audit</label>
@@ -445,23 +425,14 @@
                                     </select>
                                 </div>
 
-  <div class="formtambahan">
+                                <div class="formtambahan">
                                 <div id="fileInputsContainer" class="form-group">
-    <label for="lampiran" class="form-label">Lampiran</label>
-    
-   
-    <br>
-        ${response.auditProses.lampiran ? `Sudah adalah lampiran yaitu ${response.auditProses.lampiran}` : "Belum ada lampiran"}
+                                    <label for="lampiran" class="form-label">Lampiran</label>
+                                    <br>
+                                    ${response.auditProses.lampiran ? `Sudah ada lampiran yaitu ${response.auditProses.lampiran}` : "Belum ada lampiran"}
 
-    <input 
-        type="file" 
-        name="lampiran[]" 
-        id="lampiran" 
-        class="form-control mb-3" 
-        placeholder="Lampiran"
-    >
-</div>
-
+                                        <input type="file" name="lampiran[]" id="lampiran" class="form-control mb-3" placeholder="Lampiran">
+                                    </div>
                             
                                 <!-- Elemen untuk Menampilkan Nama File yang Dipilih -->
                                 <div class="form-group">
@@ -590,14 +561,12 @@
                                <div class="form-group">
                     <label for="pendahuluan" class="form-label">Pendahuluan</label>
                     <textarea name="pendahuluan" id="pendahuluan" class="form-control ckeditor"  placeholder="Pendahuluan">
-
                     </textarea>
                 </div>
 
                 <div class="form-group">
                     <label for="cakupan_audit" class="form-label">Cakupan Audit</label>
                     <textarea name="cakupan_audit" id="cakupan_audit"  class="form-control ckeditor" placeholder="Cakupan Audit">
-
                     </textarea>
                 </div>
 
