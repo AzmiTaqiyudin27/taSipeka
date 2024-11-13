@@ -7,13 +7,13 @@
         <div class="page-title">
             <div class="row">
                 <div class="col-12 col-md-6 order-md-1 order-last">
-                    <h3>Ubah  Pelaporan Audit Rutin</h3>
+                    <h3>Ubah  Pelaporan Audit Insidental</h3>
                 </div>
                 <div class="col-12 col-md-6 order-md-2 order-first">
                     <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="/auth/auth/dashboard-audit">Dashboard</a></li>
-                            <li class="breadcrumb-item"><a href="/auth/pelaporan-rutin">Pelaporan Audit Sistem Informasi Rutin</a></li>
+                            <li class="breadcrumb-item"><a href="/auth/pelaporan-rutin">Pelaporan Audit Sistem Informasi Insidental</a></li>
                             <li class="breadcrumb-item active" aria-current="page">Ubah</li>
                         </ol>
                     </nav>
@@ -32,6 +32,11 @@
                 <strong>{{ $message }}</strong>
             </div>
         @endif
+        @if (session('suksessimpan'))
+        <div class="alert alert-success col-md-8">
+            {{ session('suksessimpan') }}
+        </div>
+    @endif
 
         @if (count($errors) > 0)
             <div class="alert alert-danger">
@@ -54,7 +59,7 @@
                             @csrf
                             @method('PUT')
                             <input type="hidden" name="user_id" value={{ auth()->user()->id }}>
-                            <input type="hidden" id="id" value={{ $auditRutin->id }}>
+                            <input type="hidden" id="id" value={{ $auditInsidental->id }}>
 
                             <div class="form-group">
                                 <label for="" class="form-label">Nama Sistem</label>
@@ -71,12 +76,12 @@
                           
                                 <div class="form-group">
                                     <label for="tanggal_audit" class="form-label">Tanggal Audit</label>
-                                    <input type="date" value="{{ $auditRutin->tanggal_audit }}" name="tanggal_audit" id="tanggal_audit" class="form-control" required="" placeholder="Tanggal Akhir">
+                                    <input type="date" value="{{ $auditInsidental->tanggal_audit }}" name="tanggal_audit" id="tanggal_audit" class="form-control" required="" placeholder="Tanggal Akhir">
                                 </div>
                                     <div class="form-group">
                                     <label for="" class="form-label">Unitkerja</label>
                                      <select name="unitkerja_id" class="form-select">
-              <option class="form-option" value="{{ $auditRutin->unitkerja_id }}" selected="">{{ $unitKerja[0]->username}}</option>
+              <option class="form-option" value="{{ $auditInsidental->unitkerja_id }}" selected="">{{ $unitKerja[0]->username}}</option>
 s
                       </select>
                                 </div>
@@ -84,56 +89,56 @@ s
 
                                  <div class="form-group">
                     <label for="judul" class="form-label">Judul</label>
-                    <input type="text" value="{{ $auditRutin->judul }}" name="judul" id="judul" class="form-control" placeholder="Judul">
+                    <input type="text" value="{{ $auditInsidental->judul }}" name="judul" id="judul" class="form-control" placeholder="Judul">
                 </div>
                              <div class="form-group">
                                     <label for="versi" class="form-label">Versi</label>
-                                    <input type="text" name="versi" id="versi" class="form-control" placeholder="Versi" value="{{ $auditRutin->versi }}">
+                                    <input type="text" name="versi" id="versi" class="form-control" placeholder="Versi" value="{{ $auditInsidental->versi }}">
                                 </div>
 
                                 <div class="form-group">
                     <label for="pendahuluan" class="form-label">Pendahuluan</label>
                     <textarea name="pendahuluan" id="pendahuluan" class="form-control ckeditor" placeholder="Pendahuluan">
-                    {{$auditRutin->pendahuluan}} 
+                    {{$auditInsidental->pendahuluan}} 
                     </textarea>
                 </div>
 
                 <div class="form-group">
                     <label for="cakupan_audit" class="form-label">Cakupan Audit</label>
                     <textarea name="cakupan_audit" id="cakupan_audit"  class="form-control ckeditor" placeholder="Cakupan Audit">
-                    {{$auditRutin->cakupan_audit}} 
+                    {{$auditInsidental->cakupan_audit}} 
                     </textarea>
                 </div>
 
                 <div class="form-group">
                     <label for="tujuan_audit" class="form-label">Tujuan Audit</label>
                     <textarea name="tujuan_audit" id="tujuan_audit" class="form-control ckeditor" placeholder="Tujuan Audit">
-                    {{$auditRutin->tujuan_audit}} 
+                    {{$auditInsidental->tujuan_audit}} 
                     </textarea>
                 </div>
 
                 <div class="form-group">
                     <label for="metodologi_audit" class="form-label">Metodologi Audit</label>
                     <textarea name="metodologi_audit" id="metodologi_audit" class="form-control ckeditor" placeholder="Metodologi Audit">
-                    {{$auditRutin->metodologi_audit}} 
+                    {{$auditInsidental->metodologi_audit}} 
                     </textarea>
                 </div>
 
                 <div class="form-group">
                     <label for="hasil_audit" class="form-label">Hasil Audit</label>
                     <textarea name="hasil_audit" id="hasil_audit" class="form-control ckeditor" placeholder="Hasil Audit">
-                    {{$auditRutin->hasil_audit}} </textarea>
+                    {{$auditInsidental->hasil_audit}} </textarea>
                 </div>
 
                 <div class="form-group">
                     <label for="rekomendasi" class="form-label">Rekomendasi</label>
                     <textarea name="rekomendasi" id="rekomendasi" class="form-control ckeditor" placeholder="Rekomendasi">
-                    {{$auditRutin->rekomendasi}} </textarea>
+                    {{$auditInsidental->rekomendasi}} </textarea>
                 </div>
                 <div class="form-group">
                     <label for="kesimpulan" class="form-label">Kesimpulan Audit</label>
                     <textarea name="kesimpulan_audit" id="kesimpulan" class="form-control ckeditor" placeholder="Kesimpulan Audit">
-                    {{$auditRutin->kesimpulan_audit}} </textarea>
+                    {{$auditInsidental->kesimpulan_audit}} </textarea>
                 </div>
 
 
@@ -142,11 +147,11 @@ s
                     <select class="form-select" name="status" id="status" aria-label="Contoh Select" disabled>
                         <option>Status</option>
                         <option value="draft" 
-                            {{ $auditRutin->status === 'draft' ? 'selected' : '' }}>
+                            {{ $auditInsidental->status === 'draft' ? 'selected' : '' }}>
                             Draft
                         </option>
                         <option value="proses" 
-                            {{ $auditRutin->status === 'proses' ? 'selected' : '' }}>
+                            {{ $auditInsidental->status === 'proses' ? 'selected' : '' }}>
                             Proses
                         </option>
                     </select>
@@ -158,7 +163,7 @@ s
     
    
     <br>
-        {{$auditRutin->lampiran ? "Sudah adalah lampiran yaitu". $auditRutin->lampiran." " : "Belum ada lampiran"}}
+        {{$auditInsidental->lampiran ? "Sudah adalah lampiran yaitu". $auditInsidental->lampiran." " : "Belum ada lampiran"}}
 
     <input 
         type="file" 
@@ -183,7 +188,7 @@ s
 
                                 <div class="form-group">
                                     <label for="tanggal_proses" class="form-label">Tanggal Proses</label>
-                                    <input type="date" disabled value="{{ $auditRutin->tanggal_proses }}" name="tanggal_proses" id="tanggal_proses" class="form-control" placeholder="Tanggal Proses">
+                                    <input type="date" disabled value="{{ $auditInsidental->tanggal_proses }}" name="tanggal_proses" id="tanggal_proses" class="form-control" placeholder="Tanggal Proses">
                         </div>
 
                         <div class="form-group">
@@ -291,7 +296,7 @@ s
 
                         // Event untuk tombol "Update"
     $("#updateButton").on("click", function() {
-        form.attr("action", "{{ route('pelaporan-rutin.update', '') }}/" + id);
+        form.attr("action", "{{ route('pelaporan-insidental.update', '') }}/" + id);
         form.submit(); // Submit form
 
     });
@@ -300,7 +305,7 @@ s
     $("#processButton").on("click", function() {
         console.log("Cek proses 1")
 
-        form.attr("action", "{{ route('pelaporan-rutin.prosess', '') }}/" + id); // Ganti dengan route proses
+        form.attr("action", "{{ route('pelaporan-insidental.proses', '') }}/" + id); // Ganti dengan route proses
         
         form.submit(); // Submit form
     });

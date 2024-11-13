@@ -80,11 +80,14 @@
                                         <td>{{ $item->nama_sistem }}</td>
                                         <td>{{ $item->unitkerja }}</td>
                                         <td>{{ $item->versi }}</td>
-                                        <td>{{ $item->status }}</td>
+                                        <td class="text-capitalize">{{ $item->status }}</td>
 
                                         <td>
                                             {{-- <button type="button" class="tomboldetail btn btn-info" data-bs-toggle="modal"
                                                 data-bs-target="#detailModal" data-id="{{ $item->id }}">Detail</button> --}}
+                                                @if($item->status == 'draft')
+                                            <a href="{{ 'edit-pelaporan-insidental/' . $item->id }}" class="btn btn-warning">Edit</a>
+                                        @endif
                                             <button type="button" class="btn btn btn-info tomboldetail"
                                                 data-bs-toggle="modal" data-bs-target="#full-scrn"
                                                 data-id="{{ $item->id }}">

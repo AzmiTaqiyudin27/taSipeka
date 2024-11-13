@@ -21,48 +21,45 @@ class AuthController extends Controller
         return view("auth.register");
     }
 
-public function authenticate(Request $request): RedirectResponse
-{
-    $credentials = $request->validate([
-        'email' => ['required', 'email'],
-        'password' => ['required'],
-    ]);
-
-    if (Auth::attempt($credentials)) {
-        $user = Auth::user();
-
-         if ($user->is_active == '0') {
-            Auth::logout();
-            return back()->with('gagal', 'Login gagal, akun anda menunggu diapprove admin!');
-        }else if($user->is_active == '2'){
-             Auth::logout();
-            return back()->with('gagal', 'Login gagal, akun anda ditolak admin dikarenakan ' . $user->is_ditolak);
+    public function authenticate(Request $request): RedirectResponse
+    {
+        $credentials = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required'],
+        ]);
+    
+        if (Auth::attempt($credentials)) {
+            $user = Auth::user();
+    
+            if ($user->is_active == '0') {
+                Auth::logout();
+                return back()->with('gagal', 'Login gagal, akun anda menunggu diapprove admin!');
+            } else if ($user->is_active == '2') {
+                Auth::logout();
+                return back()->with('gagal', 'Login gagal, akun anda ditolak admin dikarenakan ' . $user->is_ditolak);
+            }
+    
+            session()->flash('sukses', 'Login berhasil, selamat datang ' . $user->name . '!');
+    
+            switch ($user->role) {
+                case 'admin':
+                    return redirect()->intended(route('dashboard-admin'));
+                case 'pimpinan':
+                    return redirect()->intended(route('hasil-rutin.hasil'));
+                case 'unitkerja':
+                    return redirect()->intended(route('dashboard-unitkerja'));
+                case 'audit':
+                    return redirect()->intended(route('dashboard-audit'));
+                case 'rektor':
+                    return redirect()->intended(route('hasil-rutin.hasil'));
+                default:
+                    return redirect()->intended(route('dashboard-admin'));
+            }
         }
-
-        switch ($user->role) {
-            case 'admin':
-                return redirect()->intended(route('dashboard-admin'));
-                break;
-            case 'pimpinan':
-                return redirect()->intended(route('hasil-rutin.hasil'));
-                break;
-            case 'unitkerja':
-                return redirect()->intended(route('dashboard-unitkerja'));
-                break;
-            case 'audit':
-                return redirect()->intended(route('dashboard-audit'));
-                break;
-            case 'rektor' :
-                return redirect()->intended(route('hasil-rutin.hasil'));
-                break;
-             default:
-                return redirect()->intended(route('dashboard-admin'));
-                break;
-        }
+    
+        return back()->with('gagal', 'Login gagal, periksa kembali email atau kata sandi yang anda masukkan.');
     }
-
-    return back()->with('gagal', 'Login gagal, periksa kembali email atau kata sandi yang anda masukkan.');
-}
+    
 
 
     public function logout(Request $request)

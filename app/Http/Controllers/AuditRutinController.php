@@ -119,6 +119,8 @@ public function create()
 
 public function proses(Request $request, $pelaporan_rutin_id)
 {
+    var_dump($request);
+    die;
     try {
         // Ambil data dengan kode terbaru berdasarkan tanggal
         $penindakrutin = AuditRutin::where('pelaporan_rutin_id', $pelaporan_rutin_id)
@@ -128,8 +130,11 @@ public function proses(Request $request, $pelaporan_rutin_id)
         if (!$penindakrutin) {
             return response()->json(['error' => 'Data tidak ditemukan'], 404);
         }
-        $penindakrutin->update(['status' => 'terproses']);
+        $penindakrutin->tanggal_proses = $request->input('tanggal_proses');
+        $penindakrutin->status = 'Proses';
+        $penindakrutin->save();
 
+        // Lakukan tindakan lainnya sesuai kebutuhan 
         return response()->json(['success' => 'Data berhasil diproses']);
     } catch (\Exception $e) {
         Log::error("Error processing data: " . $e->getMessage());
@@ -202,6 +207,7 @@ public function proses(Request $request, $pelaporan_rutin_id)
     // Validasi data dari request
     $data = $request->validate([
         'tanggal_audit' => 'date',
+        
         'nama_sistem' => 'string',
         'versi' => 'string',
         'bahasa_pemrograman' => 'string',
@@ -210,6 +216,7 @@ public function proses(Request $request, $pelaporan_rutin_id)
         'maksimum_pengguna' => 'string',
         'keamanan_sistem' => 'string',
         'pengguna_sistem' => 'string',
+      
     ]);
 
     // Tambahkan user_id ke data yang akan diupdate

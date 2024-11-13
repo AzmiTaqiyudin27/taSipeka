@@ -34,6 +34,19 @@
 
     <!-- <script src="https://cdn.ckeditor.com/ckeditor5/34.0.0/classic/ckeditor.js"></script> -->
     <!-- <script src="https://cdn.ckeditor.com/4.16.2/standard/ckeditor.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<!-- Cek session flash untuk pesan sukses dan tampilkan SweetAlert -->
+@if(session('sukses'))
+<script>
+    Swal.fire({
+        icon: 'success',
+        title: 'Berhasil!',
+        text: '{{ session("sukses") }}',
+        confirmButtonText: 'OK'
+    });
+</script>
+@endif
 </head>
 
 <body>

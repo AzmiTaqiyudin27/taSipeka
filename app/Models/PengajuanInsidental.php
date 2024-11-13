@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class PengajuanInsidental extends Model
 {
     use HasFactory;
+    protected $table = 'pelaporan_insidentals';
     protected $guarded = [
         'id'
     ];

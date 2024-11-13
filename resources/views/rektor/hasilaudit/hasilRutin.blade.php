@@ -7,11 +7,15 @@
 
 @extends('rektor.rektor_layout')
 @section('content')
+<form action="/auth/generate-pdf" method="POST">
+    @csrf
+    
+
+</form>
     <div class="page-heading">
         <div class="page-title">
             <div class="row">
                 <div class="col-12 col-md-6 order-md-1 order-last">
-                    <h3>Selamat datang, {{auth()->user()->username}}</h3>
                     <h3>Hasil Audit Sistem Informasi Rutin</h3>
                 </div>
                 <div class="col-12 col-md-6 order-md-2 order-first">
@@ -77,14 +81,11 @@
                         <div class="table-responsive tableDisini">
                             <div class="d-flex my-1 filtertanggal align-items-end flex-row">
                                 <div class="form-group col-4 d-flex flex-column me-2">
-                                    <label for="tanggal_audit" class="form-label">Dari</label>
-                                    <input type="date" id="tgldari" class="form-control" placeholder="Tanggal Audit">
+                                    <label for="tanggal_audit" class="form-label">Tanggal Audit</label>
+                                    <input type="date" id="tanggalaudit" class="form-control" placeholder="Tanggal Audit">
                                 </div>
 
-                                <div class="form-group col-4 d-flex flex-column ">
-                                    <label for="tanggal_audit" class="form-label">Sampai</label>
-                                    <input type="date" id="tglsampai" class="form-control" placeholder="Tanggal Audit">
-                                </div>
+                             
                                 <div class="form-group align-items-end  mx-2 d-flex justify-items-end flex-column">
                                     <label for="tanggal_audit" class="form-label"></label>
                                     <button
@@ -93,36 +94,29 @@
 
 
                             </div>
+                            <form action="/auth/generate-pdf" method="POST"> 
+                                @csrf
+                                <button type="submit" class="btn my-3 btn-secondary" id="printSelectedCheckbox">Cetak Data Terpilih</button>
+                                
+                                <table class="table row-table" id="tablehasil">
+                                    <thead>
+                                        <tr>
+                                            <th><input type="checkbox" id="selectAll"></th>
+                                            <th>Tanggal Audit</th>
+                                            <th>Judul</th>
+                                            <th>Unit Kerja</th>
+                                            <th>Nama Sistem</th>
+                                            <th>Versi</th>
+                                            <th>Status</th>
+                                            <th>Tanggal Proses</th>
+                                            <th>Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="tbody">
 
-                            <button type="button" class="btn my-3 btn-secondary" id="printSelected">Cetak Data
-                                Terpilih</button>
-                            {{-- <button id="excel" class="d-none  btn btn-info">Export Excel</button> --}}
-                            <table class="table row-table" id="tablehasil">
-                                <thead>
-                                    <tr>
-                                        <th><input type="checkbox" id="selectAll"></th>
-                                        <th>Tanggal Audit</th>
-                                        <th>Judul</th>
-                                        <th>Unit Kerja</th>
-                                        <th>Nama Sistem</th>
-                                        <th>Versi</th>
-                                        <th>Status</th>
-                                        <th>Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="tbody">
-                                    <tr>
-                                        <td class="text-center" colspan="9">Belum Menampilkan Data</td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                                    </tbody>
+                                </table>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -189,7 +183,7 @@
                             <td> <span id="detailRekomendasi"></span></td>
                         </tr>
                         <tr>
-                            <td>Kesimpulan</td>
+                            <td>Kesimpulan Audit</td>
                             <td> <span id="detailKesimpulan"></span></td>
                         </tr>
 
@@ -199,25 +193,28 @@
         </div>
     </div>
     @endsection
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+        integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script> -->
 
     @push('scripts')
-
     <script>
-        $("#unitkerjaSelect").select2();
+        $(document).ready(function(){
+                $("#unitkerjaSelect").select2();
         $("#dropdownSelect").select2();
+
           function formatDate(dateString) {
     const [year, month, day] = dateString.split('-');
     return `${day}/${month}/${year}`;
 }
          var kode = null;
         var unitkerja = null;
-        var tanggaldari = null;
-        var tanggalsampai = null;
+        var tanggalaudit = null;
           var requestData = {
                 sistem: kode,
                 unitkerja: unitkerja,
-                dari: tanggaldari,
-                sampai: tanggalsampai
+                tanggalaudit : tanggalaudit 
             };
 
 
@@ -231,6 +228,7 @@ $.ajax({
     data: requestData,
     success: function(response) {
         console.log(response);
+    
           $(".tbody").empty();
         // Handle select all checkbox functionality
         $('#selectAll').change(function() {
@@ -249,7 +247,7 @@ $.ajax({
                 var row = `
                     <tr>
                         ${item.status === 'proses'
-                            ? '<td><input type="checkbox" class="rowCheckbox" value="' + item.id + '"></td>'
+                            ? '<td><input type="checkbox" name="ids[]" class="rowCheckbox" value="' + item.id + '"></td>'
                             : '<td> - </td>'}
                         <td>${formatDate(item.tanggal_audit)}</td>
                         <td>${item.judul}</td>
@@ -257,6 +255,7 @@ $.ajax({
                         <td>${item.kodeaudit.nama_sistem}</td>
                         <td>${item.versi}</td>
                         <td>${item.status}</td>
+                        <td>${ item.tanggal_proses ? formatDate(item.tanggal_proses) : '-'}</td>
                         <td><button type="button" class="tomboldetail btn btn-info"
                                     data-bs-toggle="modal" data-bs-target="#full-scrn"
                                     data-id="${item.id}">Detail</button></td>
@@ -289,7 +288,7 @@ $.ajax({
                     },
                     error: function(xhr) {
                         // Handle error
-                        alert('Error fetching data');
+                        alert('Error fetching data1');
                     }
                 });
             });
@@ -303,12 +302,14 @@ $.ajax({
                                         <td></td>
                                         <td></td>
                                         <td></td>
+                                        <td></td>
                                     </tr>`);
         }
     },
-    error: function() {
+    error: function(err) {
         // Handle any errors during the AJAX request
-        alert('Error fetching data');
+        alert('Error fetching data2');
+        console.log(err);
     }
 });
         $("#unitkerjaSelect").change(function() {
@@ -325,26 +326,18 @@ $.ajax({
             var sistem = $("#dropdownSelect").val();
         }
         console.log($("#dropdownSelect").val())
-        if ($("#tgldari").val() == "") {
-            var dari = null;
+        if ($("#tglaudit").val() == "") {
+            var tanggalaudit = null;
         } else {
-            var dari = $("#tgldari").val();
+            var tanggalaudit = $("#tglaudit").val();
         }
 
-        if ($("#tglsampai").val() == "") {
-            var sampai = null;
-        } else {
-            var sampai = $("#tglsampai").val();
-        }
-
-
-            console.log(dari);
-            console.log(sampai);
+    
             var requestData = {
                 sistem: sistem,
                 unitkerja: id,
-                dari: dari,
-                sampai: sampai
+                tanggalaudit: tanggalaudit,
+                
             };
 
             var urlAuditInsidental = "/auth/hasil-audit-rutin-get";
@@ -370,14 +363,15 @@ $.ajax({
                 ? '<td><input type="checkbox" class="rowCheckbox" value="' + item.id + '"></td>'
                 : '<td> - </td>'}
            <td>${formatDate(item.tanggal_audit)}</td>
-            <td>${item.judul}</td>
-            <td>${item.unit_kerja.username}</td>
-            <td>${item.kodeaudit.nama_sistem}</td>
-            <td>${item.versi}</td>
-            <td>${item.status}</td>
-            <td><button type="button" class="tomboldetail btn btn-info"
-                        data-bs-toggle="modal" data-bs-target="#full-scrn"
-                        data-id="${item.id}">Detail</button></td>
+                        <td>${item.judul}</td>
+                        <td>${item.unit_kerja.username}</td>
+                        <td>${item.kodeaudit.nama_sistem}</td>
+                        <td>${item.versi}</td>
+                        <td>${item.status}</td>
+                        <td>${ item.tanggal_proses ? formatDate(item.tanggal_proses) : '-'}</td>
+                        <td><button type="button" class="tomboldetail btn btn-info"
+                                    data-bs-toggle="modal" data-bs-target="#full-scrn"
+                                    data-id="${item.id}">Detail</button></td>
         </tr>
     `;
                         tbody.append(row);
@@ -414,7 +408,7 @@ $.ajax({
                             },
                             error: function(xhr) {
                                 // Handle error
-                                alert('Error fetching data');
+                                alert('Error fetching data3');
                             }
                         });
                     })
@@ -439,22 +433,16 @@ $.ajax({
         }else{
             var unitkerja = $("#unitkerjaSelect").val();
         }
-        if ($("#tgldari").val() == "") {
-            var dari = null;
+        if ($("#tglaudit").val() == "") {
+            var tanggalaudit = null;
         } else {
-            var dari = $("#tgldari").val();
+            var tanggalaudit = $("#tglaudit").val();
         }
 
-        if ($("#tglsampai").val() == "") {
-            var sampai = null;
-        } else {
-            var sampai = $("#tglsampai").val();
-        }
               var requestData = {
                 sistem: kode,
                 unitkerja: unitkerja,
-                dari: dari,
-                sampai: sampai
+               tanggalaudit : tanggalaudit
             };
             var namasistem = $(this).find('option:selected').text()
             $(".kodes").val(kode);
@@ -491,14 +479,15 @@ $.ajax({
                 ? '<td><input type="checkbox" class="rowCheckbox" value="' + item.id + '"></td>'
                 : '<td> - </td>'}
             <td>${formatDate(item.tanggal_audit)}</td>
-            <td>${item.judul}</td>
-            <td>${item.unit_kerja.username}</td>
-            <td>${item.kodeaudit.nama_sistem}</td>
-            <td>${item.versi}</td>
-            <td>${item.status}</td>
-            <td><button type="button" class="tomboldetail btn btn-info"
-                        data-bs-toggle="modal" data-bs-target="#full-scrn"
-                        data-id="${item.id}">Detail</button></td>
+                        <td>${item.judul}</td>
+                        <td>${item.unit_kerja.username}</td>
+                        <td>${item.kodeaudit.nama_sistem}</td>
+                        <td>${item.versi}</td>
+                        <td>${item.status}</td>
+                        <td>${ item.tanggal_proses ? formatDate(item.tanggal_proses) : '-'}</td>
+                        <td><button type="button" class="tomboldetail btn btn-info"
+                                    data-bs-toggle="modal" data-bs-target="#full-scrn"
+                                    data-id="${item.id}">Detail</button></td>
         </tr>
     `;
                         tbody.append(row);
@@ -536,7 +525,7 @@ $.ajax({
                             },
                             error: function(xhr) {
                                 // Handle error
-                                alert('Error fetching data');
+                                alert('Error fetching data4');
                             }
                         });
                     })
@@ -549,7 +538,7 @@ $.ajax({
                 },
                 error: function(xhr) {
                     console.log(xhr);
-                    alert('Error fetching data');
+                    alert('Error fetching data5');
                 }
             });
         });
@@ -568,18 +557,17 @@ $.ajax({
             }
             var namasistem = $("#dropdownSelect").find('option:selected').text()
 
-        if (tanggaldari == "" || tanggalsampai == "") {
-           var tanggaldari = null;
-        var tanggalsampai = null;
+        if (tanggalaudit == "") {
+           var tanggalaudit = null;
+      
             } else {
-                 var tanggaldari = $("#tgldari").val();
-                var tanggalsampai = $("#tglsampai").val();
+                 var tanggalaudit = $("#tanggalaudit").val();
+                
                  var requestData = {
                 sistem: kode,
                 unitkerja: unitkerja,
-                dari: tanggaldari,
-                sampai: tanggalsampai
-            };
+                tanggalaudit: tanggalaudit,
+                            };
                 $(".tbody").empty();
                 var url = "/auth/hasil-audit-rutin-get";
                 $.ajax({
@@ -599,15 +587,17 @@ $.ajax({
                                 var id = item.id;
                                 var row = `
                                 <tr>
-                                <td><input type="checkbox" class="rowCheckbox" value='${id}'></td>
-                               <td>${formatDate(item.tanggal_audit)}</td>
-                                <td>${item.judul}</td>
-                                <td>${item.unit_kerja.username}</td>
-                                <td>${item.kodeaudit.nama_sistem}</td>
-                                <td>${item.versi}</td>
-                                <td><button type="button" class="tomboldetail btn btn-info"
-                                data-bs-toggle="modal" data-bs-target="#full-scrn"
-                                data-id="${item.id}">Detail</button></td>
+                                <td><input type="checkbox" class="rowCheckbox" name="id[]" value='${id}'></td>
+                            <td>${formatDate(item.tanggal_audit)}</td>
+                        <td>${item.judul}</td>
+                        <td>${item.unit_kerja.username}</td>
+                        <td>${item.kodeaudit.nama_sistem}</td>
+                        <td>${item.versi}</td>
+                        <td>${item.status}</td>
+                        <td>${ item.tanggal_proses ? formatDate(item.tanggal_proses) : '-'}</td>
+                        <td><button type="button" class="tomboldetail btn btn-info"
+                                    data-bs-toggle="modal" data-bs-target="#full-scrn"
+                                    data-id="${item.id}">Detail</button></td>
                                 </tr>
                                 `;
                                 tbody.append(row);
@@ -658,7 +648,7 @@ $.ajax({
                                 },
                                 error: function(xhr) {
                                     // Handle error
-                                    alert('Error fetching data');
+                                    alert('Error fetching data6');
                                 }
                             });
                         })
@@ -681,7 +671,7 @@ $.ajax({
         });
 
         $('#printSelected').click(function() {
-            console.log("kocak");
+            console.log("tes");
             var selectedData = [];
             var ajaxPromises = [];
 
@@ -713,7 +703,7 @@ $.ajax({
                     selectedData.push(
                         rowData); // Memasukkan rowData ke dalam selectedData
                 }).catch(function(xhr, status, error) {
-                    console.error('Error fetching data:',
+                    console.error('Error fetching data7:',
                         error); // Tangani error jika ada
 
                 });
@@ -871,6 +861,73 @@ $.ajax({
             printWindow.document.close();
             printWindow.print();
         });
+                })
     </script>
+    @endpush
 
-@endpush
+
+
+<script>
+    // Checkbox "Select All"
+    document.getElementById('selectAll').onclick = function () {
+        const checkboxes = document.querySelectorAll('.rowCheckbox');
+        checkboxes.forEach(checkbox => checkbox.checked = this.checked);
+    };
+
+    // Event listener untuk tombol cetak
+    function printClicked () {
+        alert('Cetak PDF');
+        const selectedIds = [];
+        const checkboxes = document.querySelectorAll('.rowCheckbox:checked');
+        
+        checkboxes.forEach(checkbox => {
+            selectedIds.push(checkbox.value);
+        });
+
+        if (selectedIds.length > 0) {
+            // Mengirim ID terpilih ke server menggunakan AJAX
+            // fetch('/generate-pdf', { // Ganti dengan route PHP yang sesuai
+            //     method: 'POST',
+            //     headers: {
+            //         'Content-Type': 'application/json',
+            //     },
+            //     body: JSON.stringify({ ids: selectedIds }),
+            // })
+            // .then(response => response.blob())
+            // .then(blob => {
+            //     // Buat link untuk mendownload PDF
+            //     const url = window.URL.createObjectURL(blob);
+            //     const a = document.createElement('a');
+            //     a.style.display = 'none';
+            //     a.href = url;
+            //     a.download = 'combined.pdf'; // Nama file PDF yang diunduh
+            //     document.body.appendChild(a);
+            //     a.click();
+            //     window.URL.revokeObjectURL(url);
+            // })
+            // .catch(error => console.error('Error:', error));
+        } else {
+            alert('Pilih setidaknya satu data untuk dicetak.');
+        }
+    };
+</script>
+
+<script>
+    // Pilih semua checkbox saat checkbox 'select all' dicentang
+    document.getElementById('selectAll').addEventListener('change', function() {
+        const checkboxes = document.querySelectorAll('.rowCheckbox');
+        checkboxes.forEach((checkbox) => {
+            checkbox.checked = this.checked;
+        });
+    });
+
+    // Opsi untuk memvalidasi pengiriman form
+    document.getElementById('pdfForm').addEventListener('submit', function(event) {
+        const checkedBoxes = document.querySelectorAll('.rowCheckbox:checked');
+        if (checkedBoxes.length === 0) {
+            event.preventDefault(); // Mencegah pengiriman form jika tidak ada checkbox yang dipilih
+            alert('Silakan pilih setidaknya satu data.');
+        }
+    });
+</script>
+

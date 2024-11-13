@@ -47,10 +47,10 @@ use Carbon\Carbon;
             <input type="hidden" class="namas">
             <input type="hidden" class="kodes">
             <div class="card p-3">
-                <div class="col-4">
+                <div class="form-group col-4">
                     <label for="dropdownSelect">Unit Kerja</label>
-                    <select class="form-control" name="unitkerja" id="unitkerjaSelect">
-                        <option value="">-- Pilih Unit Kerja --</option>
+                    <select class="form-control" id="unitkerjaSelect">
+                        <option value="" selected>-- Pilih Unit Kerja --</option>
                         @foreach ($listunitkerja as $unitkerja)
                         <option value="{{ $unitkerja->id }}">{{ $unitkerja->username }}</option>
                         @endforeach
@@ -58,14 +58,13 @@ use Carbon\Carbon;
                 </div>
 
 
-                <div class="form-group dropdownsistem my-2 col-4">
+                <div class="form-group dropdownsistem col-4">
                     <label for="dropdownSelect">Pilih Sistem</label>
                     <select class="form-control" id="dropdownSelect">
-                         <option value="" selected>-- Pilih Sistem --</option>
+                        <option value="" selected>-- Pilih Sistem --</option>
                         @foreach ($laporan as $kds)
                         <option value="{{ $kds->kode_audit }}">{{ $kds->nama_sistem }}</option>
                         @endforeach
-
                     </select>
                 </div>
 
@@ -73,14 +72,11 @@ use Carbon\Carbon;
                     <div class="table-responsive tableDisini">
                         <div class="d-flex my-1 filtertanggal align-items-end flex-row">
                             <div class="form-group col-4 d-flex flex-column me-2">
-                                <label for="tanggal_audit" class="form-label">Dari</label>
-                                <input type="date" id="tgldari" class="form-control" placeholder="Tanggal Audit">
+                                <label for="tanggalaudit" class="form-label">Tanggal Audit</label>
+                                <input type="date" id="tanggalaudit" class="form-control" placeholder="Tanggal Audit">
                             </div>
 
-                            <div class="form-group col-4 d-flex flex-column ">
-                                <label for="tanggal_audit" class="form-label">Sampai</label>
-                                <input type="date" id="tglsampai" class="form-control" placeholder="Tanggal Audit">
-                            </div>
+                            
                             <div class="form-group align-items-end  mx-2 d-flex justify-items-end flex-column">
                                 <label for="tanggal_audit" class="form-label"></label>
                                 <button
@@ -103,12 +99,14 @@ use Carbon\Carbon;
                                     <th>Nama Sistem</th>
                                     <th>Versi</th>
                                     <th>Status</th>
+                                    <th>Tanggal Proses</th>
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="text-center" colspan="9">Belum Menampilkan Data</td>
+                                    <td class="text-center" colspan="10">Belum Menampilkan Data</td>
+                                    <td></td>
                                     <td></td>
                                     <td></td>
                                     <td></td>
@@ -195,30 +193,29 @@ use Carbon\Carbon;
     </div>
 </div>
 @endsection
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+    integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script> -->
 
 @push('scripts')
-
-
 <script>
-    $(document).ready(function() {
-        $("#unitkerjaSelect").select2();
+    $(document).ready(function(){
+            $("#unitkerjaSelect").select2();
         $("#dropdownSelect").select2();
 
-        // console.log(select2());
- function formatDate(dateString) {
+   function formatDate(dateString) {
             const [year, month, day] = dateString.split('-');
             return `${day}/${month}/${year}`;
         }
 
         var kode = null;
         var unitkerja = null;
-        var tanggaldari = null;
-        var tanggalsampai = null;
+        var tanggalaudit = null;
         var requestData = {
             sistem: kode,
             unitkerja: unitkerja,
-            dari: tanggaldari,
-            sampai: tanggalsampai
+            tanggalaudit : tanggalaudit
         };
 
 
@@ -256,7 +253,8 @@ use Carbon\Carbon;
                         <td>${item.unit_kerja.username}</td>
                         <td>${item.kodeaudit.nama_sistem}</td>
                         <td>${item.versi}</td>
-                        <td>${item.status}</td>
+                        <td class="text-capitalize">${item.status}</td>
+                        <td>${ item.tanggal_proses ?  item.tanggal_proses : '-'}</td>
                         <td><button type="button" class="tomboldetail btn btn-info"
                                     data-bs-toggle="modal" data-bs-target="#full-scrn"
                                     data-id="${item.id}">Detail</button></td>
@@ -293,7 +291,8 @@ use Carbon\Carbon;
                     });
                 }else{
                     tbody.append(` <tr>
-                                        <td class="text-center" colspan="9">Tidak Ada Data</td>
+                                        <td class="text-center" colspan="10">Tidak Ada Data</td>
+                                        <td></td>
                                         <td></td>
                                         <td></td>
                                         <td></td>
@@ -309,253 +308,186 @@ use Carbon\Carbon;
                 alert('Error fetching data');
             }
         });
+        $("#unitkerjaSelect").change(function() {
+    var id = $(this).val() === "" ? null : $(this).val();
+    var sistem = $("#dropdownSelect").val() === "" ? null : $("#dropdownSelect").val();
+    var tanggalaudit = $("#tanggalaudit").val() === "" ? null : $("#tanggalaudit").val();
 
-    $("#unitkerjaSelect").change(function() {
-        console.log($(this).val());
+    var requestData = {
+        sistem: sistem,
+        unitkerja: id,
+        tanggalaudit: tanggalaudit,
+    };
 
+    var urlAuditInsidental = "/auth/hasil-audit-insidental-get";
+    console.log(requestData);
 
+    $.ajax({
+        url: urlAuditInsidental,
+        type: "GET",
+        data: requestData,
 
-        if($(this).val() == ""){
-            var id = null;
-        }else{
-            var id = $(this).val();
-        }
+        success: function(res) {
+            $('#selectAll').change(function() {
+                $('.rowCheckbox').prop('checked', $(this).prop('checked'));
+            });
 
-        if($("#dropdownSelect").val() == ""){
-            var sistem = null;
-        }else{
-            var sistem = $("#dropdownSelect").val();
-        }
-        console.log($("#dropdownSelect").val())
-        if ($("#tgldari").val() == "") {
-            var dari = null;
-        } else {
-            var dari = $("#tgldari").val();
-        }
+            var tbody = $(".tbody");
+            tbody.empty();
 
-        if ($("#tglsampai").val() == "") {
-            var sampai = null;
-        } else {
-            var sampai = $("#tglsampai").val();
-        }
-
-        console.log(dari);
-        console.log(sampai);
-        var requestData = {
-            sistem: sistem,
-            unitkerja: id,
-            dari: dari,
-            sampai: sampai
-        };
-
-        var urlAuditInsidental = "/auth/hasil-audit-insidental-get";
-        console.log(requestData);
-
-        $.ajax({
-            url: urlAuditInsidental,
-            type: "GET",
-            data: requestData, // Data yang dikirim dalam format JSON
-
-            success: function(res) {
-                $('#selectAll').change(function() {
-                    $('.rowCheckbox').prop('checked', $(this).prop('checked'));
-                });
-
-                console.log(res);
-                var tbody = $(".tbody");
-                tbody.empty();
+            // Cek apakah terdapat data dalam response
+            if (res.length > 0) {
                 res.forEach(function(item) {
                     var row = `
-        <tr>
-            ${item.status === 'proses'
+                    <tr>
+                        ${item.status === 'proses'
                             ? '<td><input type="checkbox" class="rowCheckbox" value="' + item.id + '"></td>'
                             : '<td> - </td>'}
-            <td>${formatDate(item.tanggal_audit)}</td>
-            <td>${item.judul}</td>
-            <td>${item.unit_kerja.username}</td>
-            <td>${item.kodeaudit.nama_sistem}</td>
-            <td>${item.versi}</td>
-            <td>${item.status}</td>
-            <td><button type="button" class="tomboldetail btn btn-info"
-                        data-bs-toggle="modal" data-bs-target="#full-scrn"
-                        data-id="${item.id}">Detail</button></td>
-        </tr>
-    `;
+                        <td>${formatDate(item.tanggal_audit)}</td>
+                        <td>${item.judul}</td>
+                        <td>${item.unit_kerja.username}</td>
+                        <td>${item.kodeaudit.nama_sistem}</td>
+                        <td>${item.versi}</td>
+                        <td>${item.status}</td>
+                        <td><button type="button" class="tomboldetail btn btn-info"
+                                    data-bs-toggle="modal" data-bs-target="#full-scrn"
+                                    data-id="${item.id}">Detail</button></td>
+                    </tr>
+                    `;
                     tbody.append(row);
                 });
-                $(".tomboldetail").click(function() {
-                    console.log("tes");
-                    var id = $(this).data('id');
-                    var url = "{{ route('audit-insidental.getData', '') }}/" +
-                        id;
-                    $.ajax({
-                        url: url,
-                        type: 'GET',
-                        success: function(response) {
-                            // Assuming response is JSON, you can parse and display it as needed
-                            console.log(response);
-                            $("#detailUnit").html(response
-                                .unitkerja_name);
-                            $("#detailPendahuluan").html(response
-                                .pendahuluan);
-                            $("#detailCakupan").html(response
-                                .cakupan_audit);
-                            $("#detailTujuan").html(response
-                                .tujuan_audit);
-                            $("#detailMetodologi").html(response
-                                .metodologi_audit);
-                            $("#detailHasil").html(response
-                                .hasil_audit);
-                            $("#detailRekomendasi").html(response
-                                .rekomendasi);
-                            $("#detailKesimpulan").html(response
-                                .kesimpulan_audit);
-                            $(".statusAudit").html(response.status);
-
-
-                        },
-                        error: function(xhr) {
-                            // Handle error
-                            alert('Error fetching data');
-                        }
-                    });
-                })
-
-
-            },
-            error: function(err) {
-                console.log(err);
+            } else {
+                // Jika tidak ada data, tampilkan pesan "Tidak Ada Data"
+                tbody.append(`
+                    <tr>
+                        <td class="text-center" colspan="8">Tidak Ada Data</td>
+                    </tr>
+                `);
             }
-        })
 
-    })
+            // Event untuk tombol detail
+            $(".tomboldetail").click(function() {
+                var id = $(this).data('id');
+                var url = "{{ route('audit-insidental.getData', '') }}/" + id;
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    success: function(response) {
+                        $("#detailUnit").html(response.unitkerja_name);
+                        $("#detailPendahuluan").html(response.pendahuluan);
+                        $("#detailCakupan").html(response.cakupan_audit);
+                        $("#detailTujuan").html(response.tujuan_audit);
+                        $("#detailMetodologi").html(response.metodologi_audit);
+                        $("#detailHasil").html(response.hasil_audit);
+                        $("#detailRekomendasi").html(response.rekomendasi);
+                        $("#detailKesimpulan").html(response.kesimpulan_audit);
+                        $(".statusAudit").html(response.status);
+                    },
+                    error: function(xhr) {
+                        alert('Error fetching data');
+                    }
+                });
+            });
+        },
+        error: function(err) {
+            console.log(err);
+        }
+    });
+});
 
     $("#dropdownSelect").change(function() {
-        if($(this).val() == ""){
-            var kode = null;
-        }else{
-            var kode = $(this).val();
-        }
-        if($("#unitkerjaSelect").val() == ""){
-            var unitkerja = null;
-        }else{
-            var unitkerja = $("#unitkerjaSelect").val();
-        }
-        if ($("#tgldari").val() == "") {
-            var dari = null;
-        } else {
-            var dari = $("#tgldari").val();
-        }
+    var kode = $(this).val() === "" ? null : $(this).val();
+    var unitkerja = $("#unitkerjaSelect").val() === "" ? null : $("#unitkerjaSelect").val();
+    var tanggalaudit = $("#tanggalaudit").val() === "" ? null : $("#tanggalaudit").val();
 
-        if ($("#tglsampai").val() == "") {
-            var sampai = null;
-        } else {
-            var sampai = $("#tglsampai").val();
-        }
-        var requestData = {
-            sistem: kode,
-            unitkerja: unitkerja,
-            dari: dari,
-            sampai: sampai
-        };
-        var namasistem = $(this).find('option:selected').text()
-        $(".kodes").val(kode);
-        $(".namas").val(namasistem);
-        $(".tbody").empty();
+    var requestData = {
+        sistem: kode,
+        unitkerja: unitkerja,
+        tanggalaudit: tanggalaudit,
+    };
 
-        var url = "/auth/hasil-audit-insidental-get";
-        $.ajax({
-            url: url,
-            type: 'GET',
-            data: requestData,
-            success: function(response) {
-                $('#selectAll').change(function() {
-                    $('.rowCheckbox').prop('checked', $(this).prop('checked'));
-                });
-                console.log(response);
-                if (response.length > 0) {
-                    $(".filtertanggal").removeClass("d-none")
-                }
+    var namasistem = $(this).find('option:selected').text();
+    $(".kodes").val(kode);
+    $(".namas").val(namasistem);
+    $(".tbody").empty();
+
+    var url = "/auth/hasil-audit-insidental-get";
+    $.ajax({
+        url: url,
+        type: 'GET',
+        data: requestData,
+        success: function(response) {
+            $('#selectAll').change(function() {
+                $('.rowCheckbox').prop('checked', $(this).prop('checked'));
+            });
+            console.log(response);
+
+            // Cek jika response tidak kosong
+            if (response.length > 0) {
+                $(".filtertanggal").removeClass("d-none");
                 $("#excel, #printSelected").removeClass("d-none");
                 $(".tbody").empty();
-
 
                 var tbody = $(".tbody");
                 response.forEach(function(item) {
                     var row = `
-        <tr>
-            ${item.status === 'proses'
+                    <tr>
+                        ${item.status === 'proses'
                             ? '<td><input type="checkbox" class="rowCheckbox" value="' + item.id + '"></td>'
                             : '<td> - </td>'}
-             <td>${formatDate(item.tanggal_audit)}</td>
-            <td>${item.judul}</td>
-            <td>${item.unit_kerja.username}</td>
-            <td>${item.kodeaudit.nama_sistem}</td>
-            <td>${item.versi}</td>
-            <td>${item.status}</td>
-            <td><button type="button" class="tomboldetail btn btn-info"
-                        data-bs-toggle="modal" data-bs-target="#full-scrn"
-                        data-id="${item.id}">Detail</button></td>
-        </tr>
-    `;
+                        <td>${formatDate(item.tanggal_audit)}</td>
+                        <td>${item.judul}</td>
+                        <td>${item.unit_kerja.username}</td>
+                        <td>${namasistem}</td>
+                        <td>${item.versi}</td>
+                        <td>${item.status}</td>
+                        <td><button type="button" class="tomboldetail btn btn-info"
+                                    data-bs-toggle="modal" data-bs-target="#full-scrn"
+                                    data-id="${item.id}">Detail</button></td>
+                    </tr>
+                `;
                     tbody.append(row);
                 });
 
                 $(".tomboldetail").click(function() {
-                    console.log("tes");
                     var id = $(this).data('id');
-                    var url = "{{ route('audit-insidental.getData', '') }}/" +
-                        id;
+                    var url = "{{ route('audit-insidental.getData', '') }}/" + id;
                     $.ajax({
                         url: url,
                         type: 'GET',
                         success: function(response) {
-                            // Assuming response is JSON, you can parse and display it as needed
-                            console.log(response);
-                            $("#detailUnit").html(response
-                                .unitkerja_name);
-                            $("#detailPendahuluan").html(response
-                                .pendahuluan);
-                            $("#detailCakupan").html(response
-                                .cakupan_audit);
-                            $("#detailTujuan").html(response
-                                .tujuan_audit);
-                            $("#detailMetodologi").html(response
-                                .metodologi_audit);
-                            $("#detailHasil").html(response
-                                .hasil_audit);
-                            $("#detailRekomendasi").html(response
-                                .rekomendasi);
-                            $("#detailKesimpulan").html(response
-                                .kesimpulan_audit);
+                            $("#detailUnit").html(response.unitkerja_name);
+                            $("#detailPendahuluan").html(response.pendahuluan);
+                            $("#detailCakupan").html(response.cakupan_audit);
+                            $("#detailTujuan").html(response.tujuan_audit);
+                            $("#detailMetodologi").html(response.metodologi_audit);
+                            $("#detailHasil").html(response.hasil_audit);
+                            $("#detailRekomendasi").html(response.rekomendasi);
+                            $("#detailKesimpulan").html(response.kesimpulan_audit);
                             $(".statusAudit").html(response.status);
-
-
                         },
                         error: function(xhr) {
-                            // Handle error
                             alert('Error fetching data');
                         }
                     });
-                })
-
-
-
-                $('#selectAll').change(function() {
-                    $('.rowCheckbox').prop('checked', $(this).prop('checked'));
                 });
-            },
-            error: function(xhr) {
-                console.log(xhr);
-                alert('Error fetching data');
+            } else {
+                // Jika tidak ada data dalam response
+                $(".filtertanggal, #excel, #printSelected").addClass("d-none");
+                $(".tbody").html('<tr><td colspan="8" class="text-center">Tidak ada data</td></tr>');
             }
-        });
+        },
+        error: function(xhr) {
+            console.log(xhr);
+            alert('Error fetching data');
+        }
     });
+});
 
 
     $(".tampilin").click(function() {
 
-        if($("dropdownSelect").val() == ""){
+     if($("dropdownSelect").val() == ""){
                 var kode = null;
             }else{
                 var kode = $("#dropdownSelect").val();
@@ -565,17 +497,16 @@ use Carbon\Carbon;
             }else{
                 var unitkerja = $("#unitkerjaSelect").val();
             }
-        if (tanggaldari == "" || tanggalsampai == "") {
-           var tanggaldari = null;
-        var tanggalsampai = null;
+
+        if (tanggalaudit == "") {
+           var tanggalaudit = null;
         } else {
-             var tanggaldari = $("#tgldari").val();
-        var tanggalsampai = $("#tglsampai").val();
+             var tanggalaudit = $("#tanggalaudit").val();
+        
             var requestData = {
                 sistem: kode,
                 unitkerja: unitkerja,
-                dari: tanggaldari,
-                sampai: tanggalsampai
+                tanggalaudit : tanggalaudit
             };
             $(".tbody").empty();
             var url = "/auth/hasil-audit-insidental-get";
@@ -596,7 +527,7 @@ use Carbon\Carbon;
                             var row = `
                                 <tr>
                                 <td><input type="checkbox" class="rowCheckbox" value='${id}'></td>
-                                <td>${formatDate(item.tanggal_audit)}</td>
+                             <td>${formatDate(item.tanggal_audit)}</td>
                                 <td>${item.judul}</td>
                                 <td>${item.unit_kerja.username}</td>
                                 <td>${item.kodeaudit.nama_sistem}</td>
@@ -872,7 +803,7 @@ use Carbon\Carbon;
         printWindow.document.close();
         printWindow.print();
     });
-     });
+})
 </script>
 
 @endpush

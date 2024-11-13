@@ -163,32 +163,31 @@ class HasilAuditRutinController extends Controller
 
     public function getAuditRutinGet(Request $request)
 {
+    // Initialize the base query
+    $query = AuditRutin::with('unitKerja', 'kodeaudit');
 
-    // Inisialisasi query dasar
-    $query = AuditRutin::with('unitKerja')->with('kodeaudit');
-
-    // Cek apakah keempat request ada
-    if ($request->sistem && $request->unitkerja && $request->dari && $request->sampai) {
+    // Check if all three request parameters exist: sistem, unitkerja, and tanggalaudit
+    if ($request->sistem && $request->unitkerja && $request->tanggalaudit) {
         $query->where('kode_audit', $request->sistem)
               ->where('unitkerja_id', $request->unitkerja)
-              ->whereBetween('tanggal_proses', [$request->dari, $request->sampai]);
+              ->where('tanggal_audit', $request->tanggalaudit);
     }
-    // Cek apakah request unitkerja dan sistem ada
+    // Check if the sistem and unitkerja parameters exist
     elseif ($request->sistem && $request->unitkerja) {
         $query->where('kode_audit', $request->sistem)
               ->where('unitkerja_id', $request->unitkerja);
     }
-    // Cek apakah request sistem, dari dan sampai ada
-    elseif ($request->sistem && $request->dari && $request->sampai) {
+    // Check if the sistem and tanggalaudit parameters exist
+    elseif ($request->sistem && $request->tanggalaudit) {
         $query->where('kode_audit', $request->sistem)
-              ->whereBetween('tanggal_proses', [$request->dari, $request->sampai]);
+              ->where('tanggal_audit', $request->tanggalaudit);
     }
-    // Cek apakah request unitkerja, dari dan sampai ada
-    elseif ($request->unitkerja && $request->dari && $request->sampai) {
+    // Check if the unitkerja and tanggalaudit parameters exist
+    elseif ($request->unitkerja && $request->tanggalaudit) {
         $query->where('unitkerja_id', $request->unitkerja)
-              ->whereBetween('tanggal_proses', [$request->dari, $request->sampai]);
+              ->where('tanggal_audit', $request->tanggalaudit);
     }
-    // Cek request satu per satu untuk kombinasi lainnya
+    // Handle other individual conditions
     else {
         if ($request->sistem) {
             $query->where('kode_audit', $request->sistem);
@@ -196,15 +195,15 @@ class HasilAuditRutinController extends Controller
         if ($request->unitkerja) {
             $query->where('unitkerja_id', $request->unitkerja);
         }
-        if ($request->dari && $request->sampai) {
-            $query->whereBetween('tanggal_proses', [$request->dari, $request->sampai]);
+        if ($request->tanggalaudit) {
+            $query->where('tanggal_audit', $request->tanggalaudit);
         }
     }
 
-    // Jalankan query dan dapatkan hasilnya
-    $auditRutin = $query->orderBy('tanggal_proses', 'asc')->get();
+    // Execute the query and get the results
+    $auditRutin = $query->orderBy('tanggal_audit', 'asc')->get();
 
-    // Kembalikan hasil query dalam format JSON
+    // Return the query results as JSON
     return response()->json($auditRutin);
 }
 }

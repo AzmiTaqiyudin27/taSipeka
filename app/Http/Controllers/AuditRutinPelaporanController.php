@@ -62,8 +62,7 @@ class AuditRutinPelaporanController extends Controller
             'user_id' => 'required|int',
             'unitkerja_id' => 'int',
             'judul' => '',
-            'tanggal_awal' => 'required|date',
-            'tanggal_akhir' => 'required|date',
+            
             'kode_audit' => '',
             'versi' => '',
             'pendahuluan' => '',
@@ -144,8 +143,7 @@ class AuditRutinPelaporanController extends Controller
             'user_id' => 'required|int',
             'unitkerja_id' => 'int',
             'judul' => '',
-            'tanggal_awal' => 'required|date',
-            'tanggal_akhir' => 'required|date',
+           'tanggal_audit' => 'date',
             'kode_audit' => '',
             'versi' => '',
             'pendahuluan' => '',
@@ -169,9 +167,8 @@ else
         $auditRutin->user_id = $validatedData['user_id'];
         $auditRutin->unitkerja_id = $validatedData['unitkerja_id'];
         $auditRutin->judul = $validatedData['judul'];
-        $auditRutin->tanggal_awal = $validatedData['tanggal_awal'];
-        $auditRutin->tanggal_akhir = $validatedData['tanggal_akhir'];
-        $auditRutin->kode_audit = $validatedData['kode_audit'];
+        $auditRutin->tanggal_audit = $validatedData['tanggal_audit'];
+                $auditRutin->kode_audit = $validatedData['kode_audit'];
         $auditRutin->versi = $validatedData['versi'];
         $auditRutin->pendahuluan = $validatedData['pendahuluan'];
         $auditRutin->cakupan_audit = $validatedData['cakupan_audit'];
@@ -180,9 +177,9 @@ else
         $auditRutin->hasil_audit = $validatedData['hasil_audit'];
         $auditRutin->rekomendasi = $validatedData['rekomendasi'];
         $auditRutin->kesimpulan_audit = $validatedData['kesimpulan_audit'];
+        $auditRutin->tanggal_proses = date('Y-m-d'); // Format YYYY-MM-DD
         $auditRutin->status = "proses";
         // Mengisi tanggal_proses dengan tanggal saat ini tanpa waktu
-        $auditRutin->tanggal_proses = date('Y-m-d'); // Format YYYY-MM-DD
 
         // Array untuk menyimpan nama file yang di-upload
         $files = [];

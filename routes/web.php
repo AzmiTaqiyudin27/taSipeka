@@ -94,6 +94,9 @@ Route::group(['prefix' => 'auth'], function () {
     Route::get('hasil-insidental', [HasilAuditInsidentalController::class, "index"])->name('hasil-insidental.index');
     Route::get('penerimaan-insidental', [AuditInsidentalController::class, "index"])->name('penerimaan-insidental.insidentalpenerimaan');
     Route::get('pelaporan-insidental', [AuditInsidentalController::class, "pelaporan"])->name('pelaporan-insidental.pelaporan');
+    Route::get('edit-pelaporan-insidental/{id}', [AuditInsidentalController::class, "edit"])->name('edit-pelaporan-insidental');
+    Route::put('pelaporan-insidental/proses/{id}', [AuditInsidentalController::class, "proses"])->name('pelaporan-insidental.proses');
+    // Route::put('pelaporan-insidental/update/{id}', [AuditInsidentalController::class, "update"])->name('pelaporan-insidental.update');
     Route::get('audit-rutinhasil', [HasilAuditRutinController::class, "index"])->name("hasil-rutin.hasilrutin");
     Route::get('pelaporan-insidental/create', [AuditInsidentalController::class, "create"])->name('pelaporan-insidental.create');
     Route::post('ckeditor/upload', [ImageUploadController::class, 'upload'])->name('ckeditor.upload');
@@ -111,7 +114,7 @@ Route::group(['prefix' => 'auth'], function () {
     Route::post('pelaporan-audit-rutin/tambah', [AuditRutinPelaporanController::class, "store"])->name("tambahAuditRutin");
     Route::put('pelaporan-audit-rutin/update/{id}', [AuditRutinPelaporanController::class, "update"])->name("pelaporan-rutin.update");
     Route::put('pelaporan-audit-rutin/proses/{id}', [AuditRutinPelaporanController::class, "proses"])->name("pelaporan-rutin.prosess");
-    Route::post('pelaporan-audit-rutin/proses', [AuditRutinPelaporanController::class, "prosess"])->name("pelaporan-rutin.prosesss");
+    // Route::post('pelaporan-audit-rutin/proses', [AuditRutinPelaporanController::class, "prosess"])->name("pelaporan-rutin.prosesss");
     Route::delete('pelaporan-audit-rutin/destroy/{id}', [AuditRutinPelaporanController::class, "destroy"])->name("pelaporan-rutin.destroy");
     Route::get('pelaporan-rutin/create', [AuditRutinController::class, "create"])->name('pelaporan-rutin.create');
     Route::get('pelaporan-rutin/detail', [AuditRutinController::class, "getAuditDetail"])->name('pelaporan-rutin.getAuditDetail');

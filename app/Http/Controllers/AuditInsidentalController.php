@@ -104,6 +104,23 @@ public function create()
         'unitkerjas' => $unitkerja
     ]);
 }
+public function edit($id)
+{
+    $auditInsidental = AuditInsidental::find($id);
+    $kodeAudit = KodeAudit::where('kode_audit', $auditInsidental->kode_audit)->get();
+    // $auditProses = AuditRutin::where("kode_audit", $kode)->where("status", "proses")->get();
+    $auditDiedit = AuditInsidental::where("status", "draft")->get();
+    $unitkerja = User::where('id', $auditInsidental->unitkerja_id)->get();
+    $role = auth()->user()->role;
+
+    return view('TimKeamananAudit.pelaporaninsidental.edit_pelaporanInsidental', [
+        'auditInsidental' => $auditInsidental,
+        // "auditDiedit" => $auditDiedit,
+        "kodeAudit" => $kodeAudit,
+        "userid" => $id,
+        "unitKerja" => $unitkerja
+    ]);
+}
 
 
     public function getAuditDetail(Request $request)
@@ -152,26 +169,18 @@ public function create()
         return response()->json($audit);
     }
 
-public function proses(Request $request, $pelaporan_rutin_id)
+public function proses(Request $request, $id)
 {
-    try {
-        // Ambil data dengan kode terbaru berdasarkan tanggal
-        $pelaporrutin = AuditRutin::where('pelaporan_rutin_id', $pelaporan_rutin_id)
-                                    ->orderBy('created_at', 'desc') // Urutkan berdasarkan tanggal terbaru
-                                    ->first();
+   
 
-        if (!$pelaporrutin) {
-            return response()->json(['error' => 'Data tidak ditemukan'], 404);
-        }
-
-        $pelaporrutin->update(['status' => 'terproses']);
-
-        return response()->json(['success' => 'Data berhasil diproses']);
-    } catch (\Exception $e) {
-        Log::error("Error processing data: " . $e->getMessage());
-        return response()->json(['error' => 'Terjadi kesalahan saat memproses data'], 500);
-    }
+    $auditInsidental = AuditInsidental::findOrFail($id);
+    $auditInsidental->tanggal_proses = date('Y-m-d'); // Format YYYY-MM-DD
+    $auditInsidental->status = "proses";
+    $auditInsidental->save();
+    return redirect()->back()->with('message', 'Berhasil Memproses Laporan Audit!');
 }
+
+
 
     public function storeProses(Request $request)
 {
@@ -217,7 +226,7 @@ public function proses(Request $request, $pelaporan_rutin_id)
             'hasil_audit' => '',
             'rekomendasi' => '',
             'kesimpulan_audit' => '',
-            'status' => '',
+        
     ]);
 
         try {
@@ -336,7 +345,7 @@ public function proses(Request $request, $pelaporan_rutin_id)
             'hasil_audit' => '',
             'rekomendasi' => '',
             'kesimpulan_audit' => '',
-            'status' => '',
+           
     ]);
 
     // Cari instance dari model AuditRutin berdasarkan ID
@@ -354,7 +363,6 @@ public function proses(Request $request, $pelaporan_rutin_id)
         $auditRutin->hasil_audit = $validatedData['hasil_audit'];
         $auditRutin->rekomendasi = $validatedData['rekomendasi'];
         $auditRutin->kesimpulan_audit = $validatedData['kesimpulan_audit'];
-        $auditRutin->status = $validatedData['status'];
 
     // Simpan perubahan ke dalam database
     $auditRutin->save();
@@ -398,56 +406,51 @@ public function proses(Request $request, $pelaporan_rutin_id)
 
     }
 
-    public function getAuditByUnitkerja($unitkerja){
-        $auditInsidental = AuditInsidental::with('unitKerja')->with('kodeAudit')->where('unitkerja_id', $unitkerja)->get();
-        return response($auditInsidental);
-    }
-
     public function getAuditInsidentalGet(Request $request)
-{
-
-    // Inisialisasi query dasar
-    $query = AuditInsidental::with('unitKerja')->with('kodeaudit');
-
-    // Cek apakah keempat request ada
-    if ($request->sistem && $request->unitkerja && $request->dari && $request->sampai) {
-        $query->where('kode_audit', $request->sistem)
-              ->where('unitkerja_id', $request->unitkerja)
-              ->whereBetween('tanggal_audit', [$request->dari, $request->sampai]);
-    }
-    // Cek apakah request unitkerja dan sistem ada
-    elseif ($request->sistem && $request->unitkerja) {
-        $query->where('kode_audit', $request->sistem)
-              ->where('unitkerja_id', $request->unitkerja);
-    }
-    // Cek apakah request sistem, dari dan sampai ada
-    elseif ($request->sistem && $request->dari && $request->sampai) {
-        $query->where('kode_audit', $request->sistem)
-              ->whereBetween('tanggal_audit', [$request->dari, $request->sampai]);
-    }
-    // Cek apakah request unitkerja, dari dan sampai ada
-    elseif ($request->unitkerja && $request->dari && $request->sampai) {
-        $query->where('unitkerja_id', $request->unitkerja)
-              ->whereBetween('tanggal_audit', [$request->dari, $request->sampai]);
-    }
-    // Cek request satu per satu untuk kombinasi lainnya
-    else {
-        if ($request->sistem) {
-            $query->where('kode_audit', $request->sistem);
+    {
+        // Inisialisasi query dasar
+        $query = AuditInsidental::with('unitKerja')->with('kodeaudit');
+    
+        // Cek apakah keempat request ada
+        if ($request->sistem && $request->unitkerja && $request->tanggalaudit) {
+            $query->where('kode_audit', $request->sistem)
+                  ->where('unitkerja_id', $request->unitkerja)
+                  ->where('tanggal_audit', $request->tanggalaudit);
         }
-        if ($request->unitkerja) {
-            $query->where('unitkerja_id', $request->unitkerja);
+        // Cek apakah request unitkerja dan sistem ada
+        elseif ($request->sistem && $request->unitkerja) {
+            $query->where('kode_audit', $request->sistem)
+                  ->where('unitkerja_id', $request->unitkerja);
         }
-        if ($request->dari && $request->sampai) {
-            $query->whereBetween('tanggal_audit', [$request->dari, $request->sampai]);
+        // Cek apakah request sistem dan tanggalaudit ada
+        elseif ($request->sistem && $request->tanggalaudit) {
+            $query->where('kode_audit', $request->sistem)
+                  ->where('tanggal_audit', $request->tanggalaudit);
         }
+        // Cek apakah request unitkerja dan tanggalaudit ada
+        elseif ($request->unitkerja && $request->tanggalaudit) {
+            $query->where('unitkerja_id', $request->unitkerja)
+                  ->where('tanggal_audit', $request->tanggalaudit);
+        }
+        // Cek request satu per satu untuk kombinasi lainnya
+        else {
+            if ($request->sistem) {
+                $query->where('kode_audit', $request->sistem);
+            }
+            if ($request->unitkerja) {
+                $query->where('unitkerja_id', $request->unitkerja);
+            }
+            if ($request->tanggalaudit) {
+                $query->where('tanggal_audit', $request->tanggalaudit);
+            }
+        }
+    
+        // Jalankan query dan dapatkan hasilnya
+        $auditInsidental = $query->orderBy('tanggal_audit', 'asc')->get();
+    
+        // Kembalikan hasil query dalam format JSON
+        return response()->json($auditInsidental);
     }
-
-    // Jalankan query dan dapatkan hasilnya
-    $auditInsidental = $query->orderBy('tanggal_audit', 'asc')->get();
-
-    // Kembalikan hasil query dalam format JSON
-    return response()->json($auditInsidental);
-}
+    
 
 }

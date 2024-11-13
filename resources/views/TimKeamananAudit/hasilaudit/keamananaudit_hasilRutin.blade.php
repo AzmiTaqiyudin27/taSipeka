@@ -74,14 +74,11 @@
                         <div class="table-responsive tableDisini">
                             <div class="d-flex my-1 filtertanggal align-items-end flex-row">
                                 <div class="form-group col-4 d-flex flex-column me-2">
-                                    <label for="tanggal_audit" class="form-label">Dari</label>
-                                    <input type="date" id="tgldari" class="form-control" placeholder="Tanggal Audit">
+                                    <label for="tanggal_audit" class="form-label">Tanggal Audit</label>
+                                    <input type="date" id="tanggalaudit" class="form-control" placeholder="Tanggal Audit">
                                 </div>
 
-                                <div class="form-group col-4 d-flex flex-column ">
-                                    <label for="tanggal_audit" class="form-label">Sampai</label>
-                                    <input type="date" id="tglsampai" class="form-control" placeholder="Tanggal Audit">
-                                </div>
+                             
                                 <div class="form-group align-items-end  mx-2 d-flex justify-items-end flex-column">
                                     <label for="tanggal_audit" class="form-label"></label>
                                     <button
@@ -108,6 +105,9 @@
                                             <th>Aksi</th>
                                         </tr>
                                     </thead>
+                                    <tbody class="tbody">
+
+                                    </tbody>
                                 </table>
                             </form>
                         </div>
@@ -203,13 +203,11 @@
 }
          var kode = null;
         var unitkerja = null;
-        var tanggaldari = null;
-        var tanggalsampai = null;
+        var tanggalaudit = null;
           var requestData = {
                 sistem: kode,
                 unitkerja: unitkerja,
-                dari: tanggaldari,
-                sampai: tanggalsampai
+                tanggalaudit : tanggalaudit 
             };
 
 
@@ -223,6 +221,7 @@ $.ajax({
     data: requestData,
     success: function(response) {
         console.log(response);
+    
           $(".tbody").empty();
         // Handle select all checkbox functionality
         $('#selectAll').change(function() {
@@ -243,13 +242,13 @@ $.ajax({
                         ${item.status === 'proses'
                             ? '<td><input type="checkbox" name="ids[]" class="rowCheckbox" value="' + item.id + '"></td>'
                             : '<td> - </td>'}
-                        <td>${formatDate(item.tanggal_awal)} sampai ${formatDate(item.tanggal_akhir)}</td>
+                        <td>${formatDate(item.tanggal_audit)}</td>
                         <td>${item.judul}</td>
                         <td>${item.unit_kerja.username}</td>
                         <td>${item.kodeaudit.nama_sistem}</td>
                         <td>${item.versi}</td>
-                        <td>${formatDate(item.tanggal_proses)}</td>
                         <td>${item.status}</td>
+                        <td>${ item.tanggal_proses ? formatDate(item.tanggal_proses) : '-'}</td>
                         <td><button type="button" class="tomboldetail btn btn-info"
                                     data-bs-toggle="modal" data-bs-target="#full-scrn"
                                     data-id="${item.id}">Detail</button></td>
@@ -300,9 +299,10 @@ $.ajax({
                                     </tr>`);
         }
     },
-    error: function() {
+    error: function(err) {
         // Handle any errors during the AJAX request
         alert('Error fetching data2');
+        console.log(err);
     }
 });
         $("#unitkerjaSelect").change(function() {
@@ -319,26 +319,18 @@ $.ajax({
             var sistem = $("#dropdownSelect").val();
         }
         console.log($("#dropdownSelect").val())
-        if ($("#tgldari").val() == "") {
-            var dari = null;
+        if ($("#tglaudit").val() == "") {
+            var tanggalaudit = null;
         } else {
-            var dari = $("#tgldari").val();
+            var tanggalaudit = $("#tglaudit").val();
         }
 
-        if ($("#tglsampai").val() == "") {
-            var sampai = null;
-        } else {
-            var sampai = $("#tglsampai").val();
-        }
-
-
-            console.log(dari);
-            console.log(sampai);
+    
             var requestData = {
                 sistem: sistem,
                 unitkerja: id,
-                dari: dari,
-                sampai: sampai
+                tanggalaudit: tanggalaudit,
+                
             };
 
             var urlAuditInsidental = "/auth/hasil-audit-rutin-get";
@@ -364,14 +356,15 @@ $.ajax({
                 ? '<td><input type="checkbox" class="rowCheckbox" value="' + item.id + '"></td>'
                 : '<td> - </td>'}
            <td>${formatDate(item.tanggal_audit)}</td>
-            <td>${item.judul}</td>
-            <td>${item.unit_kerja.username}</td>
-            <td>${item.kodeaudit.nama_sistem}</td>
-            <td>${item.versi}</td>
-            <td>${item.status}</td>
-            <td><button type="button" class="tomboldetail btn btn-info"
-                        data-bs-toggle="modal" data-bs-target="#full-scrn"
-                        data-id="${item.id}">Detail</button></td>
+                        <td>${item.judul}</td>
+                        <td>${item.unit_kerja.username}</td>
+                        <td>${item.kodeaudit.nama_sistem}</td>
+                        <td>${item.versi}</td>
+                        <td>${item.status}</td>
+                        <td>${ item.tanggal_proses ? formatDate(item.tanggal_proses) : '-'}</td>
+                        <td><button type="button" class="tomboldetail btn btn-info"
+                                    data-bs-toggle="modal" data-bs-target="#full-scrn"
+                                    data-id="${item.id}">Detail</button></td>
         </tr>
     `;
                         tbody.append(row);
@@ -433,22 +426,16 @@ $.ajax({
         }else{
             var unitkerja = $("#unitkerjaSelect").val();
         }
-        if ($("#tgldari").val() == "") {
-            var dari = null;
+        if ($("#tglaudit").val() == "") {
+            var tanggalaudit = null;
         } else {
-            var dari = $("#tgldari").val();
+            var tanggalaudit = $("#tglaudit").val();
         }
 
-        if ($("#tglsampai").val() == "") {
-            var sampai = null;
-        } else {
-            var sampai = $("#tglsampai").val();
-        }
               var requestData = {
                 sistem: kode,
                 unitkerja: unitkerja,
-                dari: dari,
-                sampai: sampai
+               tanggalaudit : tanggalaudit
             };
             var namasistem = $(this).find('option:selected').text()
             $(".kodes").val(kode);
@@ -485,14 +472,15 @@ $.ajax({
                 ? '<td><input type="checkbox" class="rowCheckbox" value="' + item.id + '"></td>'
                 : '<td> - </td>'}
             <td>${formatDate(item.tanggal_audit)}</td>
-            <td>${item.judul}</td>
-            <td>${item.unit_kerja.username}</td>
-            <td>${item.kodeaudit.nama_sistem}</td>
-            <td>${item.versi}</td>
-            <td>${item.status}</td>
-            <td><button type="button" class="tomboldetail btn btn-info"
-                        data-bs-toggle="modal" data-bs-target="#full-scrn"
-                        data-id="${item.id}">Detail</button></td>
+                        <td>${item.judul}</td>
+                        <td>${item.unit_kerja.username}</td>
+                        <td>${item.kodeaudit.nama_sistem}</td>
+                        <td>${item.versi}</td>
+                        <td>${item.status}</td>
+                        <td>${ item.tanggal_proses ? formatDate(item.tanggal_proses) : '-'}</td>
+                        <td><button type="button" class="tomboldetail btn btn-info"
+                                    data-bs-toggle="modal" data-bs-target="#full-scrn"
+                                    data-id="${item.id}">Detail</button></td>
         </tr>
     `;
                         tbody.append(row);
@@ -562,18 +550,17 @@ $.ajax({
             }
             var namasistem = $("#dropdownSelect").find('option:selected').text()
 
-        if (tanggaldari == "" || tanggalsampai == "") {
-           var tanggaldari = null;
-        var tanggalsampai = null;
+        if (tanggalaudit == "") {
+           var tanggalaudit = null;
+      
             } else {
-                 var tanggaldari = $("#tgldari").val();
-                var tanggalsampai = $("#tglsampai").val();
+                 var tanggalaudit = $("#tanggalaudit").val();
+                
                  var requestData = {
                 sistem: kode,
                 unitkerja: unitkerja,
-                dari: tanggaldari,
-                sampai: tanggalsampai
-            };
+                tanggalaudit: tanggalaudit,
+                            };
                 $(".tbody").empty();
                 var url = "/auth/hasil-audit-rutin-get";
                 $.ajax({
@@ -594,14 +581,16 @@ $.ajax({
                                 var row = `
                                 <tr>
                                 <td><input type="checkbox" class="rowCheckbox" name="id[]" value='${id}'></td>
-                               <td>${formatDate(item.tanggal_audit)}</td>
-                                <td>${item.judul}</td>
-                                <td>${item.unit_kerja.username}</td>
-                                <td>${item.kodeaudit.nama_sistem}</td>
-                                <td>${item.versi}</td>
-                                <td><button type="button" class="tomboldetail btn btn-info"
-                                data-bs-toggle="modal" data-bs-target="#full-scrn"
-                                data-id="${item.id}">Detail</button></td>
+                            <td>${formatDate(item.tanggal_audit)}</td>
+                        <td>${item.judul}</td>
+                        <td>${item.unit_kerja.username}</td>
+                        <td>${item.kodeaudit.nama_sistem}</td>
+                        <td>${item.versi}</td>
+                        <td>${item.status}</td>
+                        <td>${ item.tanggal_proses ? formatDate(item.tanggal_proses) : '-'}</td>
+                        <td><button type="button" class="tomboldetail btn btn-info"
+                                    data-bs-toggle="modal" data-bs-target="#full-scrn"
+                                    data-id="${item.id}">Detail</button></td>
                                 </tr>
                                 `;
                                 tbody.append(row);

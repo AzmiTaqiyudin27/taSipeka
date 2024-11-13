@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class PengajuanRutin extends Model
 {
     use HasFactory;
+    protected $table = 'pelaporan_rutins';
     protected $guarded = [
         'id'
     ];
