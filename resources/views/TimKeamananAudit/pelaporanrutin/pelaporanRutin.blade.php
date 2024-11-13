@@ -82,22 +82,23 @@
                                 
                                     <td>
                                         @if($item->lampiran)
-                                        @php
-                                            $dokumenArray = json_decode($item->lampiran, true);
-                                        @endphp
-                                        <ul>
-
-                                            @foreach ($dokumenArray as $lampiran)
-                                            <li>
-                                                <a target="_blank" href="/lampiran/{{ $lampiran }}">{{ $lampiran }}</a><br>
-                                            </li>
-                                            @endforeach
-                                        </ul>
+                                            @php
+                                                $dokumenArray = json_decode($item->lampiran, true);
+                                            @endphp
+                                            @if($dokumenArray && count($dokumenArray) > 0)
+                                                <ul>
+                                                    @foreach ($dokumenArray as $lampiran)
+                                                        <li>
+                                                            <a target="_blank" href="/lampiran/{{ $lampiran }}">{{ $lampiran }}</a><br>
+                                                        </li>
+                                                    @endforeach
+                                                </ul>
+                                            @else
+                                                Tidak Ada Lampiran
+                                            @endif
                                         @else
-                                        Tidak Ada Lamp
+                                            Tidak Ada Lampiran
                                         @endif
-
-
                                     </td>
                                     <td>{{ $item->tanggal_proses ? date('d-m-Y', strtotime($item->tanggal_proses)) : '-' }}</td>
                                     <td>
@@ -108,10 +109,7 @@
                                             data-bs-target="#full-scrn" data-id="{{ $item->id }}">
                                             Detail
                                         </button>
-                                        <div class="fileInputsContainer form-group mt-2">
-                                            <label for="lampiran" class="form-label">Lampiran</label>
-
-                                        </div>
+                                       
                                     </td>
                                 </tr>
                             @endforeach

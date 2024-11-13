@@ -397,11 +397,45 @@ public function proses(Request $request, $id)
         $auditRutin->hasil_audit = $validatedData['hasil_audit'];
         $auditRutin->rekomendasi = $validatedData['rekomendasi'];
         $auditRutin->kesimpulan_audit = $validatedData['kesimpulan_audit'];
+        $lampiranArray = json_decode($auditRutin->lampiran, true) ?? [];
+
+        // Update foto yang sudah ada
+        if ($request->has('lampiran_update')) {
+            foreach ($request->file('lampiran_update') as $index => $file) {
+                if ($file && isset($fotoArray[$index])) {
+                    // Hapus foto lama dari server
+                    if (file_exists(public_path('lampiran/' . $lampiranArray[$index]))) {
+                        unlink(public_path('lampiran/' . $lampiranArray[$index]));
+                    }
+    
+                    // Simpan foto baru
+                    // $newFilename = time() . '-' . $file->getClientOriginalName();
+                    $newFilename =  $file->getClientOriginalName();
+                    $file->move(public_path('lampiran'), $newFilename);
+                    $lampiranArray[$index] = $newFilename;
+                }
+            }
+        }
+    
+        // Tambah foto baru ke daftar yang ada
+        if ($request->hasFile('lampiran')) {
+            foreach ($request->file('lampiran') as $file) {
+                if ($file->isValid()) {
+                    // $filename = time() . '-' . $file->getClientOriginalName();
+                    $filename =  $file->getClientOriginalName();
+                    $file->move(public_path('lampiran'), $filename);
+                    $lampiranArray[] = $filename;
+                }
+            }
+        }
+    
+        // Simpan kembali foto yang sudah diupdate dan baru ke database dalam bentuk JSON
+        $auditRutin->lampiran = json_encode($lampiranArray);
 
     // Simpan perubahan ke dalam database
     $auditRutin->save();
 
-    return redirect()->back()->with('suksessimpan', 'Berhasil Memperbarui Laporan Audit!');
+    return redirect('/auth/pelaporan-insidental')->with('success', 'Berhasil Mengupdate Laporan Audit!');
 
 }
     public function destroy($id){

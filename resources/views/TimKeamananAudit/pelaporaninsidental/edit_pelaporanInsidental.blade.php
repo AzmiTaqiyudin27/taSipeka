@@ -157,39 +157,38 @@ s
                     </select>
                 </div>
 
-  <div class="formtambahan">
-                                <div id="fileInputsContainer" class="form-group">
-    <label for="lampiran" class="form-label">Lampiran</label>
-    
-   
-    <br>
-        {{$auditInsidental->lampiran ? "Sudah adalah lampiran yaitu". $auditInsidental->lampiran." " : "Belum ada lampiran"}}
-
-    <input 
-        type="file" 
-        name="lampiran[]" 
-        id="lampiran" 
-        class="form-control mb-3" 
-        placeholder="Lampiran"
-    >
-</div>
-
-                            
-                                <!-- Elemen untuk Menampilkan Nama File yang Dipilih -->
-                                <div class="form-group">
-                                    <label>File yang Dipilih:</label>
-                                    <ul id="fileList"></ul> <!-- Ini adalah tempat nama file yang akan ditampilkan -->
-                                </div>
-                            
-                                <!-- Tombol untuk menambahkan input file lagi -->
-                                <div class="form-group">
-                                    <button type="button" id="addFileInputBtn" class="btn btn-primary" onclick="addFormTambahan()">Tambah File Lain</button>
-                                </div>
+  
 
                                 <div class="form-group">
                                     <label for="tanggal_proses" class="form-label">Tanggal Proses</label>
                                     <input type="date" disabled value="{{ $auditInsidental->tanggal_proses }}" name="tanggal_proses" id="tanggal_proses" class="form-control" placeholder="Tanggal Proses">
                         </div>
+                        <!-- Display existing photos -->
+   <div class="form-group">
+    <label for="existing_foto" class="form-label">Lampiran yang Sudah Diupload</label>
+    <div>
+        @php
+            // Jika foto disimpan sebagai JSON atau string yang dipisahkan koma
+            $lampirans = json_decode($auditInsidental->lampiran, true) ?? explode(',', $auditInsidental->lampiran);
+        @endphp
+        @foreach ($lampirans as $index => $lamp)
+            <div class="mb-3">
+                <label for="existing_foto_{{ $index }}">Lampiran {{ $index + 1 }}</label>
+                <div>
+                    <a href="{{ url('lampiran/' . trim($lamp)) }}" target="_blank">{{ trim($lamp) }}</a>
+                </div>
+                <input type="file" name="lampiran_update[{{ $index }}]" class="form-control mt-2">
+                <input type="hidden" name="existing_lampiran[{{ $index }}]" value="{{ $lamp }}">
+            </div>
+        @endforeach
+    </div>
+</div>
+
+<!-- Input for adding new photos -->
+<div class="form-group">
+    <label for="foto" class="form-label">Unggah Lampiran Baru (Tambahan)</label>
+    <input type="file" name="lampiran[]" id="lampiran" class="form-control" multiple>
+</div>
 
                         <div class="form-group">
                         <button type="button" class="btn btn-primary" id="updateButton">Update</button>

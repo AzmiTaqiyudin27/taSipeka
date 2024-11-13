@@ -152,34 +152,32 @@ s
                     </select>
                 </div>
 
-  <div class="formtambahan">
-                                <div id="fileInputsContainer" class="form-group">
-    <label for="lampiran" class="form-label">Lampiran</label>
-    
-   
-    <br>
-        {{$auditRutin->lampiran ? "Sudah adalah lampiran yaitu". $auditRutin->lampiran." " : "Belum ada lampiran"}}
-
-    <input 
-        type="file" 
-        name="lampiran[]" 
-        id="lampiran" 
-        class="form-control mb-3" 
-        placeholder="Lampiran"
-    >
+   <!-- Display existing photos -->
+   <div class="form-group">
+    <label for="existing_foto" class="form-label">Lampiran yang Sudah Diupload</label>
+    <div>
+        @php
+            // Jika foto disimpan sebagai JSON atau string yang dipisahkan koma
+            $lampirans = json_decode($auditRutin->lampiran, true) ?? explode(',', $auditRutin->lampiran);
+        @endphp
+        @foreach ($lampirans as $index => $lamp)
+            <div class="mb-3">
+                <label for="existing_foto_{{ $index }}">Lampiran {{ $index + 1 }}</label>
+                <div>
+                    <a href="{{ url('lampiran/' . trim($lamp)) }}" target="_blank">{{ trim($lamp) }}</a>
+                </div>
+                <input type="file" name="lampiran_update[{{ $index }}]" class="form-control mt-2">
+                <input type="hidden" name="existing_lampiran[{{ $index }}]" value="{{ $lamp }}">
+            </div>
+        @endforeach
+    </div>
 </div>
 
-                            
-                                <!-- Elemen untuk Menampilkan Nama File yang Dipilih -->
-                                <div class="form-group">
-                                    <label>File yang Dipilih:</label>
-                                    <ul id="fileList"></ul> <!-- Ini adalah tempat nama file yang akan ditampilkan -->
-                                </div>
-                            
-                                <!-- Tombol untuk menambahkan input file lagi -->
-                                <div class="form-group">
-                                    <button type="button" id="addFileInputBtn" class="btn btn-primary" onclick="addFormTambahan()">Tambah File Lain</button>
-                                </div>
+<!-- Input for adding new photos -->
+<div class="form-group">
+    <label for="foto" class="form-label">Unggah Lampiran Baru (Tambahan)</label>
+    <input type="file" name="lampiran[]" id="lampiran" class="form-control" multiple>
+</div>
 
                                 <div class="form-group">
                                     <label for="tanggal_proses" class="form-label">Tanggal Proses</label>

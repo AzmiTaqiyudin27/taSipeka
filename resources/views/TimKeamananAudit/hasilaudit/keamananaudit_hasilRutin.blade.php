@@ -89,7 +89,7 @@
                             </div>
                             <form action="/auth/generate-pdf" method="POST"> 
                                 @csrf
-                                <button type="submit" class="btn my-3 btn-secondary" id="printSelectedCheckbox">Cetak Data Terpilih</button>
+                                <button type="button" class="btn my-3 btn-secondary" id="printSelected">Cetak Data Terpilih</button>
                                 
                                 <table class="table row-table" id="tablehasil">
                                     <thead>
