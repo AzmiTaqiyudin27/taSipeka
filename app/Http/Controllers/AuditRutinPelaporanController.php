@@ -62,7 +62,7 @@ class AuditRutinPelaporanController extends Controller
             'user_id' => 'required|int',
             'unitkerja_id' => 'int',
             'judul' => '',
-            
+            'tanggal_audit' => 'date',
             'kode_audit' => '',
             'versi' => '',
             'pendahuluan' => '',
@@ -83,8 +83,7 @@ class AuditRutinPelaporanController extends Controller
         $auditRutin->user_id = $validatedData['user_id'];
         $auditRutin->unitkerja_id = $validatedData['unitkerja_id'];
         $auditRutin->judul = $validatedData['judul'];
-        $auditRutin->tanggal_awal = $validatedData['tanggal_awal'];
-        $auditRutin->tanggal_akhir = $validatedData['tanggal_akhir'];
+        $auditRutin->tanggal_audit = $validatedData['tanggal_audit'];
         $auditRutin->kode_audit = $validatedData['kode_audit'];
         $auditRutin->versi = $validatedData['versi'];
         $auditRutin->pendahuluan = $validatedData['pendahuluan'];
@@ -132,7 +131,7 @@ class AuditRutinPelaporanController extends Controller
         // Simpan ke dalam database
         $auditRutin->save();
 
-        return redirect()->back()->with('message', 'Berhasil Menambah Laporan Audit!');
+        return redirect('/auth/pelaporan-rutin')->with('success', 'Berhasil Menambah Laporan Audit!');
     }
 
     public function proses(Request $request, $id)
@@ -425,7 +424,7 @@ return redirect()->back()->with('message', 'Berhasil Menambah Laporan Audit!');
 
     public function getAudit($id)
     {
-        $auditRutin = AuditRutin::where('kode_audit', $id)->where('status', 'draft')->get();
+        // $auditRutin = AuditRutin::where('kode_audit', $id)->where('status', 'draft')->get();
         $auditProses = AuditRutin::where('kode_audit', $id)->where('status', 'proses')->latest()->first();
         $unitkerja = User::where('role', 'unitkerja')->get();
         $versi = AuditRutin::select('versi')
@@ -434,7 +433,7 @@ return redirect()->back()->with('message', 'Berhasil Menambah Laporan Audit!');
             ->orderBy('versi', 'asc')
             ->get();
         return response()->json([
-            'auditRutin' => $auditRutin,
+            // 'auditRutin' => $auditRutin,
             'auditProses' => $auditProses,
             'unitKerja' => $unitkerja,
             'versi' => $versi

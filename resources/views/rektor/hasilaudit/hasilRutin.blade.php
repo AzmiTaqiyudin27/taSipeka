@@ -199,6 +199,18 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script> -->
 
     @push('scripts')
+        <!-- Script -->
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        @if(session('sukses'))
+    <script>
+        Swal.fire({
+            icon: 'success',
+            title: 'Berhasil!',
+            text: '{{ session("sukses") }}',
+            confirmButtonText: 'OK'
+        });
+    </script>
+    @endif
     <script>
         $(document).ready(function(){
                 $("#unitkerjaSelect").select2();

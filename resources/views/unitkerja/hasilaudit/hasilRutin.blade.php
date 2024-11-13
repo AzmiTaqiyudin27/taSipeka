@@ -241,7 +241,7 @@ $.ajax({
                         <td>${item.unit_kerja.username}</td>
                         <td>${item.kodeaudit.nama_sistem}</td>
                         <td>${item.versi}</td>
-                        <td>${item.status}</td>
+                         <td class="text-capitalize">${item.status}</td>
                         <td>${ item.tanggal_proses ? formatDate(item.tanggal_proses) : '-'}</td>
                         <td><button type="button" class="tomboldetail btn btn-info"
                                     data-bs-toggle="modal" data-bs-target="#full-scrn"
@@ -358,7 +358,7 @@ $.ajax({
                         <td>${item.unit_kerja.username}</td>
                         <td>${item.kodeaudit.nama_sistem}</td>
                         <td>${item.versi}</td>
-                        <td>${item.status}</td>
+                        <td class="text-capitalize">${item.status}</td>
                         <td>${ item.tanggal_proses ? formatDate(item.tanggal_proses) : '-'}</td>
                         <td><button type="button" class="tomboldetail btn btn-info"
                                     data-bs-toggle="modal" data-bs-target="#full-scrn"
@@ -464,7 +464,7 @@ $.ajax({
                         <td>${item.unit_kerja.username}</td>
                         <td>${item.kodeaudit.nama_sistem}</td>
                         <td>${item.versi}</td>
-                        <td>${item.status}</td>
+                        <td class="text-capitalize">${item.status}</td>
                         <td>${ item.tanggal_proses ? formatDate(item.tanggal_proses) : '-'}</td>
                         <td><button type="button" class="tomboldetail btn btn-info"
                                     data-bs-toggle="modal" data-bs-target="#full-scrn"

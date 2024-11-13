@@ -68,13 +68,12 @@
     </section>
 
 
-    @endsection
+ 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
     integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
-    $(document).ready(function() {
-
+  
         // hapus
         $(".tombolhapus").click(function() {
             console.log("kocak");
@@ -146,11 +145,59 @@
             });
 
         });
-    });
+  
 </script>
 
 <script>
-    $(document).ready(function() {
+    let fileInputIndex = 1; // Index untuk input file yang dinamis
+    function handleFileChange(input) {
+    var fileList = document.getElementById('fileList');
+    fileList.innerHTML = ''; // Kosongkan isi sebelumnya
+
+    for (var i = 0; i < input.files.length; i++) {
+        var li = document.createElement('li');
+        li.textContent = input.files[i].name + " ";
+
+        // Buat tombol hapus untuk file
+        var removeButton = document.createElement('button');
+        removeButton.type = "button";
+        removeButton.textContent = "Hapus";
+        removeButton.className = "btn btn-danger btn-sm";
+        removeButton.onclick = function() {
+            input.value = ""; // Reset input file
+            li.remove(); // Hapus nama file dari list
+        };
+
+        li.appendChild(removeButton);
+        fileList.appendChild(li);
+    }
+}
+
+// Fungsi untuk menambah input file baru
+function addNewFileInput() {
+    fileInputIndex++;
+    var newFileInput = document.createElement('input');
+    newFileInput.type = 'file';
+    newFileInput.name = 'lampiran[]';
+    newFileInput.className = 'form-control';
+    newFileInput.id = 'lampiran' + fileInputIndex;
+    newFileInput.multiple = true;
+
+    // Tambahkan event listener untuk menangani perubahan file baru
+    newFileInput.addEventListener('change', function() {
+        handleFileChange(this);
+    });
+
+    // Tambahkan input file baru ke container
+    document.getElementById('fileInputsContainer').appendChild(newFileInput);
+}
+
+// Event handler untuk tombol 'Tambah File Lain'
+$("#addFileInputBtn").click(function() {
+    addNewFileInput();
+    console.log("Input file baru ditambahkan.");
+});
+
         // Select/Deselect all checkboxes
         $('#selectAll').click(function() {
             $('.rowCheckbox').prop('checked', this.checked);
@@ -273,144 +320,7 @@
                 success : function(response){
                     $(".loading").toggleClass("d-none");
                     console.log(response);
-                    if(response.auditInsidental.length > 0){
-                        var form = $(".formTambahAudit");
-                        var id = response.auditInsidental[0].id;
-                        var action = "{{ route('pelaporan-insidental.update', '') }}/" + id;
-                        form.attr("action", action)
-                          var selectedUnitKerjaId = response.auditInsidental[0].unitkerja_id;
-                          var selectedVersi = response.auditInsidental[0].versi;
-                        var data = `
-                          @method('PUT')
-                        <div class="form-group">
-                                    <label for="tanggal_audit" class="form-label">Tanggal Audit</label>
-                                    <input type="date" value="${response.auditInsidental[0].tanggal_audit}" name="tanggal_audit"
-                                        id="tanggal_audit" required class="form-control" placeholder="Tanggal Audit">
-                                </div>
-                                    <div class="form-group">
-                                    <label for="" class="form-label">Unitkerja</label>
-                                     <select name="unitkerja_id" class="form-select">
-                <option class="form-option" value="">-Unit Kerja-</option>
-                     ${$.map(response.unitKerja, function(item) {
-                    // Cek jika item.id sama dengan selectedUnitKerjaId
-                    console.log(item.id);
-                       var isSelected = item.id === selectedUnitKerjaId ? 'selected' : '';
-                     return `<option class="form-option" value="${item.id}" ${isSelected}>${item.username}</option>`;
-                        }).join('')}
-                      </select>
-                                </div>
-
-
-                                 <div class="form-group">
-                    <label for="judul" class="form-label">Judul</label>
-                    <input type="text" value="${response.auditInsidental[0].judul}" name="judul" id="judul" class="form-control" placeholder="Judul" >
-                </div>
-                             <div class="form-group">
-                                    <label for="versi" class="form-label">Versi</label>
-                                    <select name="versi" class="form-select">
-                <option class="form-option" value="">-Versi-</option>
-                     ${$.map(response.versi, function(item) {
-                    // Cek jika item.id sama dengan selectedUnitKerjaId
-                    console.log(item.versi);
-                       var isSelected = item.versi === selectedVersi ? 'selected' : '';
-                     return `<option class="form-option" value="${item.versi}" ${isSelected}>${item.versi}</option>`;
-                        }).join('')}
-                      </select>
-                                </div>
-
-                               <div class="form-group">
-                    <label for="pendahuluan" class="form-label">Pendahuluan</label>
-                    <textarea name="pendahuluan" id="pendahuluan" class="form-control ckeditor" placeholder="Pendahuluan">
-                    ${response.auditInsidental[0].pendahuluan}
-                    </textarea>
-                </div>
-
-                <div class="form-group">
-                    <label for="cakupan_audit" class="form-label">Cakupan Audit</label>
-                    <textarea name="cakupan_audit" id="cakupan_audit"  class="form-control ckeditor" placeholder="Cakupan Audit">
-                    ${response.auditInsidental[0].cakupan_audit}
-                    </textarea>
-                </div>
-
-                <div class="form-group">
-                    <label for="tujuan_audit" class="form-label">Tujuan Audit</label>
-                    <textarea name="tujuan_audit" id="tujuan_audit" class="form-control ckeditor" placeholder="Tujuan Audit">
-                    ${response.auditInsidental[0].tujuan_audit}
-                    </textarea>
-                </div>
-
-                <div class="form-group">
-                    <label for="metodologi_audit" class="form-label">Metodologi Audit</label>
-                    <textarea name="metodologi_audit" id="metodologi_audit" class="form-control ckeditor" placeholder="Metodologi Audit">
-                    ${response.auditInsidental[0].metodologi_audit}
-                    </textarea>
-                </div>
-
-                <div class="form-group">
-                    <label for="hasil_audit" class="form-label">Hasil Audit</label>
-                    <textarea name="hasil_audit" id="hasil_audit" class="form-control ckeditor" placeholder="Hasil Audit">
-                     ${response.auditInsidental[0].hasil_audit}</textarea>
-                </div>
-
-                <div class="form-group">
-                    <label for="rekomendasi" class="form-label">Rekomendasi</label>
-                    <textarea name="rekomendasi" id="rekomendasi" class="form-control ckeditor" placeholder="Rekomendasi">
-                     ${response.auditInsidental[0].rekomendasi}</textarea>
-                </div>
-                <div class="form-group">
-                    <label for="kesimpulan" class="form-label">Kesimpulan Audit</label>
-                    <textarea name="kesimpulan_audit" id="kesimpulan" class="form-control ckeditor" placeholder="Kesimpulan Audit">
-                     ${response.auditInsidental[0].kesimpulan_audit}</textarea>
-                </div>
-
-
-                                <div class="form-group">
-                                    <label for="status" class="form-label">Status</label>
-                                    <select class="form-select" name="status" id="status"
-                                        aria-label="Contoh Select">
-                                        <option>Status</option>
-                                        <option selected value="draft">Draft</option>
-                                        <option value="proses">Proses</option>
-
-                                    </select>
-                                </div>
-
-
-                                <div class="form-group">
-                                    <button type="submit" class="btn btn-primary">Update</button>
-                                </div>`;
-                                $(".formtambahan").append(data);
-                                  document.querySelectorAll('.ckeditor').forEach(function(editorElement) {
-                    ClassicEditor
-                        .create(editorElement, {
-                            ckfinder: {
-                                uploadUrl: "{{ route('ckeditor.upload') }}?_token={{ csrf_token() }}"
-                            },
-
-                        })
-                        .then(editor => {
-                            console.log('Editor was initialized', editor);
-                        })
-                        .catch(error => {
-                            console.error(error);
-                        });
-                });
-
-                 function validateForm() {
-                let valid = true;
-                document.querySelectorAll('.ckeditor').forEach(function(editorElement) {
-                    if (editorElement.style.display !== 'none') {
-                        let editorData = editorElement.closest('.ck-editor').querySelector('.ck-content').innerHTML;
-                        if (editorData.trim() === '') {
-                            alert('Please fill out all required fields.');
-                            valid = false;
-                        }
-                    }
-                });
-                return valid;
-            }
-
-                    }else if(response.auditProses){
+                  if(response.auditProses){
                          var form = $(".formTambahAudit");
                            var selectedUnitKerjaId = response.auditProses.unitkerja_id;
                            var selectedVersi = response.auditProses.versi;
@@ -513,6 +423,21 @@
 
                                     </select>
                                 </div>
+                                 <div id="fileInputsContainer" class="form-group">
+        <label for="lampiran" class="form-label">Lampiran</label>
+        <input type="file" name="lampiran[]" onchange="handleFileChange(this)" id="lampiran" class="form-control" placeholder="Lampiran" multiple>
+    </div>
+
+   
+    <div class="form-group">
+        <label>File yang Dipilih:</label>
+        <ul id="fileList"></ul>
+    </div>
+
+
+    <div class="form-group">
+        <button type="button" onclick="addNewFileInput()" id="addFileInputBtn" class="btn btn-primary">Tambah File Lain</button>
+    </div>
 
 
                                 <div class="form-group">
@@ -650,6 +575,21 @@
 
                                     </select>
                                 </div>
+                                 <div id="fileInputsContainer" class="form-group">
+        <label for="lampiran" class="form-label">Lampiran</label>
+        <input type="file" name="lampiran[]" onchange="handleFileChange(this)" id="lampiran" class="form-control" placeholder="Lampiran" multiple>
+    </div>
+
+   
+    <div class="form-group">
+        <label>File yang Dipilih:</label>
+        <ul id="fileList"></ul>
+    </div>
+
+
+    <div class="form-group">
+        <button type="button" onclick="addNewFileInput()" id="addFileInputBtn" class="btn btn-primary">Tambah File Lain</button>
+    </div>
 
 
                                 <div class="form-group">
@@ -697,8 +637,6 @@
 
 
     })
-    });
+   
 </script>
-<script>
-
-</script>
+@endsection

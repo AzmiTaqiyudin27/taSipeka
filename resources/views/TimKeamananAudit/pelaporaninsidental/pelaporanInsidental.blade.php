@@ -66,7 +66,8 @@
                                     <th>Nama Sistem</th>
                                     <th>Unit Kerja</th>
                                     <th>Versi</th>
-                                    <th>Status</th>
+                                    <th>Lampiran</th>
+                                    <th>Tanggal Proses</th>
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
@@ -80,8 +81,26 @@
                                         <td>{{ $item->nama_sistem }}</td>
                                         <td>{{ $item->unitkerja }}</td>
                                         <td>{{ $item->versi }}</td>
-                                        <td class="text-capitalize">{{ $item->status }}</td>
-
+                                        <td>
+                                            @if($item->lampiran)
+                                            @php
+                                                $dokumenArray = json_decode($item->lampiran, true);
+                                            @endphp
+                                            <ul>
+    
+                                                @foreach ($dokumenArray as $lampiran)
+                                                <li>
+                                                    <a target="_blank" href="/lampiran/{{ $lampiran }}">{{ $lampiran }}</a><br>
+                                                </li>
+                                                @endforeach
+                                            </ul>
+                                            @else
+                                            Tidak Ada Lamp
+                                            @endif
+    
+    
+                                            </td>
+                                            <td>{{ $item->tanggal_proses ? date('d-m-Y', strtotime($item->tanggal_proses)) : '-' }}</td>
                                         <td>
                                             {{-- <button type="button" class="tomboldetail btn btn-info" data-bs-toggle="modal"
                                                 data-bs-target="#detailModal" data-id="{{ $item->id }}">Detail</button> --}}

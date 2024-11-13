@@ -26,6 +26,11 @@
             {{ session('suksessimpan') }}
         </div>
     @endif
+    @if (session()->has('success'))
+        <div class="alert alert-success" role="alert">
+            {{ session('success') }}
+        </div>
+    @endif
 
     @if (session()->has('suksestambah'))
         <div class="alert alert-success" role="alert">
@@ -61,7 +66,7 @@
                                 <th>Nama Sistem</th>
                                 <th>Unit Kerja</th>
                                 <th>Versi</th>
-                                <th>Status</th>
+                                <th>Lampiran</th>
                                 <th>Tanggal Proses</th>
                                 <th>Aksi</th>
                             </tr>
@@ -69,12 +74,31 @@
                         <tbody>
                             @foreach ($laporan as $item)
                                 <tr>
-                                    <td>{{ date('d-m-Y', strtotime($item->tanggal_awal)) }} sampai {{ date('d-m-Y', strtotime($item->tanggal_akhir)) }}</td>
+                                    <td>{{ date('d-m-Y', strtotime($item->tanggal_audit)) }}</td>
                                     <td>{{ $item->judul }}</td>
                                     <td>{{ $item->kodeaudit->nama_sistem }}</td>
                                     <td>{{ $item->unitkerja->username }}</td>
                                     <td>{{ $item->versi }}</td>
-                                    <td style="text-transform:capitalize">{{ $item->status }}</td>
+                                
+                                    <td>
+                                        @if($item->lampiran)
+                                        @php
+                                            $dokumenArray = json_decode($item->lampiran, true);
+                                        @endphp
+                                        <ul>
+
+                                            @foreach ($dokumenArray as $lampiran)
+                                            <li>
+                                                <a target="_blank" href="/lampiran/{{ $lampiran }}">{{ $lampiran }}</a><br>
+                                            </li>
+                                            @endforeach
+                                        </ul>
+                                        @else
+                                        Tidak Ada Lamp
+                                        @endif
+
+
+                                    </td>
                                     <td>{{ $item->tanggal_proses ? date('d-m-Y', strtotime($item->tanggal_proses)) : '-' }}</td>
                                     <td>
                                         @if($item->status == 'draft')
@@ -87,28 +111,6 @@
                                         <div class="fileInputsContainer form-group mt-2">
                                             <label for="lampiran" class="form-label">Lampiran</label>
 
-                                            <br>
-                                            @if($item->lampiran)
-                                                <div>
-                                                    <p>Sudah ada lampiran:</p>
-                                                    @php
-                                                        $lampiranArray = json_decode($item->lampiran, true); // Decode JSON menjadi array
-                                                    @endphp
-                                                    <button type="button" class="btn btn-info viewAttachmentsBtn" data-index="{{ $loop->index }}">Lihat Lampiran</button>
-                                                    <div class="attachmentsList" style="display: none; margin-top: 10px;">
-                                                        <ul>
-                                                            @foreach ($lampiranArray as $lampiran)
-                                                                <li>
-                                                                    <span>{{ $lampiran }}</span>
-                                                                    <a href="/dokumen/{{ $lampiran }}" target="_blank" class="btn btn-sm btn-primary ml-2">Lihat</a>
-                                                                </li>
-                                                            @endforeach
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            @else
-                                                <p>Belum ada lampiran</p>
-                                            @endif
                                         </div>
                                     </td>
                                 </tr>

@@ -296,7 +296,8 @@ public function proses(Request $request, $id)
             'hasil_audit' => '',
             'rekomendasi' => '',
             'kesimpulan_audit' => '',
-            'status' => ''
+            'status' => '',
+            'lampiran' => ''
         ]);
 
 
@@ -316,6 +317,38 @@ public function proses(Request $request, $id)
         $pelaporanInsidental->rekomendasi = $request->rekomendasi;
         $pelaporanInsidental->kesimpulan_audit = $request->kesimpulan_audit;
         $pelaporanInsidental->status = $request->status;
+        
+        // Array untuk menyimpan nama file yang di-upload
+        $files = [];
+        $totalSize = 0;
+
+        // Cek apakah ada file yang diunggah
+        if ($request->hasFile('lampiran')) {
+            // Hitung total ukuran file
+            foreach ($request->file('lampiran') as $file) {
+                $totalSize += $file->getSize();
+            }
+
+            // Batas total ukuran file adalah 5MB
+            $maxSize = 5 * 1024 * 1024;
+
+            // Jika total ukuran melebihi 5MB, kembalikan dengan error
+            if ($totalSize > $maxSize) {
+                return back()->withErrors(['lampiran' => 'Total ukuran semua file tidak boleh melebihi 5 MB.']);
+            }
+
+            // Jika file sesuai dengan aturan, simpan setiap file di direktori yang diinginkan
+            foreach ($request->file('lampiran') as $file) {
+                if ($file->isValid()) {
+                    $lampiran = $file->getClientOriginalName();
+                    // $lampiran = time() . '-' . $file->getClientOriginalName(); // Buat nama unik dengan timestamp
+                    $file->move(public_path('lampiran'), $lampiran); // Pindahkan file ke folder publik
+                    $files[] = $lampiran; // Tambahkan nama file ke array
+                }
+            }
+
+            // Simpan file dalam format array (misalnya JSON)
+            $pelaporanInsidental['lampiran'] = json_encode($files); // Simpan sebagai JSON dalam kolom dokumen
 
         $pelaporanInsidental->save();
 
@@ -326,6 +359,7 @@ public function proses(Request $request, $id)
         return redirect()->route('pelaporan-insidental.pelaporan')->with('suksessimpan', 'Data berhasil disimpan!');
 
     }
+}
 
    public function perbarui(Request $request, $id)
 {
@@ -377,7 +411,7 @@ public function proses(Request $request, $id)
     }
 
      public function getAudit($id){
-        $auditInsidental = AuditInsidental::where('kode_audit', $id)->where('status', 'draft')->get();
+        // $auditInsidental = AuditInsidental::where('kode_audit', $id)->where('status', 'draft')->get();
         $auditProses = AuditInsidental::where('kode_audit', $id)->where('status', 'proses')->latest()->first();
         $unitkerja = User::where('role', 'unitkerja')->get();
        $versi = AuditRutin::select('versi')
@@ -386,7 +420,7 @@ public function proses(Request $request, $id)
     ->orderBy('versi', 'asc')
     ->get();
         return response()->json([
-            'auditInsidental' => $auditInsidental,
+            // 'auditInsidental' => $auditInsidental,
             'unitKerja' => $unitkerja,
             'auditProses' => $auditProses,
             'versi' => $versi

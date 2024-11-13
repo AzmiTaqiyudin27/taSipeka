@@ -111,7 +111,7 @@ Route::group(['prefix' => 'auth'], function () {
     Route::get('edit-pelaporan-audit-rutin/{id}', [AuditRutinPelaporanController::class, "edit"])->name("edit-pelaporan-rutin")->middleware('auth');
     Route::get('data-pelaporan-audit-rutin/{id}', [AuditRutinPelaporanController::class, 'getAudit'])->name("getAudit");
     Route::get('pelaporan-audit-rutin-get/{id}', [AuditRutinPelaporanController::class, "getData"])->name("pelaporan-rutin.getData");
-    Route::post('pelaporan-audit-rutin/tambah', [AuditRutinPelaporanController::class, "store"])->name("tambahAuditRutin");
+    Route::post('pelaporan-audit-rutin/tambah', [AuditRutinPelaporanController::class, "store"])->name("pelaporan-rutin.store");
     Route::put('pelaporan-audit-rutin/update/{id}', [AuditRutinPelaporanController::class, "update"])->name("pelaporan-rutin.update");
     Route::put('pelaporan-audit-rutin/proses/{id}', [AuditRutinPelaporanController::class, "proses"])->name("pelaporan-rutin.prosess");
     // Route::post('pelaporan-audit-rutin/proses', [AuditRutinPelaporanController::class, "prosess"])->name("pelaporan-rutin.prosesss");
