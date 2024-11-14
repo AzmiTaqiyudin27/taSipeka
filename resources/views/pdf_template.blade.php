@@ -15,19 +15,20 @@
     <h6>Versi : {!! $versi !!}</h6>
     <h6>Judul : {!! $judul !!}</h6>
     <h3 class="text-center">Pendahuluan</h3>
-    <h6 class="text-center">{!! $pendahuluan !!}</h6>
+    <div class="text-center">{!! str_replace('src="/storage/storage', 'src="' . public_path('storage/storage'), $pendahuluan) !!}</div> 
     <h3 class="text-center">Cakupan Audit</h3>
-    <h6 class="text-center">{!! $cakupanAudit !!}</h6>
+    <div class="text-center">{!! str_replace('src="/storage/storage', 'src="' . public_path('storage/storage'), $cakupanAudit) !!}</div>
+
     <h3 class="text-center">Tujuan Audit</h3>
-    <h6 class="text-center">{!! $tujuanAudit !!}</h6>
+    <div class="text-center">{!! str_replace('src="/storage/storage', 'src="' . public_path('storage/storage'), $tujuanAudit) !!}</div>
     <h3 class="text-center">Metodologi Audit</h3>
-    <h6 class="text-center">{!! $metodologiAudit !!}</h6>
+    <div class="text-center">{!! str_replace('src="/storage/storage', 'src="' . public_path('storage/storage'), $metodologiAudit) !!}</div>
     <h3 class="text-center">Hasil Audit</h3>
-    <h6 class="text-center">{!! $hasilAudit !!}</h6>
+    <div class="text-center">{!! str_replace('src="/storage/storage', 'src="' . public_path('storage/storage'), $hasilAudit) !!}</div>
     <h3 class="text-center">Rekomendasi</h3>
-    <h6 class="text-center">{!! $rekomendasi !!}</h6>
+    <div class="text-center">{!! str_replace('src="/storage/storage', 'src="' . public_path('storage/storage'), $hasilAudit) !!}</div>
     <h3 class="text-center">Kesimpulan Audit</h3>
-    <h6 class="text-center">{!! $kesimpulanAudit !!}</h6>
+    <div class="text-center">{!! str_replace('src="/storage/storage', 'src="' . public_path('storage/storage'), $kesimpulanAudit) !!}</div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 

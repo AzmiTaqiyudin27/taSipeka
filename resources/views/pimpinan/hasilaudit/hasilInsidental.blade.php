@@ -84,7 +84,9 @@
 
                             </div>
 
-                            <button type="button" class="btn my-3 btn-secondary" id="printSelected">Cetak Data
+                            <form action="/auth/generate-pdf-insidental" method="POST"> 
+                                @csrf
+                            <button type="submit" class="btn my-3 btn-secondary" id="printSelected">Cetak Data
                                 Terpilih</button>
                             {{-- <button id="excel" class="d-none  btn btn-info">Export Excel</button> --}}
                             <table class="table row-table" id="tablehasil">
@@ -105,6 +107,7 @@
 
                                 </tbody>
                             </table>
+                            </form>
                         </div>
                     </div>
                 </div>

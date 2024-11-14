@@ -3,7 +3,7 @@
         'name' => 'laravel/laravel',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => 'ede2c589a1bd5a6dce1c95ca2bfb1ed7e682a02a',
+        'reference' => '3d4432867cca9c1753675d6f3d77ab4d4659d41f',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -465,7 +465,7 @@
         'laravel/laravel' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'ede2c589a1bd5a6dce1c95ca2bfb1ed7e682a02a',
+            'reference' => '3d4432867cca9c1753675d6f3d77ab4d4659d41f',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -1539,6 +1539,15 @@
             'install_path' => __DIR__ . '/../ta-tikoma/phpunit-architecture-test',
             'aliases' => array(),
             'dev_requirement' => true,
+        ),
+        'tecnickcom/tcpdf' => array(
+            'pretty_version' => '6.7.7',
+            'version' => '6.7.7.0',
+            'reference' => 'cfbc0028cc23f057f2baf9e73bdc238153c22086',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../tecnickcom/tcpdf',
+            'aliases' => array(),
+            'dev_requirement' => false,
         ),
         'theseer/tokenizer' => array(
             'pretty_version' => '1.2.3',

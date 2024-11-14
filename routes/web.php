@@ -195,4 +195,5 @@ Route::group(['prefix' => 'auth'], function () {
     Route::get('/hasil-audit-insidental-get/', [AuditInsidentalController::class, 'getAuditInsidentalGet'])->name('hasil-insidental-get');
     Route::get('/hasil-audit-rutin-get/', [HasilAuditRutinController::class, 'getAuditRutinGet'])->name('hasil-rutin-get');
     Route::post('/generate-pdf', [PDFController::class, 'generatePDF'])->name('pdf.generate');
+    Route::post('/generate-pdf-insidental', [PDFController::class, 'generatePDFInsidental'])->name('pdf.generate-insidental');
 });

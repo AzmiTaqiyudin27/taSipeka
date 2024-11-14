@@ -86,7 +86,9 @@ use Carbon\Carbon;
 
                         </div>
 
-                        <button type="button" class="btn my-3 btn-secondary" id="printSelected">Cetak Data
+                        <form action="/auth/generate-pdf-insidental" method="POST"> 
+                            @csrf
+                        <button type="submit" class="btn my-3 btn-secondary" id="printSelected">Cetak Data
                             Terpilih</button>
                         {{-- <button id="excel" class="d-none  btn btn-info">Export Excel</button> --}}
                         <table class="table row-table" id="tablehasil">
@@ -99,24 +101,15 @@ use Carbon\Carbon;
                                     <th>Nama Sistem</th>
                                     <th>Versi</th>
                                     <th>Status</th>
-                                    <th>Tanggal Proses</th>
                                     <th>Aksi</th>
+
                                 </tr>
                             </thead>
                             <tbody class="tbody">
-                                <tr>
-                                    <td class="text-center" colspan="10">Belum Menampilkan Data</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
+
                             </tbody>
                         </table>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -246,7 +239,7 @@ use Carbon\Carbon;
                         var row = `
                     <tr>
                         ${item.status === 'proses'
-                            ? '<td><input type="checkbox" class="rowCheckbox" value="' + item.id + '"></td>'
+                            ? '<td><input type="checkbox" name="ids[]" class="rowCheckbox" value="' + item.id + '"></td>'
                             : '<td> - </td>'}
                         <td>${formatDate(item.tanggal_audit)}</td>
                         <td>${item.judul}</td>

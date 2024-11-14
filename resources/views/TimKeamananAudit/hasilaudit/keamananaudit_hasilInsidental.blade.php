@@ -83,8 +83,9 @@
 
                         </div>
 
-                        <button type="button" class="btn my-3 btn-secondary" id="printSelected">Cetak Data
-                            Terpilih</button>
+                        <form action="/auth/generate-pdf-insidental" method="POST"> 
+                            @csrf
+                            <button type="submit" class="btn my-3 btn-secondary" id="printSelectedCheckbox">Cetak Data Terpilih</button>
                         {{-- <button id="excel" class="d-none  btn btn-info">Export Excel</button> --}}
                         <table class="table row-table" id="tablehasil">
                             <thead>
@@ -114,6 +115,7 @@
                                 </tr>
                             </tbody>
                         </table>
+                    </form>
                     </div>
                 </div>
             </div>
@@ -243,7 +245,7 @@
                         var row = `
                     <tr>
                         ${item.status === 'proses'
-                            ? '<td><input type="checkbox" class="rowCheckbox" value="' + item.id + '"></td>'
+                            ? '<td><input type="checkbox" class="rowCheckbox" name="ids[]" value="' + item.id + '"></td>'
                             : '<td> - </td>'}
                         <td>${formatDate(item.tanggal_audit)}</td>
                         <td>${item.judul}</td>
