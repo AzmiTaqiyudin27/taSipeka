@@ -355,7 +355,7 @@ $("#addFileInputBtn").click(function() {
                 </div>
                              <div class="form-group">
                                 <label for="versi" class="form-label">Versi</label>
-                                <input type="text" name="versi" value="${response.auditProses.versi} id="versi" class="form-control" placeholder="Versi"
+                                <input type="text" name="versi" value="${response.auditProses.versi}" id="versi" class="form-control" placeholder="Versi"
                                     required>
                             </div>
                     <label for="pendahuluan" class="form-label">Pendahuluan</label>
