@@ -22,6 +22,7 @@ class AuditRutinPelaporanController extends Controller
         } else {
             $view = 'timkeamananaudit.pelaporanrutin.pelaporanRutin';
         }
+      
         return view($view, [
             'laporan' => $laporan
         ]);
