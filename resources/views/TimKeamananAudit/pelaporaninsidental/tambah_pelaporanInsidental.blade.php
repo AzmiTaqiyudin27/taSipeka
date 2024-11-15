@@ -352,17 +352,10 @@ $("#addFileInputBtn").click(function() {
                     <input type="text"  name="judul" id="judul" class="form-control" value="${response.auditProses.judul}" placeholder="Judul" >
                 </div>
                              <div class="form-group">
-                                    <label for="versi" class="form-label">Versi</label>
-                                    <select name="versi" class="form-select">
-                <option class="form-option" value="">-Versi-</option>
-                     ${$.map(response.versi, function(item) {
-                    // Cek jika item.id sama dengan selectedUnitKerjaId
-                    console.log(item.versi);
-                       var isSelected = item.versi === selectedVersi ? 'selected' : '';
-                     return `<option class="form-option" value="${item.versi}" ${isSelected}>${item.versi}</option>`;
-                        }).join('')}
-                      </select>
-                                </div>
+                                <label for="versi" class="form-label">Versi</label>
+                                <input type="text" name="versi" value="${response.auditProses.versi} id="versi" class="form-control" placeholder="Versi"
+                                    required>
+                            </div>
 
                                <div class="form-group">
                     <label for="pendahuluan" class="form-label">Pendahuluan</label>
@@ -499,22 +492,11 @@ $("#addFileInputBtn").click(function() {
                                 </div>
 
 
-                                 <div class="form-group">
-                    <label for="judul" class="form-label">Judul</label>
-                    <input type="text"  name="judul" id="judul" class="form-control"  placeholder="Judul">
-                </div>
-                             <div class="form-group">
-                                    <label for="versi" class="form-label">Versi</label>
-                                    <select name="versi" class="form-select">
-                <option class="form-option" value="">-Versi-</option>
-                     ${$.map(response.versi, function(item) {
-                    // Cek jika item.id sama dengan selectedUnitKerjaId
-                    console.log(item.versi);
-
-                     return `<option class="form-option" >${item.versi}</option>`;
-                        }).join('')}
-                      </select>
-                                </div>
+                              <div class="form-group">
+                                <label for="versi" class="form-label">Versi</label>
+                                <input type="text" name="versi"  id="versi" class="form-control" placeholder="Versi"
+                                    required>
+                            </div>
 
                                <div class="form-group">
                     <label for="pendahuluan" class="form-label">Pendahuluan</label>
