@@ -68,12 +68,12 @@
                             <div class="d-flex my-1 filtertanggal align-items-end flex-row">
                                 <div class="form-group col-4 d-flex flex-column me-2">
                                     <label for="tanggal_audit" class="form-label">Dari</label>
-                                    <input type="date" id="tgldari" class="form-control" placeholder="Tanggal Audit">
+                                    <input type="date" id="tanggalawal" class="form-control" placeholder="Tanggal Audit">
                                 </div>
 
                                 <div class="form-group col-4 d-flex flex-column ">
                                     <label for="tanggal_audit" class="form-label">Sampai</label>
-                                    <input type="date" id="tglsampai" class="form-control" placeholder="Tanggal Audit">
+                                    <input type="date" id="tanggalakhir" class="form-control" placeholder="Tanggal Audit">
                                 </div>
                                 <div class="form-group align-items-end  mx-2 d-flex justify-items-end flex-column">
                                     <label for="tanggal_audit" class="form-label"></label>
@@ -83,7 +83,6 @@
 
 
                             </div>
-
                             <form action="/auth/generate-pdf-insidental" method="POST"> 
                                 @csrf
                             <button type="submit" class="btn my-3 btn-secondary" id="printSelected">Cetak Data
@@ -99,6 +98,7 @@
                                         <th>Nama Sistem</th>
                                         <th>Versi</th>
                                         <th>Status</th>
+                                        <th>Tanggal Proses</th>
                                         <th>Aksi</th>
 
                                     </tr>
@@ -192,17 +192,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script> -->
 @endsection
 @push('scripts')
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-@if(session('sukses'))
-<script>
-Swal.fire({
-    icon: 'success',
-    title: 'Berhasil!',
-    text: '{{ session("sukses") }}',
-    confirmButtonText: 'OK'
-});
-</script>
-@endif
 <script>
     $(document).ready(function(){
             $("#unitkerjaSelect").select2();
@@ -214,11 +203,13 @@ return `${day}/${month}/${year}`;
 }
      var kode = null;
     var unitkerja = $("#unitkerja").val();
-    var tanggalaudit = null;
+    var tanggalawal = null;
+    var tanggalakhir = null;
       var requestData = {
             sistem: kode,
             unitkerja: unitkerja,
-            tanggalaudit : tanggalaudit 
+            tanggalawal : tanggalawal,
+            tanggalakhir : tanggalakhir 
         };
 
 
@@ -275,7 +266,7 @@ success: function(response) {
             console.log(id)
 
             $.ajax({
-                var url = "{{ route('audit-insidental.getData', '') }}/" + id;
+                url : "{{ route('audit-insidental.getData', '') }}/" + id,
                 type: 'GET',
                 success: function(response) {
                     console.log(response)
@@ -298,7 +289,8 @@ success: function(response) {
         });
     }else{
         tbody.append(`   <tr>
-                                    <td class="text-center" colspan="9">Belum Menampilkan Data</td>
+                                    <td class="text-center" colspan="10">Belum Menampilkan Data</td>
+                                    <td></td>
                                     <td></td>
                                     <td></td>
                                     <td></td>
@@ -325,16 +317,22 @@ error: function(err) {
         var kode = $(this).val();
     }
     var unitkerja = $("#unitkerja").val();
-    if ($("#tglaudit").val() == "") {
-        var tanggalaudit = null;
+    if ($("#tanggalawal").val() == "") {
+        var tanggalawal = null;
     } else {
-        var tanggalaudit = $("#tglaudit").val();
+        var tanggalawal = $("#tanggalawal").val();
+    }
+    if ($("#tanggalakhir").val() == "") {
+        var tanggalakhir = null;
+    } else {
+        var tanggalakhir = $("#tangalakhir").val();
     }
 
           var requestData = {
             sistem: kode,
             unitkerja: unitkerja,
-           tanggalaudit : tanggalaudit
+           tanggalawal : tanggalawal,
+           tanggalakhir : tanggalakhir
         };
         var namasistem = $(this).find('option:selected').text()
         $(".kodes").val(kode);
@@ -365,33 +363,43 @@ error: function(err) {
 
 
                 var tbody = $(".tbody");
-                response.forEach(function(item) {
-                    var row = `
-    <tr>
-        ${item.status === 'proses'
-            ? '<td><input type="checkbox" class="rowCheckbox" value="' + item.id + '"></td>'
-            : '<td> - </td>'}
-        <td>${formatDate(item.tanggal_audit)}</td>
-                    <td>${item.judul}</td>
-                    <td>${item.unit_kerja.username}</td>
-                    <td>${item.kodeaudit.nama_sistem}</td>
-                    <td>${item.versi}</td>
-                    <td>${item.status}</td>
-                    <td>${ item.tanggal_proses ? formatDate(item.tanggal_proses) : '-'}</td>
-                    <td><button type="button" class="tomboldetail btn btn-info"
-                                data-bs-toggle="modal" data-bs-target="#full-scrn"
-                                data-id="${item.id}">Detail</button></td>
-    </tr>
-`;
-                    tbody.append(row);
-                });
+                if (response.length > 0) {
+    // Loop through each item in the response and append a row
+    response.forEach(function(item) {
+        var row = `
+            <tr>
+                ${item.status === 'proses'
+                        ? '<td><input type="checkbox" name="ids[]" class="rowCheckbox" value="' + item.id + '"></td>'
+                        : '<td> - </td>'}
+                <td>${formatDate(item.tanggal_audit)}</td>
+                <td>${item.judul}</td>
+                <td>${item.unit_kerja.username}</td>
+                <td>${item.kodeaudit.nama_sistem}</td>
+                <td>${item.versi}</td>
+                <td>${item.status}</td>
+                <td>${item.tanggal_proses ? formatDate(item.tanggal_proses) : '-'}</td>
+                <td><button type="button" class="tomboldetail btn btn-info"
+                            data-bs-toggle="modal" data-bs-target="#full-scrn"
+                            data-id="${item.id}">Detail</button></td>
+            </tr>
+        `;
+        tbody.append(row);
+    });
+} else {
+    // If no data, show a single row with colspan
+    tbody.append(`
+        <tr>
+            <td colspan="9" class="text-center">Tidak ada data</td>
+        </tr>
+    `);
+}
 
                 $(".tomboldetail").click(function() {
                     console.log("tes");
                     var id = $(this).data('id');
 
                     $.ajax({
-                        url = "{{ route('audit-insidental.getData', '') }}/" + id;
+                        url : "{{ route('audit-insidental.getData', '') }}/" + id,
                         type: 'GET',
                         success: function(response) {
                             // Assuming response is JSON, you can parse and display it as needed
@@ -438,6 +446,8 @@ error: function(err) {
 
 
     $(".tampilin").click(function() {
+        console.log($("#tanggalawal").val());
+        console.log($("#tanggalakhir").val());
         if($("dropdownSelect").val() == ""){
             var kode = null;
         }else{
@@ -446,17 +456,24 @@ error: function(err) {
     var unitkerja = $("#unitkerja").val();
         var namasistem = $("#dropdownSelect").find('option:selected').text()
 
-    if (tanggalaudit == "") {
-       var tanggalaudit = null;
-  
-        } else {
-             var tanggalaudit = $("#tanggalaudit").val();
-            
-             var requestData = {
+        if ($("#tanggalawal").val() == "") {
+        var tanggalawal = null;
+    } else {
+        var tanggalawal = $("#tanggalawal").val();
+    }
+    if ($("#tanggalakhir").val() == "") {
+        var tanggalakhir = null;
+    } else {
+        var tanggalakhir = $("#tanggalakhir").val();
+    }
+
+          var requestData = {
             sistem: kode,
             unitkerja: unitkerja,
-            tanggalaudit: tanggalaudit,
-                        };
+           tanggalawal : tanggalawal,
+           tanggalakhir : tanggalakhir
+        };
+        var namasis
             $(".tbody").empty();
             var url = "/auth/hasil-audit-insidental-get";
 
@@ -477,7 +494,9 @@ error: function(err) {
                             var id = item.id;
                             var row = `
                             <tr>
-                            <td><input type="checkbox" class="rowCheckbox" name="id[]" value='${id}'></td>
+                             ${item.status === 'proses'
+                        ? '<td><input type="checkbox" name="ids[]" class="rowCheckbox" value="' + item.id + '"></td>'
+                        : '<td> - </td>'}
                         <td>${formatDate(item.tanggal_audit)}</td>
                     <td>${item.judul}</td>
                     <td>${item.unit_kerja.username}</td>
@@ -495,7 +514,8 @@ error: function(err) {
                     } else {
                         $(".tbody").append(`
                          <tr>
-                                    <td class="text-center" colspan="9">Tidak Ada Data</td>
+                                    <td class="text-center" colspan="10">Tidak Ada Data</td>
+                                    <td></td>
                                     <td></td>
                                     <td></td>
                                     <td></td>
@@ -511,7 +531,7 @@ error: function(err) {
                         var id = $(this).data('id');
 
                         $.ajax({
-                            url = "{{ route('audit-insidental.getData', '') }}/" + id;
+                            url : "{{ route('audit-insidental.getData', '') }}/" + id,
                             type: 'GET',
                             success: function(response) {
                                 // Assuming response is JSON, you can parse and display it as needed
@@ -548,7 +568,7 @@ error: function(err) {
                 }
             })
 
-        }
+        })
     })
 
     $("#excel").click(function() {
@@ -572,7 +592,7 @@ error: function(err) {
             console.log(id);
             // Menambahkan AJAX request ke dalam promises array
             var ajaxPromise = $.ajax({
-                var url = "/auth/hasil-audit-insidental-get";
+                url : "/auth/hasil-audit-insidental-get",
                 type: 'GET'
             }).then(function(response) {
                 // Jika sukses mendapatkan data, masukkan ke dalam rowData
@@ -751,9 +771,8 @@ error: function(err) {
         printWindow.document.close();
         printWindow.print();
     });
-            })
+          
 </script>
-@endpush
 
 
 
@@ -821,3 +840,5 @@ document.getElementById('pdfForm').addEventListener('submit', function(event) {
 });
 </script>
 
+
+@endpush

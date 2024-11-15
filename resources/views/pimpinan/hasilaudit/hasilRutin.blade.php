@@ -184,19 +184,7 @@
         integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script> -->
-
     @push('scripts')
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    @if(session('sukses'))
-<script>
-    Swal.fire({
-        icon: 'success',
-        title: 'Berhasil!',
-        text: '{{ session("sukses") }}',
-        confirmButtonText: 'OK'
-    });
-</script>
-@endif
     <script>
         $(document).ready(function(){
               
@@ -208,11 +196,13 @@
 }
          var kode = null;
         var unitkerja = $("#unitkerja").val();
-        var tanggalaudit = null;
+        var tanggalawal = null;
+        var tanggalakhir = null;
           var requestData = {
                 sistem: kode,
                 unitkerja: unitkerja,
-                tanggalaudit : tanggalaudit 
+                tanggalawal : tanggalawal,
+                tanggalakhir : tanggalakhir 
             };
 
 
@@ -319,16 +309,23 @@ $.ajax({
             var kode = $(this).val();
         }
         var unitkerja = $("#unitkerja").val();
-        if ($("#tglaudit").val() == "") {
-            var tanggalaudit = null;
+        if ($("#tgldari").val() == "") {
+            var tanggalawal = null;
         } else {
-            var tanggalaudit = $("#tglaudit").val();
+            var tanggalawal = $("#tgldari").val();
+        }
+        if ($("#tglsampai").val() == "") {
+            var tanggalakhir = null;
+        } else {
+            var tanggalakhir = $("#tglsampai").val();
         }
 
               var requestData = {
                 sistem: kode,
                 unitkerja: unitkerja,
-               tanggalaudit : tanggalaudit
+               tanggalawal : tanggalawal,
+               tanggalakhir : tanggalakhir
+
             };
             var namasistem = $(this).find('option:selected').text()
             $(".kodes").val(kode);
@@ -361,9 +358,9 @@ $.ajax({
                     response.forEach(function(item) {
                         var row = `
         <tr>
-            ${item.status === 'proses'
-                ? '<td><input type="checkbox" class="rowCheckbox" value="' + item.id + '"></td>'
-                : '<td> - </td>'}
+             ${item.status === 'proses'
+                            ? '<td><input type="checkbox" name="ids[]" class="rowCheckbox" value="' + item.id + '"></td>'
+                            : '<td> - </td>'}
             <td>${formatDate(item.tanggal_audit)}</td>
                         <td>${item.judul}</td>
                         <td>${item.unit_kerja.username}</td>
@@ -439,17 +436,24 @@ $.ajax({
         var unitkerja = $("#unitkerja").val();
             var namasistem = $("#dropdownSelect").find('option:selected').text()
 
-        if (tanggalaudit == "") {
-           var tanggalaudit = null;
-      
-            } else {
-                 var tanggalaudit = $("#tanggalaudit").val();
-                
-                 var requestData = {
+            if ($("#tgldari").val() == "") {
+            var tanggalawal = null;
+        } else {
+            var tanggalawal = $("#tgldari").val();
+        }
+        if ($("#tglsampai").val() == "") {
+            var tanggalakhir = null;
+        } else {
+            var tanggalakhir = $("#tglsampai").val();
+        }
+
+              var requestData = {
                 sistem: kode,
                 unitkerja: unitkerja,
-                tanggalaudit: tanggalaudit,
-                            };
+               tanggalawal : tanggalawal,
+               tanggalakhir : tanggalakhir
+
+            };
                 $(".tbody").empty();
                 var url = "/auth/hasil-audit-rutin-get";
                 $.ajax({
@@ -469,7 +473,9 @@ $.ajax({
                                 var id = item.id;
                                 var row = `
                                 <tr>
-                                <td><input type="checkbox" class="rowCheckbox" name="id[]" value='${id}'></td>
+                                 ${item.status === 'proses'
+                            ? '<td><input type="checkbox" name="ids[]" class="rowCheckbox" value="' + item.id + '"></td>'
+                            : '<td> - </td>'}
                             <td>${formatDate(item.tanggal_audit)}</td>
                         <td>${item.judul}</td>
                         <td>${item.unit_kerja.username}</td>
@@ -540,7 +546,7 @@ $.ajax({
                     }
                 })
 
-            }
+            
         })
 
         $("#excel").click(function() {
@@ -743,7 +749,8 @@ $.ajax({
             printWindow.document.close();
             printWindow.print();
         });
-                })
+    })
+                
     </script>
     @endpush
 

@@ -69,11 +69,15 @@
                     <div class="table-responsive tableDisini">
                         <div class="d-flex my-1 filtertanggal align-items-end flex-row">
                             <div class="form-group col-4 d-flex flex-column me-2">
-                                <label for="tanggalaudit" class="form-label">Tanggal Audit</label>
-                                <input type="date" id="tanggalaudit" class="form-control" placeholder="Tanggal Audit">
+                                <label for="tanggal_audit" class="form-label">Dari</label>
+                                <input type="date" id="tanggalawal" class="form-control" placeholder="Tanggal Audit">
                             </div>
 
-                            
+                            <div class="form-group col-4 d-flex flex-column ">
+                                <label for="tanggal_audit" class="form-label">Sampai</label>
+                                <input type="date" id="tanggalakhir" class="form-control" placeholder="Tanggal Audit">
+                            </div>
+                         
                             <div class="form-group align-items-end  mx-2 d-flex justify-items-end flex-column">
                                 <label for="tanggal_audit" class="form-label"></label>
                                 <button
@@ -210,11 +214,13 @@
 
         var kode = null;
         var unitkerja = null;
-        var tanggalaudit = null;
+        var tanggalawal = null;
+        var tanggalakhir = null;
         var requestData = {
             sistem: kode,
             unitkerja: unitkerja,
-            tanggalaudit : tanggalaudit
+            tanggalawal : tanggalawal,
+            tanggalakhir : tanggalakhir
         };
 
 
@@ -253,7 +259,7 @@
                         <td>${item.kodeaudit.nama_sistem}</td>
                         <td>${item.versi}</td>
                         <td class="text-capitalize">${item.status}</td>
-                        <td>${ item.tanggal_proses ?  item.tanggal_proses : '-'}</td>
+                        <td>${ item.tanggal_proses ?   formatDate(item.tanggal_proses) : '-'}</td>
                         <td><button type="button" class="tomboldetail btn btn-info"
                                     data-bs-toggle="modal" data-bs-target="#full-scrn"
                                     data-id="${item.id}">Detail</button></td>
@@ -310,12 +316,14 @@
         $("#unitkerjaSelect").change(function() {
     var id = $(this).val() === "" ? null : $(this).val();
     var sistem = $("#dropdownSelect").val() === "" ? null : $("#dropdownSelect").val();
-    var tanggalaudit = $("#tanggalaudit").val() === "" ? null : $("#tanggalaudit").val();
+    var tanggalawal = $("#tanggalawal").val() === "" ? null : $("#tanggalawal").val();
+    var tanggalakhir = $("#tanggalakhir").val() === "" ? null : $("#tanggalakhir").val();
 
     var requestData = {
         sistem: sistem,
         unitkerja: id,
-        tanggalaudit: tanggalaudit,
+        tanggalawal: tanggalawal,
+        tanggalakhir: tanggalakhir,
     };
 
     var urlAuditInsidental = "/auth/hasil-audit-insidental-get";
@@ -340,14 +348,16 @@
                     var row = `
                     <tr>
                         ${item.status === 'proses'
-                            ? '<td><input type="checkbox" class="rowCheckbox" value="' + item.id + '"></td>'
+                            ? '<td><input type="checkbox" class="rowCheckbox" name="ids[]" value="' + item.id + '"></td>'
                             : '<td> - </td>'}
                         <td>${formatDate(item.tanggal_audit)}</td>
                         <td>${item.judul}</td>
                         <td>${item.unit_kerja.username}</td>
                         <td>${item.kodeaudit.nama_sistem}</td>
                         <td>${item.versi}</td>
-                        <td>${item.status}</td>
+                       
+                          <td class="text-capitalize">${item.status}</td>
+                        <td>${ item.tanggal_proses ?  formatDate(item.tanggal_proses): '-'}</td>
                         <td><button type="button" class="tomboldetail btn btn-info"
                                     data-bs-toggle="modal" data-bs-target="#full-scrn"
                                     data-id="${item.id}">Detail</button></td>
@@ -359,7 +369,15 @@
                 // Jika tidak ada data, tampilkan pesan "Tidak Ada Data"
                 tbody.append(`
                     <tr>
-                        <td class="text-center" colspan="8">Tidak Ada Data</td>
+                        <td class="text-center" colspan="10">Tidak Ada Data</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
                     </tr>
                 `);
             }
@@ -397,14 +415,15 @@
     $("#dropdownSelect").change(function() {
     var kode = $(this).val() === "" ? null : $(this).val();
     var unitkerja = $("#unitkerjaSelect").val() === "" ? null : $("#unitkerjaSelect").val();
-    var tanggalaudit = $("#tanggalaudit").val() === "" ? null : $("#tanggalaudit").val();
+    var tanggalawal = $("#tanggalawal").val() === "" ? null : $("#tanggalawal").val();
+    var tanggalakhir = $("#tanggalakhir").val() === "" ? null : $("#tanggalakhir").val();
 
     var requestData = {
         sistem: kode,
         unitkerja: unitkerja,
-        tanggalaudit: tanggalaudit,
+        tanggalawal: tanggalawal,
+        tanggalakhir: tanggalakhir,
     };
-
     var namasistem = $(this).find('option:selected').text();
     $(".kodes").val(kode);
     $(".namas").val(namasistem);
@@ -431,15 +450,18 @@
                 response.forEach(function(item) {
                     var row = `
                     <tr>
-                        ${item.status === 'proses'
-                            ? '<td><input type="checkbox" class="rowCheckbox" value="' + item.id + '"></td>'
+                       ${item.status === 'proses'
+                            ? '<td><input type="checkbox" class="rowCheckbox" name="ids[]" value="' + item.id + '"></td>'
                             : '<td> - </td>'}
                         <td>${formatDate(item.tanggal_audit)}</td>
                         <td>${item.judul}</td>
                         <td>${item.unit_kerja.username}</td>
                         <td>${namasistem}</td>
                         <td>${item.versi}</td>
-                        <td>${item.status}</td>
+                      
+                        
+                          <td class="text-capitalize">${item.status}</td>
+                        <td>${ item.tanggal_proses ?  formatDate(item.tanggal_proses) : '-'}</td>
                         <td><button type="button" class="tomboldetail btn btn-info"
                                     data-bs-toggle="modal" data-bs-target="#full-scrn"
                                     data-id="${item.id}">Detail</button></td>
@@ -497,16 +519,15 @@
                 var unitkerja = $("#unitkerjaSelect").val();
             }
 
-        if (tanggalaudit == "") {
-           var tanggalaudit = null;
-        } else {
-             var tanggalaudit = $("#tanggalaudit").val();
-        
-            var requestData = {
-                sistem: kode,
-                unitkerja: unitkerja,
-                tanggalaudit : tanggalaudit
-            };
+            var tanggalawal = $("#tanggalawal").val() === "" ? null : $("#tanggalawal").val();
+    var tanggalakhir = $("#tanggalakhir").val() === "" ? null : $("#tanggalakhir").val();
+
+    var requestData = {
+        sistem: kode,
+        unitkerja: unitkerja,
+        tanggalawal: tanggalawal,
+        tanggalakhir: tanggalakhir,
+    };
             $(".tbody").empty();
             var url = "/auth/hasil-audit-insidental-get";
             $.ajax({
@@ -525,12 +546,17 @@
                             var id = item.id;
                             var row = `
                                 <tr>
-                                <td><input type="checkbox" class="rowCheckbox" value='${id}'></td>
+                              ${item.status === 'proses'
+                            ? '<td><input type="checkbox" class="rowCheckbox" name="ids[]" value="' + item.id + '"></td>'
+                            : '<td> - </td>'}
                              <td>${formatDate(item.tanggal_audit)}</td>
                                 <td>${item.judul}</td>
                                 <td>${item.unit_kerja.username}</td>
                                 <td>${item.kodeaudit.nama_sistem}</td>
                                 <td>${item.versi}</td>
+                               
+                          <td class="text-capitalize">${item.status}</td>
+                        <td>${ item.tanggal_proses ?  formatDate(item.tanggal_proses)  : '-'}</td>
                                 <td><button type="button" class="tomboldetail btn btn-info"
                                 data-bs-toggle="modal" data-bs-target="#full-scrn"
                                 data-id="${item.id}">Detail</button></td>
@@ -541,7 +567,8 @@
                     } else {
                         $(".tbody").append(`
                              <tr>
-                                        <td class="text-center" colspan="9">Tidak Ada Data</td>
+                                        <td class="text-center" colspan="10">Tidak Ada Data</td>
+                                        <td></td>
                                         <td></td>
                                         <td></td>
                                         <td></td>
@@ -595,7 +622,7 @@
                 }
             })
 
-        }
+        })
     })
 
     $("#excel").click(function() {
@@ -788,8 +815,9 @@
                 alert('Tidak ada data terpilih');
             }
         });
-
+    
     });
+
 
 
 
@@ -802,7 +830,7 @@
         printWindow.document.close();
         printWindow.print();
     });
-})
+
 </script>
 
 @endpush

@@ -68,11 +68,14 @@
                         <div class="table-responsive tableDisini">
                             <div class="d-flex my-1 filtertanggal align-items-end flex-row">
                                 <div class="form-group col-4 d-flex flex-column me-2">
-                                    <label for="tanggal_audit" class="form-label">Tanggal Audit</label>
-                                    <input type="date" id="tanggalaudit" class="form-control" placeholder="Tanggal Audit">
+                                    <label for="tanggal_audit" class="form-label">Dari</label>
+                                    <input type="date" id="tgldari" class="form-control" placeholder="Tanggal Audit">
                                 </div>
 
-                             
+                                <div class="form-group col-4 d-flex flex-column ">
+                                    <label for="tanggal_audit" class="form-label">Sampai</label>
+                                    <input type="date" id="tglsampai" class="form-control" placeholder="Tanggal Audit">
+                                </div>
                                 <div class="form-group align-items-end  mx-2 d-flex justify-items-end flex-column">
                                     <label for="tanggal_audit" class="form-label"></label>
                                     <button
@@ -197,11 +200,13 @@
 }
          var kode = null;
         var unitkerja = $("#unitkerja").val();
-        var tanggalaudit = null;
+        var tanggalawal = null;
+        var tanggalakhir = null;
           var requestData = {
                 sistem: kode,
                 unitkerja: unitkerja,
-                tanggalaudit : tanggalaudit 
+                tanggalawal : tanggalawal,
+                tanggalakhir : tanggalakhir 
             };
 
 
@@ -308,16 +313,23 @@ $.ajax({
             var kode = $(this).val();
         }
         var unitkerja = $("#unitkerja").val();
-        if ($("#tglaudit").val() == "") {
-            var tanggalaudit = null;
+        if ($("#tgldari").val() == "") {
+            var tanggalawal = null;
         } else {
-            var tanggalaudit = $("#tglaudit").val();
+            var tanggalawal = $("#tgldari").val();
+        }
+        if ($("#tglsampai").val() == "") {
+            var tanggalakhir = null;
+        } else {
+            var tanggalakhir = $("#tglsampai").val();
         }
 
               var requestData = {
                 sistem: kode,
                 unitkerja: unitkerja,
-               tanggalaudit : tanggalaudit
+               tanggalawal : tanggalawal,
+               tanggalakhir : tanggalakhir
+
             };
             var namasistem = $(this).find('option:selected').text()
             $(".kodes").val(kode);
@@ -350,9 +362,9 @@ $.ajax({
                     response.forEach(function(item) {
                         var row = `
         <tr>
-            ${item.status === 'proses'
-                ? '<td><input type="checkbox" class="rowCheckbox" value="' + item.id + '"></td>'
-                : '<td> - </td>'}
+              ${item.status === 'proses'
+                            ? '<td><input type="checkbox" name="ids[]" class="rowCheckbox" value="' + item.id + '"></td>'
+                            : '<td> - </td>'}
             <td>${formatDate(item.tanggal_audit)}</td>
                         <td>${item.judul}</td>
                         <td>${item.unit_kerja.username}</td>
@@ -428,17 +440,24 @@ $.ajax({
         var unitkerja = $("#unitkerja").val();
             var namasistem = $("#dropdownSelect").find('option:selected').text()
 
-        if (tanggalaudit == "") {
-           var tanggalaudit = null;
-      
-            } else {
-                 var tanggalaudit = $("#tanggalaudit").val();
-                
-                 var requestData = {
+            if ($("#tgldari").val() == "") {
+            var tanggalawal = null;
+        } else {
+            var tanggalawal = $("#tgldari").val();
+        }
+        if ($("#tglsampai").val() == "") {
+            var tanggalakhir = null;
+        } else {
+            var tanggalakhir = $("#tglsampai").val();
+        }
+
+              var requestData = {
                 sistem: kode,
                 unitkerja: unitkerja,
-                tanggalaudit: tanggalaudit,
-                            };
+               tanggalawal : tanggalawal,
+               tanggalakhir : tanggalakhir
+
+            };
                 $(".tbody").empty();
                 var url = "/auth/hasil-audit-rutin-get";
                 $.ajax({
@@ -458,7 +477,9 @@ $.ajax({
                                 var id = item.id;
                                 var row = `
                                 <tr>
-                                <td><input type="checkbox" class="rowCheckbox" name="id[]" value='${id}'></td>
+                                ${item.status === 'proses'
+                            ? '<td><input type="checkbox" name="ids[]" class="rowCheckbox" value="' + item.id + '"></td>'
+                            : '<td> - </td>'}
                             <td>${formatDate(item.tanggal_audit)}</td>
                         <td>${item.judul}</td>
                         <td>${item.unit_kerja.username}</td>
@@ -529,7 +550,7 @@ $.ajax({
                     }
                 })
 
-            }
+            
         })
 
         $("#excel").click(function() {
@@ -732,7 +753,8 @@ $.ajax({
             printWindow.document.close();
             printWindow.print();
         });
-                })
+    })
+                
     </script>
     @endpush
 

@@ -115,6 +115,7 @@ $outputPath = storage_path("app/public/Hasil-Audit-Rutin-$tanggal.pdf");
 }
     public function generatePDFInsidental(Request $request)
     {
+      
         $finalPdf = new PDFMerger();
         $ids = $request->input('ids');
 

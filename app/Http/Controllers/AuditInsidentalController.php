@@ -177,7 +177,7 @@ public function proses(Request $request, $id)
     $auditInsidental->tanggal_proses = date('Y-m-d'); // Format YYYY-MM-DD
     $auditInsidental->status = "proses";
     $auditInsidental->save();
-    return redirect()->back()->with('message', 'Berhasil Memproses Laporan Audit!');
+    return redirect('/auth/pelaporan-insidental')->with('success', 'Berhasil Memproses Laporan Audit!');
 }
 
 
@@ -356,7 +356,7 @@ public function proses(Request $request, $id)
         // return redirect()->back()->with('suksessimpan', 'Data Audit insidental berhasil ditambahkan');
 
 
-        return redirect()->route('pelaporan-insidental.pelaporan')->with('suksessimpan', 'Data berhasil disimpan!');
+        return redirect('/auth/pelaporan-insidental')->with('success', 'Berhasil Menyimpan Laporan Audit!');
 
     }
 }
@@ -364,6 +364,7 @@ public function proses(Request $request, $id)
    public function perbarui(Request $request, $id)
 {
     // Validasi data
+    // dd($request);
 
     $validatedData = $request->validate([
           'user_id' => 'required|int',
@@ -397,12 +398,12 @@ public function proses(Request $request, $id)
         $auditRutin->hasil_audit = $validatedData['hasil_audit'];
         $auditRutin->rekomendasi = $validatedData['rekomendasi'];
         $auditRutin->kesimpulan_audit = $validatedData['kesimpulan_audit'];
-        $lampiranArray = json_decode($auditRutin->lampiran, true) ?? [];
+        $lampiranArray = json_decode($auditRutin->lampiran);
 
         // Update foto yang sudah ada
-        if ($request->has('lampiran_update')) {
+        if ($request->hasFile('lampiran_update')) {
             foreach ($request->file('lampiran_update') as $index => $file) {
-                if ($file && isset($fotoArray[$index])) {
+                if ($file && isset($lampiranArray[$index])) {
                     // Hapus foto lama dari server
                     if (file_exists(public_path('lampiran/' . $lampiranArray[$index]))) {
                         unlink(public_path('lampiran/' . $lampiranArray[$index]));
@@ -429,7 +430,7 @@ public function proses(Request $request, $id)
             }
         }
     
-        // Simpan kembali foto yang sudah diupdate dan baru ke database dalam bentuk JSON
+       
         $auditRutin->lampiran = json_encode($lampiranArray);
 
     // Simpan perubahan ke dalam database
@@ -475,50 +476,50 @@ public function proses(Request $request, $id)
     }
 
     public function getAuditInsidentalGet(Request $request)
-    {
-        // Inisialisasi query dasar
-        $query = AuditInsidental::with('unitKerja')->with('kodeaudit');
+{
     
-        // Cek apakah keempat request ada
-        if ($request->sistem && $request->unitkerja && $request->tanggalaudit) {
-            $query->where('kode_audit', $request->sistem)
-                  ->where('unitkerja_id', $request->unitkerja)
-                  ->where('tanggal_audit', $request->tanggalaudit);
-        }
-        // Cek apakah request unitkerja dan sistem ada
-        elseif ($request->sistem && $request->unitkerja) {
-            $query->where('kode_audit', $request->sistem)
-                  ->where('unitkerja_id', $request->unitkerja);
-        }
-        // Cek apakah request sistem dan tanggalaudit ada
-        elseif ($request->sistem && $request->tanggalaudit) {
-            $query->where('kode_audit', $request->sistem)
-                  ->where('tanggal_audit', $request->tanggalaudit);
-        }
-        // Cek apakah request unitkerja dan tanggalaudit ada
-        elseif ($request->unitkerja && $request->tanggalaudit) {
-            $query->where('unitkerja_id', $request->unitkerja)
-                  ->where('tanggal_audit', $request->tanggalaudit);
-        }
-        // Cek request satu per satu untuk kombinasi lainnya
-        else {
-            if ($request->sistem) {
-                $query->where('kode_audit', $request->sistem);
-            }
-            if ($request->unitkerja) {
-                $query->where('unitkerja_id', $request->unitkerja);
-            }
-            if ($request->tanggalaudit) {
-                $query->where('tanggal_audit', $request->tanggalaudit);
-            }
-        }
-    
-        // Jalankan query dan dapatkan hasilnya
-        $auditInsidental = $query->orderBy('tanggal_audit', 'asc')->get();
-    
-        // Kembalikan hasil query dalam format JSON
-        return response()->json($auditInsidental);
+    // Initialize the base query
+    $query = AuditInsidental::with('unitKerja')->with('kodeaudit');
+
+    // Check if all three parameters are provided
+    if ($request->sistem && $request->unitkerja && $request->tanggalawal && $request->tanggalakhir) {
+        $query->where('kode_audit', $request->sistem)
+              ->where('unitkerja_id', $request->unitkerja)
+              ->whereBetween('tanggal_audit', [$request->tanggalawal, $request->tanggalakhir]);
     }
-    
+    // Check if system and unitkerja are provided
+    elseif ($request->sistem && $request->unitkerja) {
+        $query->where('kode_audit', $request->sistem)
+              ->where('unitkerja_id', $request->unitkerja);
+    }
+    // Check if system and date range are provided
+    elseif ($request->sistem && $request->tanggalawal && $request->tanggalakhir) {
+        $query->where('kode_audit', $request->sistem)
+              ->whereBetween('tanggal_audit', [$request->tanggalawal, $request->tanggalakhir]);
+    }
+    // Check if unitkerja and date range are provided
+    elseif ($request->unitkerja && $request->tanggalawal && $request->tanggalakhir) {
+        $query->where('unitkerja_id', $request->unitkerja)
+              ->whereBetween('tanggal_audit', [$request->tanggalawal, $request->tanggalakhir]);
+    }
+    // Handle individual parameter cases
+    else {
+        if ($request->sistem) {
+            $query->where('kode_audit', $request->sistem);
+        }
+        if ($request->unitkerja) {
+            $query->where('unitkerja_id', $request->unitkerja);
+        }
+        if ($request->tanggalawal && $request->tanggalakhir) {
+            $query->whereBetween('tanggal_audit', [$request->tanggalawal, $request->tanggalakhir]);
+        }
+    }
+
+    // Execute the query and get results
+    $auditInsidental = $query->orderBy('tanggal_audit', 'asc')->get();
+
+    // Return results as JSON
+    return response()->json($auditInsidental);
+}
 
 }

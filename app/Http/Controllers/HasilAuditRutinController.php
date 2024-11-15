@@ -167,10 +167,10 @@ class HasilAuditRutinController extends Controller
     $query = AuditRutin::with('unitKerja', 'kodeaudit');
 
     // Check if all three request parameters exist: sistem, unitkerja, and tanggalaudit
-    if ($request->sistem && $request->unitkerja && $request->tanggalaudit) {
+    if ($request->sistem && $request->unitkerja && $request->tanggalawal && $request->tanggalakhir) {
         $query->where('kode_audit', $request->sistem)
               ->where('unitkerja_id', $request->unitkerja)
-              ->where('tanggal_audit', $request->tanggalaudit);
+              ->whereBetween('tanggal_audit', [$request->tanggalawal, $request->tanggalakhir]);
     }
     // Check if the sistem and unitkerja parameters exist
     elseif ($request->sistem && $request->unitkerja) {
@@ -178,14 +178,14 @@ class HasilAuditRutinController extends Controller
               ->where('unitkerja_id', $request->unitkerja);
     }
     // Check if the sistem and tanggalaudit parameters exist
-    elseif ($request->sistem && $request->tanggalaudit) {
+    elseif ($request->sistem && $request->tanggalawal && $request->tanggalakhir) {
         $query->where('kode_audit', $request->sistem)
-              ->where('tanggal_audit', $request->tanggalaudit);
+              ->whereBetween('tanggal_audit', [$request->tanggalawal, $request->tanggalakhir]);
     }
     // Check if the unitkerja and tanggalaudit parameters exist
-    elseif ($request->unitkerja && $request->tanggalaudit) {
+    elseif ($request->unitkerja && $request->tanggalawal && $request->tanggalakhir) {
         $query->where('unitkerja_id', $request->unitkerja)
-              ->where('tanggal_audit', $request->tanggalaudit);
+              ->whereBetween('tanggal_audit', [$request->tanggalawal, $request->tanggalakhir]);
     }
     // Handle other individual conditions
     else {
@@ -195,8 +195,8 @@ class HasilAuditRutinController extends Controller
         if ($request->unitkerja) {
             $query->where('unitkerja_id', $request->unitkerja);
         }
-        if ($request->tanggalaudit) {
-            $query->where('tanggal_audit', $request->tanggalaudit);
+        if ($request->tanggalawal && $request->tanggalakhir) {
+            $query->whereBetween('tanggal_audit', [$request->tanggalawal, $request->tanggalakhir]);
         }
     }
 
@@ -206,4 +206,5 @@ class HasilAuditRutinController extends Controller
     // Return the query results as JSON
     return response()->json($auditRutin);
 }
+
 }

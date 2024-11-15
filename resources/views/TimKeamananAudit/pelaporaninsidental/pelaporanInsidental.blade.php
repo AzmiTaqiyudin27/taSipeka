@@ -47,6 +47,11 @@
                 {{ session('suksesubah') }}
             </div>
         @endif
+        @if (session()->has('success'))
+            <div class="alert alert-success" role="alert">
+                {{ session('success') }}
+            </div>
+        @endif
 
         <section class="section">
             <a href="{{ route('pelaporan-insidental.create') }}" class="btn btn-success mt-4">

@@ -365,7 +365,7 @@ class AuditRutinPelaporanController extends Controller
         // Update foto yang sudah ada
         if ($request->has('lampiran_update')) {
             foreach ($request->file('lampiran_update') as $index => $file) {
-                if ($file && isset($fotoArray[$index])) {
+                if ($file && isset($lampiranArray[$index])) {
                     // Hapus foto lama dari server
                     if (file_exists(public_path('lampiran/' . $lampiranArray[$index]))) {
                         unlink(public_path('lampiran/' . $lampiranArray[$index]));
